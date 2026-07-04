@@ -25,15 +25,15 @@ export default function HomePage() {
     <>
       <Header />
       <section className="hero-section relative mb-8 min-h-[285px] p-4 xl:min-h-[315px] xl:p-8">
-        <div className="hero-copy relative z-10 max-w-[74%] xl:max-w-[58%]">
-          <h2 className="text-[38px] font-black leading-[1.02] tracking-normal sm:text-[42px] xl:text-[52px]">
+        <div className="hero-copy relative z-10 max-w-[82%] xl:max-w-[64%]">
+          <h2 className="text-[44px] font-black leading-[0.98] tracking-normal sm:text-[48px] xl:text-[60px]">
             <span className="block">Získej až</span>
             <span className="block whitespace-nowrap text-neon">4 100 Kč</span>
             <span className="block whitespace-nowrap">na bonusech</span>
           </h2>
-          <p className="mt-3 max-w-[230px] text-sm leading-5 text-slate-300 xl:max-w-none xl:text-base xl:leading-6">Banky, cashback a investiční platformy na jednom místě.</p>
+          <p className="mt-4 max-w-[245px] text-sm leading-5 text-slate-300 xl:max-w-none xl:text-base xl:leading-6">Banky, cashback a investiční platformy na jednom místě.</p>
         </div>
-        <div className="relative z-20 mt-6 grid w-full grid-cols-2 gap-3 xl:max-w-[470px]">
+        <div className="relative z-20 mt-5 grid w-full grid-cols-2 gap-3 xl:max-w-[470px]">
           <NeonButton onClick={() => navigate(paths.exchanges)} className="h-12 whitespace-nowrap px-3 text-sm">
             Nejlepší bonusy
           </NeonButton>
