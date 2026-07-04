@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { Check, ChevronRight, Search, Star } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import type { HTMLMotionProps } from "framer-motion";
+import type { ReactNode } from "react";
 import { useId } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Bonus } from "../data/mockData";
@@ -45,7 +46,7 @@ export function NeonButton({
   variant = "primary",
   type = "button",
   ...buttonProps
-}: ButtonHTMLAttributes<HTMLButtonElement> & {
+}: HTMLMotionProps<"button"> & {
   variant?: "primary" | "ghost";
 }) {
   return (
