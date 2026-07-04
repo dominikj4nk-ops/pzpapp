@@ -25,8 +25,8 @@ export default function HomePage() {
     <>
       <Header />
       <section className="hero-section relative mb-8 min-h-[285px] p-4 xl:min-h-[315px] xl:p-8">
-        <div className="hero-copy relative z-10 max-w-[68%] xl:max-w-[58%]">
-          <h2 className="text-[32px] font-black leading-[1.08] tracking-normal sm:text-[36px] xl:text-[42px]">
+        <div className="hero-copy relative z-10 max-w-[74%] xl:max-w-[58%]">
+          <h2 className="text-[38px] font-black leading-[1.02] tracking-normal sm:text-[42px] xl:text-[52px]">
             <span className="block">Získej až</span>
             <span className="block whitespace-nowrap text-neon">4 100 Kč</span>
             <span className="block whitespace-nowrap">na bonusech</span>
