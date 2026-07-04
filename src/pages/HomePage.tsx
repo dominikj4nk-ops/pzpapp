@@ -24,7 +24,7 @@ export default function HomePage() {
   return (
     <>
       <Header />
-      <section className="hero-section relative mb-8 min-h-[285px] p-4 xl:min-h-[315px] xl:p-8">
+      <section className="hero-section relative mb-8 min-h-[305px] p-4 xl:min-h-[335px] xl:p-8">
         <div className="hero-copy relative z-10 max-w-[82%] xl:max-w-[64%]">
           <h2 className="text-[44px] font-black leading-[0.98] tracking-normal sm:text-[48px] xl:text-[60px]">
             <span className="block">Získej až</span>
@@ -33,7 +33,7 @@ export default function HomePage() {
           </h2>
           <p className="mt-4 max-w-[245px] text-sm leading-5 text-slate-300 xl:max-w-none xl:text-base xl:leading-6">Banky, cashback a investiční platformy na jednom místě.</p>
         </div>
-        <div className="relative z-20 mt-5 grid w-full grid-cols-2 gap-3 xl:max-w-[470px]">
+        <div className="relative z-20 mt-7 grid w-full grid-cols-2 gap-3 xl:max-w-[470px]">
           <NeonButton onClick={() => navigate(paths.exchanges)} className="h-12 whitespace-nowrap px-3 text-sm">
             Nejlepší bonusy
           </NeonButton>

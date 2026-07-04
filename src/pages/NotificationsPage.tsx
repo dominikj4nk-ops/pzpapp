@@ -48,7 +48,7 @@ export default function NotificationsPage() {
             </p>
           </div>
           {notifications.length ? (
-            <NeonButton onClick={dismissAll} className="h-10 px-3 text-xs">
+            <NeonButton onClick={dismissAll} className="h-10 px-3 text-xs" data-testid="dismiss-all-notifications">
               <CheckCheck size={15} className="inline" /> Přečteno
             </NeonButton>
           ) : null}
@@ -88,6 +88,7 @@ export default function NotificationsPage() {
                       <span className="text-[11px] text-slate-500">{notification.time}</span>
                       <button
                         onClick={() => dismissBonusNotifications([notification.bonusId])}
+                        data-testid={`dismiss-${notification.bonusId}`}
                         className="rounded-xl border border-white/10 bg-white/[.06] px-2 py-1 text-[11px] font-bold text-slate-200 transition hover:border-neon/35 hover:text-white active:scale-95"
                       >
                         Přečteno

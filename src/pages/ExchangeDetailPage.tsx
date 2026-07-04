@@ -2,7 +2,7 @@ import { CheckCircle2, ExternalLink, Star } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../components/Header";
-import { markBonusCompleted, markBonusOpened } from "../components/notificationState";
+import { cancelScheduledBonusAbandoned, markBonusAbandoned, markBonusCompleted, scheduleBonusAbandoned } from "../components/notificationState";
 import { DetailRow, GlassCard, LogoMark, NeonButton } from "../components/ui";
 import { bonuses, detailSteps } from "../data/mockData";
 import { paths } from "../routes/paths";
@@ -11,20 +11,33 @@ export default function ExchangeDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [activated, setActivated] = useState(false);
-  const activatedRef = useRef(false);
+  const completedRef = useRef(false);
   const bonus = useMemo(() => bonuses.find((item) => item.id === id) ?? bonuses[0], [id]);
   const activateBonus = () => {
-    activatedRef.current = true;
+    setActivated(true);
+    cancelScheduledBonusAbandoned(bonus.id);
+  };
+  const finishBonus = () => {
+    completedRef.current = true;
     setActivated(true);
     markBonusCompleted(bonus.id);
+    navigate(paths.myBonuses);
   };
 
   useEffect(() => {
-    activatedRef.current = false;
+    completedRef.current = false;
     setActivated(false);
+    cancelScheduledBonusAbandoned(bonus.id);
+
+    const handlePageHide = () => {
+      if (!completedRef.current) markBonusAbandoned(bonus.id);
+    };
+
+    window.addEventListener("pagehide", handlePageHide);
 
     return () => {
-      if (!activatedRef.current) markBonusOpened(bonus.id);
+      window.removeEventListener("pagehide", handlePageHide);
+      if (!completedRef.current) scheduleBonusAbandoned(bonus.id);
     };
   }, [bonus.id]);
 
@@ -85,7 +98,7 @@ export default function ExchangeDetailPage() {
             const isLastStep = index === steps.length - 1;
 
             return (
-              <button key={step} onClick={() => (isLastStep ? navigate(paths.myBonuses) : activateBonus())} className="glass-button flex w-full items-center gap-3 p-3 text-left text-sm transition">
+              <button key={step} onClick={() => (isLastStep ? finishBonus() : activateBonus())} className="glass-button flex w-full items-center gap-3 p-3 text-left text-sm transition">
                 <span className="grid h-7 w-7 place-items-center rounded-full bg-white/10 text-xs font-black text-neon">{index + 1}</span>
                 <span>{step}</span>
               </button>

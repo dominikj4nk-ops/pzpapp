@@ -4,6 +4,7 @@ import type { Bonus } from "../data/mockData";
 
 const abandonedKey = "pzp:abandoned-bonuses";
 export const notificationStateEvent = "pzp:notification-state";
+const pendingAbandonedTimers = new Map<string, ReturnType<typeof window.setTimeout>>();
 
 function readIds() {
   try {
@@ -20,16 +21,35 @@ function writeIds(ids: string[]) {
   window.dispatchEvent(new Event(notificationStateEvent));
 }
 
-export function markBonusOpened(id: string) {
+export function cancelScheduledBonusAbandoned(id: string) {
+  const timer = pendingAbandonedTimers.get(id);
+  if (!timer) return;
+  window.clearTimeout(timer);
+  pendingAbandonedTimers.delete(id);
+}
+
+export function markBonusAbandoned(id: string) {
+  cancelScheduledBonusAbandoned(id);
   writeIds([...readIds(), id]);
 }
 
+export function scheduleBonusAbandoned(id: string) {
+  cancelScheduledBonusAbandoned(id);
+  const timer = window.setTimeout(() => {
+    pendingAbandonedTimers.delete(id);
+    markBonusAbandoned(id);
+  }, 180);
+  pendingAbandonedTimers.set(id, timer);
+}
+
 export function markBonusCompleted(id: string) {
+  cancelScheduledBonusAbandoned(id);
   writeIds(readIds().filter((item) => item !== id));
 }
 
 export function dismissBonusNotifications(ids: string[]) {
   const dismissed = new Set(ids);
+  ids.forEach(cancelScheduledBonusAbandoned);
   writeIds(readIds().filter((item) => !dismissed.has(item)));
 }
 

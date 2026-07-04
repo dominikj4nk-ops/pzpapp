@@ -169,7 +169,7 @@ export const suggestions = ["mBank", "George", "Robinhood", "Air Bank", "Tipli",
 export const exchangeFilters = ["Vše", "Banky", "Investice", "Ostatní"];
 export const rewardFilters = ["Vše", "Odměny", "Soutěže", "Partneři"];
 export const ageFilters = ["Vše", "15+", "18+"];
-export const bonusFilters = ["Vše", "Aktivní", "Dokončené"];
+export const bonusFilters = ["Vše", "Aktivní", "Dokončené", "Wishlist"];
 
 export const activeBonusRows = [
   ["mBank", "+1 000 Kč"],

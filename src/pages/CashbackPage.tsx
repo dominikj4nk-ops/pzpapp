@@ -15,11 +15,11 @@ export default function CashbackPage() {
           return (
             <button key={store.name} onClick={() => setSelected(store.name)} className="w-full text-left">
               <GlassCard className="flex items-center gap-3 p-3 transition hover:border-neon/30">
-                <div className={`relative grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br ${store.color} text-xl font-black shadow-glow`}>
+                <div className={`relative grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br ${store.color} text-xl font-black shadow-glow`}>
                   <img
                     src={store.logoUrl}
                     alt={`${store.name} logo`}
-                    className="relative z-10 h-full w-full object-contain p-2"
+                    className="relative z-10 h-full w-full scale-110 object-cover"
                     onError={(event) => {
                       event.currentTarget.style.display = "none";
                       event.currentTarget.nextElementSibling?.classList.remove("hidden");
