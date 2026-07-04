@@ -17,7 +17,6 @@ const sidebarItems = [
   { label: "Pozvat a vydělat", path: paths.rewards, icon: UserPlus, color: "text-amber-400" },
   { label: "Cashback", path: paths.cashback, icon: Percent, color: "text-pink-400" },
   { label: "Můj potenciální zisk", path: paths.profit, icon: WalletCards, color: "text-slate-300" },
-  { label: "Moje bonusy", path: paths.myBonuses, icon: WalletCards, color: "text-slate-300" },
   { label: "Notifikace", path: paths.notifications, icon: Bell, color: "text-slate-300" },
   { label: "Nastavení", path: paths.settings, icon: Settings, color: "text-slate-300" },
   { label: "Nápověda a podpora", path: paths.help, icon: HelpCircle, color: "text-slate-300" }

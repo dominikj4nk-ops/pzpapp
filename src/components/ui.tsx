@@ -154,20 +154,50 @@ export function LogoMark({ bonus, size = "md" }: { bonus: Bonus; size?: "sm" | "
 }
 
 function RankShield({ rank }: { rank: number }) {
-  const rankStyles =
+  const gradientId = useId().replace(/:/g, "");
+  const highlightId = `${gradientId}-shine`;
+  const colors =
     rank === 1
-      ? "from-yellow-200 via-amber-300 to-orange-400 text-[#211400] shadow-[0_0_24px_rgba(250,204,21,.46)]"
+      ? {
+          stops: ["#fef08a", "#fbbf24", "#fb923c"],
+          text: "#211400",
+          glow: "drop-shadow(0 0 12px rgba(250,204,21,.5))"
+        }
       : rank === 2
-        ? "from-slate-50 via-cyan-100 to-slate-300 text-[#07111c] shadow-[0_0_22px_rgba(207,250,254,.34)]"
-        : "from-orange-200 via-amber-500 to-rose-500 text-[#1d0a02] shadow-[0_0_22px_rgba(251,146,60,.34)]";
+        ? {
+            stops: ["#f8fafc", "#cffafe", "#cbd5e1"],
+            text: "#07111c",
+            glow: "drop-shadow(0 0 12px rgba(207,250,254,.38))"
+          }
+        : {
+            stops: ["#fed7aa", "#f59e0b", "#f43f5e"],
+            text: "#1d0a02",
+            glow: "drop-shadow(0 0 12px rgba(251,146,60,.38))"
+          };
 
   return (
-    <span
-      className={`absolute -left-1.5 -top-1.5 z-20 grid h-9 w-8 place-items-center overflow-hidden rounded-t-[10px] bg-gradient-to-br ${rankStyles} font-black [clip-path:polygon(0_0,100%_0,100%_72%,50%_100%,0_72%)]`}
-    >
-      <span className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,.62),transparent_42%,rgba(0,0,0,.18))]" />
-      <span className="absolute inset-x-1 bottom-1.5 h-2 rounded-full bg-black/10 blur-[1px]" />
-      <span className="relative grid h-5 w-5 place-items-center rounded-full bg-white/72 text-[11px] shadow-[inset_0_1px_0_rgba(255,255,255,.7),0_3px_8px_rgba(0,0,0,.16)]">
+    <span className="absolute -left-1.5 -top-1.5 z-20 h-9 w-8 font-black" style={{ filter: colors.glow }}>
+      <svg aria-hidden="true" className="absolute inset-0 h-full w-full" viewBox="0 0 32 36" fill="none">
+        <defs>
+          <linearGradient id={gradientId} x1="3" y1="0" x2="30" y2="35" gradientUnits="userSpaceOnUse">
+            <stop stopColor={colors.stops[0]} />
+            <stop offset="0.58" stopColor={colors.stops[1]} />
+            <stop offset="1" stopColor={colors.stops[2]} />
+          </linearGradient>
+          <linearGradient id={highlightId} x1="0" y1="0" x2="32" y2="36" gradientUnits="userSpaceOnUse">
+            <stop stopColor="rgba(255,255,255,.62)" />
+            <stop offset="0.42" stopColor="rgba(255,255,255,0)" />
+            <stop offset="1" stopColor="rgba(0,0,0,.18)" />
+          </linearGradient>
+        </defs>
+        <path d="M8 0H24C28.42 0 32 3.58 32 8V25.92L16 36L0 25.92V8C0 3.58 3.58 0 8 0Z" fill={`url(#${gradientId})`} />
+        <path d="M8 0H24C28.42 0 32 3.58 32 8V25.92L16 36L0 25.92V8C0 3.58 3.58 0 8 0Z" fill={`url(#${highlightId})`} />
+        <ellipse cx="16" cy="25.4" rx="11" ry="3.2" fill="rgba(0,0,0,.1)" />
+      </svg>
+      <span
+        className="absolute left-1/2 top-2 grid h-5 w-5 -translate-x-1/2 place-items-center rounded-full bg-white/72 text-[11px] shadow-[inset_0_1px_0_rgba(255,255,255,.7),0_3px_8px_rgba(0,0,0,.16)]"
+        style={{ color: colors.text }}
+      >
         {rank}
       </span>
     </span>

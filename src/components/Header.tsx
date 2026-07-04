@@ -25,7 +25,7 @@ export default function Header({ title, back = false }: HeaderProps) {
     <header className="mb-5 flex items-center justify-between xl:hidden">
       <button
         aria-label={showBack ? "Zpět" : "Menu"}
-        onClick={() => (showBack ? goBack() : navigate(paths.myBonuses))}
+        onClick={() => (showBack ? goBack() : navigate(paths.profit))}
         className="grid h-10 w-10 place-items-center rounded-2xl bg-white/5 text-white/90 transition hover:bg-white/10 active:scale-95"
       >
         {showBack ? <ArrowLeft size={20} /> : <Menu size={20} />}

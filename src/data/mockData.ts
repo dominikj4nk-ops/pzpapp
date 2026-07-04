@@ -142,11 +142,6 @@ export const bonuses: Bonus[] = [
   }
 ];
 
-export const myBonuses = bonuses.map((bonus, index) => ({
-  ...bonus,
-  status: index < 2 ? "Aktivní" : index === 2 ? "Dokončeno" : index === 3 ? "Aktivní" : "Neaktivní"
-})) as Bonus[];
-
 export const rewards = [
   { title: "iPhone 15 Pro", kind: "Soutěžní odměna", time: "Do 5 dní", icon: Smartphone, color: "from-blue-300 to-cyan-500" },
   { title: "PlayStation 5", kind: "Partnerská odměna", time: "Do 10 dní", icon: Gamepad2, color: "from-slate-300 to-slate-700" },
@@ -169,7 +164,6 @@ export const suggestions = ["mBank", "George", "Robinhood", "Air Bank", "Tipli",
 export const exchangeFilters = ["Vše", "Banky", "Investice", "Ostatní"];
 export const rewardFilters = ["Vše", "Odměny", "Soutěže", "Partneři"];
 export const ageFilters = ["Vše", "15+", "18+"];
-export const bonusFilters = ["Vše", "Aktivní", "Dokončené", "Wishlist"];
 
 export const activeBonusRows = [
   ["mBank", "+1 000 Kč"],

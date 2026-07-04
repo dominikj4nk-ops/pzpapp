@@ -11,7 +11,6 @@ export default function CashbackPage() {
       <Header title="Cashback" />
       <section className="space-y-3">
         {cashbackStores.map((store) => {
-          const Icon = store.icon;
           return (
             <button key={store.name} onClick={() => setSelected(store.name)} className="w-full text-left">
               <GlassCard className="flex items-center gap-3 p-3 transition hover:border-neon/30">
@@ -32,7 +31,6 @@ export default function CashbackPage() {
                   <p className="text-sm text-slate-300">{store.text}</p>
                   {selected === store.name ? <p className="mt-1 text-xs font-bold text-neon">Cashback připraven</p> : null}
                 </div>
-                <Icon size={18} className="text-neon" />
               </GlassCard>
             </button>
           );

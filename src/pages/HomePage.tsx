@@ -9,7 +9,7 @@ import { paths } from "../routes/paths";
 
 const socialProof: Array<{ label: string; icon: LucideIcon; color: string }> = [
   { label: "Nenech peníze ležet", icon: CircleDollarSign, color: "from-emerald-300 to-green-500" },
-  { label: "Neber první bonus", icon: Target, color: "from-blue-300 to-cyan-500" },
+  { label: "Vyber lepší bonus", icon: Target, color: "from-blue-300 to-cyan-500" },
   { label: "Nabídky hlídáme", icon: BellRing, color: "from-amber-300 to-orange-500" }
 ];
 
@@ -28,7 +28,7 @@ export default function HomePage() {
         <div className="hero-copy relative z-10 max-w-[82%] xl:max-w-[64%]">
           <h2 className="text-[44px] font-black leading-[0.98] tracking-normal sm:text-[48px] xl:text-[60px]">
             <span className="block">Získej až</span>
-            <span className="block whitespace-nowrap text-neon">4 100 Kč</span>
+            <span className="block whitespace-nowrap pt-1.5 leading-[1.04] text-neon -mb-1.5">4 100 Kč</span>
             <span className="block whitespace-nowrap">na bonusech</span>
           </h2>
           <p className="mt-4 max-w-[245px] text-sm leading-5 text-slate-300 xl:max-w-none xl:text-base xl:leading-6">Banky, cashback a investiční platformy na jednom místě.</p>

@@ -7,7 +7,6 @@ export const paths = {
   search: "/hledat",
   notifications: "/notifikace",
   profit: "/zisk",
-  myBonuses: "/moje-bonusy",
   settings: "/nastaveni",
   help: "/podpora"
 };

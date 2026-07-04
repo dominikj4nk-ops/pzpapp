@@ -5,7 +5,6 @@ import ExchangeDetailPage from "./pages/ExchangeDetailPage";
 import ExchangesPage from "./pages/ExchangesPage";
 import HelpPage from "./pages/HelpPage";
 import HomePage from "./pages/HomePage";
-import MyBonusesPage from "./pages/MyBonusesPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import ProfitPage from "./pages/ProfitPage";
 import RewardsPage from "./pages/RewardsPage";
@@ -25,7 +24,6 @@ export default function App() {
         <Route path={paths.search} element={<SearchPage />} />
         <Route path={paths.notifications} element={<NotificationsPage />} />
         <Route path={paths.profit} element={<ProfitPage />} />
-        <Route path={paths.myBonuses} element={<MyBonusesPage />} />
         <Route path={paths.settings} element={<SettingsPage />} />
         <Route path={paths.help} element={<HelpPage />} />
         <Route path="/burzy" element={<Navigate to={paths.exchanges} replace />} />
@@ -39,9 +37,10 @@ export default function App() {
         <Route path="/search" element={<Navigate to={paths.search} replace />} />
         <Route path="/notifications" element={<Navigate to={paths.notifications} replace />} />
         <Route path="/profit" element={<Navigate to={paths.profit} replace />} />
-        <Route path="/profil" element={<Navigate to={paths.myBonuses} replace />} />
-        <Route path="/profile" element={<Navigate to={paths.myBonuses} replace />} />
-        <Route path="/my-bonuses" element={<Navigate to={paths.myBonuses} replace />} />
+        <Route path="/moje-bonusy" element={<Navigate to={paths.home} replace />} />
+        <Route path="/profil" element={<Navigate to={paths.home} replace />} />
+        <Route path="/profile" element={<Navigate to={paths.home} replace />} />
+        <Route path="/my-bonuses" element={<Navigate to={paths.home} replace />} />
         <Route path="/settings" element={<Navigate to={paths.settings} replace />} />
         <Route path="/help" element={<Navigate to={paths.help} replace />} />
         <Route path="*" element={<Navigate to={paths.home} replace />} />

@@ -21,7 +21,7 @@ export default function ExchangeDetailPage() {
     completedRef.current = true;
     setActivated(true);
     markBonusCompleted(bonus.id);
-    navigate(paths.myBonuses);
+    navigate(paths.profit);
   };
 
   useEffect(() => {
