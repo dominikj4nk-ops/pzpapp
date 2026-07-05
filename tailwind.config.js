@@ -13,7 +13,7 @@ export default {
         cyanGlow: "#21d4fd"
       },
       boxShadow: {
-        glow: "0 0 24px rgba(24, 242, 106, 0.34)",
+        glow: "0 8px 18px rgba(0, 0, 0, 0.24)",
         card: "0 18px 50px rgba(0, 0, 0, 0.35)"
       }
     }

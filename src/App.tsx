@@ -10,6 +10,7 @@ import ProfitPage from "./pages/ProfitPage";
 import RewardsPage from "./pages/RewardsPage";
 import SearchPage from "./pages/SearchPage";
 import SettingsPage from "./pages/SettingsPage";
+import WheelPage from "./pages/WheelPage";
 import { paths } from "./routes/paths";
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
         <Route path={paths.cashback} element={<CashbackPage />} />
         <Route path={paths.search} element={<SearchPage />} />
         <Route path={paths.notifications} element={<NotificationsPage />} />
+        <Route path={paths.wheel} element={<WheelPage />} />
         <Route path={paths.profit} element={<ProfitPage />} />
         <Route path={paths.settings} element={<SettingsPage />} />
         <Route path={paths.help} element={<HelpPage />} />

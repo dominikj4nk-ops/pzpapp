@@ -1,14 +1,31 @@
 import { useEffect, useState } from "react";
 import { bonuses } from "../data/mockData";
 import type { Bonus } from "../data/mockData";
+import { bonusStateEvent, getBonusProgress } from "./bonusState";
 
-const abandonedKey = "pzp:abandoned-bonuses";
+const dismissedKey = "pzp:dismissed-notifications";
 export const notificationStateEvent = "pzp:notification-state";
-const pendingAbandonedTimers = new Map<string, ReturnType<typeof window.setTimeout>>();
 
-function readIds() {
+// Nabídka, kterou aktuálně komunikujeme jako novou (změň ID, když přidáš další).
+const NEW_OFFER_ID = "robinhood-trading";
+const REFERRAL_NOTIFICATION_ID = "referral-invite";
+
+type OfferNotification = {
+  id: string;
+  kind: "in-progress" | "new-offer";
+  bonus: Bonus;
+};
+
+type ReferralNotification = {
+  id: string;
+  kind: "referral";
+};
+
+export type AppNotification = OfferNotification | ReferralNotification;
+
+function readDismissed(): string[] {
   try {
-    const value = window.localStorage.getItem(abandonedKey);
+    const value = window.localStorage.getItem(dismissedKey);
     const parsed = value ? JSON.parse(value) : [];
     return Array.isArray(parsed) ? parsed.filter((id): id is string => typeof id === "string") : [];
   } catch {
@@ -16,58 +33,56 @@ function readIds() {
   }
 }
 
-function writeIds(ids: string[]) {
-  window.localStorage.setItem(abandonedKey, JSON.stringify([...new Set(ids)]));
+function writeDismissed(ids: string[]) {
+  window.localStorage.setItem(dismissedKey, JSON.stringify([...new Set(ids)]));
   window.dispatchEvent(new Event(notificationStateEvent));
 }
 
-export function cancelScheduledBonusAbandoned(id: string) {
-  const timer = pendingAbandonedTimers.get(id);
-  if (!timer) return;
-  window.clearTimeout(timer);
-  pendingAbandonedTimers.delete(id);
+export function dismissNotification(id: string) {
+  writeDismissed([...readDismissed(), id]);
 }
 
-export function markBonusAbandoned(id: string) {
-  cancelScheduledBonusAbandoned(id);
-  writeIds([...readIds(), id]);
+export function dismissNotifications(ids: string[]) {
+  writeDismissed([...readDismissed(), ...ids]);
 }
 
-export function scheduleBonusAbandoned(id: string) {
-  cancelScheduledBonusAbandoned(id);
-  const timer = window.setTimeout(() => {
-    pendingAbandonedTimers.delete(id);
-    markBonusAbandoned(id);
-  }, 180);
-  pendingAbandonedTimers.set(id, timer);
+export function getNotifications(): AppNotification[] {
+  const dismissed = new Set(readDismissed());
+  const { activatedIds, completedIds } = getBonusProgress();
+  const list: AppNotification[] = [];
+
+  // 1) Rozpracovaná nabídka: aktivovaná, ale nedokončená (spolehlivé, bez detekce odchodu)
+  bonuses.forEach((bonus) => {
+    if (activatedIds.includes(bonus.id) && !completedIds.includes(bonus.id) && !dismissed.has(`prog-${bonus.id}`)) {
+      list.push({ id: `prog-${bonus.id}`, kind: "in-progress", bonus });
+    }
+  });
+
+  // 2) Nová nabídka (systémová notifikace)
+  const newBonus = bonuses.find((bonus) => bonus.id === NEW_OFFER_ID);
+  if (newBonus && !completedIds.includes(newBonus.id) && !dismissed.has(`new-${newBonus.id}`)) {
+    list.push({ id: `new-${newBonus.id}`, kind: "new-offer", bonus: newBonus });
+  }
+
+  if (!dismissed.has(REFERRAL_NOTIFICATION_ID)) {
+    list.push({ id: REFERRAL_NOTIFICATION_ID, kind: "referral" });
+  }
+
+  return list;
 }
 
-export function markBonusCompleted(id: string) {
-  cancelScheduledBonusAbandoned(id);
-  writeIds(readIds().filter((item) => item !== id));
-}
-
-export function dismissBonusNotifications(ids: string[]) {
-  const dismissed = new Set(ids);
-  ids.forEach(cancelScheduledBonusAbandoned);
-  writeIds(readIds().filter((item) => !dismissed.has(item)));
-}
-
-export function getAbandonedBonuses() {
-  const ids = readIds();
-  return ids.map((id) => bonuses.find((bonus) => bonus.id === id)).filter((bonus): bonus is Bonus => Boolean(bonus));
-}
-
-export function useAbandonedBonuses() {
-  const [items, setItems] = useState(getAbandonedBonuses);
+export function useNotifications() {
+  const [items, setItems] = useState(getNotifications);
 
   useEffect(() => {
-    const sync = () => setItems(getAbandonedBonuses());
+    const sync = () => setItems(getNotifications());
 
     window.addEventListener(notificationStateEvent, sync);
+    window.addEventListener(bonusStateEvent, sync);
     window.addEventListener("storage", sync);
     return () => {
       window.removeEventListener(notificationStateEvent, sync);
+      window.removeEventListener(bonusStateEvent, sync);
       window.removeEventListener("storage", sync);
     };
   }, []);

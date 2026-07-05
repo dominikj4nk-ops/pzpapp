@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
-import { Check, ChevronRight, Search, Star } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { Check, ChevronRight, HelpCircle, Mail, Search, Star } from "lucide-react";
 import type { HTMLMotionProps } from "framer-motion";
 import type { ReactNode } from "react";
 import { useId } from "react";
@@ -10,6 +9,19 @@ import { paths } from "../routes/paths";
 
 export function GlassCard({ children, className = "" }: { children: ReactNode; className?: string }) {
   return <div className={`glass ${className}`}>{children}</div>;
+}
+
+export function SectionHeading({ title, action, onAction }: { title: string; action?: string; onAction?: () => void }) {
+  return (
+    <div className="mb-3 flex items-center justify-between gap-3">
+      <h2 className="min-w-0 truncate text-lg font-bold xl:text-xl">{title}</h2>
+      {action && onAction ? (
+        <button onClick={onAction} className="flex shrink-0 items-center gap-1 text-xs font-semibold text-slate-300 transition hover:text-white">
+          {action} <ChevronRight size={14} />
+        </button>
+      ) : null}
+    </div>
+  );
 }
 
 export function VerifiedBadge({ size = 18 }: { size?: number }) {
@@ -115,27 +127,6 @@ export function FilterTabs({
   );
 }
 
-export function CategoryButton({
-  label,
-  icon: Icon,
-  color,
-  onClick
-}: {
-  label: string;
-  icon: LucideIcon;
-  color: string;
-  onClick: () => void;
-}) {
-  return (
-    <motion.button whileTap={{ scale: 0.94 }} onClick={onClick} className="flex min-w-0 flex-col items-center gap-2">
-      <span className={`category-glow grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br ${color}`}>
-        <Icon size={23} className="text-white drop-shadow" />
-      </span>
-      <span className="min-h-7 w-full text-center text-[10px] font-medium leading-tight text-slate-200 sm:text-[11px]">{label}</span>
-    </motion.button>
-  );
-}
-
 export function LogoMark({ bonus, size = "md" }: { bonus: Bonus; size?: "sm" | "md" | "lg" }) {
   const dimensions = size === "lg" ? "h-16 w-16 text-2xl" : size === "sm" ? "h-10 w-10 text-sm" : "h-14 w-14 text-xl";
   return (
@@ -162,22 +153,22 @@ function RankShield({ rank }: { rank: number }) {
       ? {
           stops: ["#fef08a", "#fbbf24", "#fb923c"],
           text: "#211400",
-          glow: "drop-shadow(0 0 12px rgba(250,204,21,.5))"
+          shadow: "drop-shadow(0 8px 10px rgba(0,0,0,.24))"
         }
       : rank === 2
         ? {
             stops: ["#f8fafc", "#cffafe", "#cbd5e1"],
             text: "#07111c",
-            glow: "drop-shadow(0 0 12px rgba(207,250,254,.38))"
+            shadow: "drop-shadow(0 8px 10px rgba(0,0,0,.22))"
           }
         : {
             stops: ["#fed7aa", "#f59e0b", "#f43f5e"],
             text: "#1d0a02",
-            glow: "drop-shadow(0 0 12px rgba(251,146,60,.38))"
+            shadow: "drop-shadow(0 8px 10px rgba(0,0,0,.24))"
           };
 
   return (
-    <span className="absolute -left-1.5 -top-1.5 z-20 h-9 w-8 font-black" style={{ filter: colors.glow }}>
+    <span className="absolute -left-1.5 -top-1.5 z-20 h-9 w-8 font-black" style={{ filter: colors.shadow }}>
       <svg aria-hidden="true" className="absolute inset-0 h-full w-full" viewBox="0 0 32 36" fill="none">
         <defs>
           <linearGradient id={gradientId} x1="3" y1="0" x2="30" y2="35" gradientUnits="userSpaceOnUse">
@@ -215,7 +206,7 @@ export function BonusCard({ bonus, rank }: { bonus: Bonus; rank?: number }) {
       className="relative h-full cursor-pointer rounded-[20px] border border-white/10 bg-white/[.055] p-3 shadow-card transition hover:border-neon/30 lg:p-4"
     >
       {rank ? <RankShield rank={rank} /> : null}
-      <div className="flex items-center gap-3 lg:flex-col lg:items-start">
+      <div className="flex h-full items-center gap-3 lg:flex-col lg:items-start">
         <LogoMark bonus={bonus} />
         <div className="min-w-0 flex-1 lg:w-full">
           <div className="flex items-center gap-1">
@@ -245,9 +236,9 @@ export function BonusCard({ bonus, rank }: { bonus: Bonus; rank?: number }) {
               event.stopPropagation();
               navigate(paths.exchangeDetail(bonus.id));
             }}
-            className="neon-button h-10 rounded-[14px] px-4 text-xs font-black text-[#02130c] active:scale-95 lg:min-w-[130px]"
+            className="neon-button h-10 whitespace-nowrap rounded-[14px] px-4 text-xs font-black text-[#02130c] active:scale-95 lg:min-w-[130px]"
           >
-            Získat
+            Získat<span className="hidden lg:inline"> {bonus.bonus}</span>
           </button>
         </div>
       </div>
@@ -274,6 +265,38 @@ export function ExchangeCard({ bonus }: { bonus: Bonus }) {
       </span>
       <ChevronRight size={16} className="text-slate-500" />
     </button>
+  );
+}
+
+export function ContactCard({ title = "Potřebuješ poradit?", text = "Odpovídáme obvykle do pár hodin." }: { title?: string; text?: string }) {
+  const navigate = useNavigate();
+
+  return (
+    <GlassCard className="p-4">
+      <div className="flex items-center gap-3">
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-white/[.07] text-neon">
+          <Mail size={19} />
+        </span>
+        <div className="min-w-0 flex-1">
+          <h3 className="text-sm font-black">{title}</h3>
+          <p className="mt-0.5 text-xs leading-5 text-slate-400">{text}</p>
+        </div>
+      </div>
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        <a
+          href="mailto:podpora@prachyzaregistraci.cz"
+          className="glass-button flex h-11 items-center justify-center gap-2 px-3 text-xs font-bold text-white transition active:scale-95"
+        >
+          <Mail size={15} className="text-neon" /> Napsat e-mail
+        </a>
+        <button
+          onClick={() => navigate(paths.help)}
+          className="glass-button flex h-11 items-center justify-center gap-2 px-3 text-xs font-bold text-white transition active:scale-95"
+        >
+          <HelpCircle size={15} className="text-neon" /> Nápověda
+        </button>
+      </div>
+    </GlassCard>
   );
 }
 
@@ -332,22 +355,10 @@ export function Toggle({ checked, onChange }: { checked: boolean; onChange: () =
   return (
     <button
       onClick={onChange}
-      className={`flex h-7 w-12 items-center rounded-full p-1 transition ${checked ? "bg-neon shadow-glow" : "bg-white/15"}`}
+      className={`flex h-7 w-12 items-center rounded-full p-1 transition ${checked ? "bg-neon shadow-[0_6px_12px_rgba(0,0,0,.2)]" : "bg-white/15"}`}
       aria-pressed={checked}
     >
       <span className={`h-5 w-5 rounded-full bg-white shadow transition ${checked ? "translate-x-5" : "translate-x-0"}`} />
-    </button>
-  );
-}
-
-export function ProfileMenuItem({ icon: Icon, label, onClick }: { icon: LucideIcon; label: string; onClick: () => void }) {
-  return (
-    <button onClick={onClick} className="glass-button flex w-full items-center gap-3 p-3 text-left transition active:scale-[.99]">
-      <span className="grid h-8 w-8 place-items-center rounded-xl bg-white/[.07] text-neon">
-        <Icon size={17} />
-      </span>
-      <span className="flex-1 text-sm font-medium">{label}</span>
-      <ChevronRight size={16} className="text-slate-500" />
     </button>
   );
 }

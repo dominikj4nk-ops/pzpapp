@@ -6,6 +6,7 @@ export const paths = {
   cashback: "/cashback",
   search: "/hledat",
   notifications: "/notifikace",
+  wheel: "/kolo",
   profit: "/zisk",
   settings: "/nastaveni",
   help: "/podpora"

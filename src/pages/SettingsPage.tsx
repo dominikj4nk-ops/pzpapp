@@ -3,6 +3,25 @@ import { useState } from "react";
 import Header from "../components/Header";
 import { GlassCard, Toggle } from "../components/ui";
 
+const storageKey = "pzp:settings";
+
+type Settings = {
+  bonus: boolean;
+  rewards: boolean;
+  cashback: boolean;
+};
+
+const defaultSettings: Settings = { bonus: true, rewards: true, cashback: true };
+
+function readSettings(): Settings {
+  try {
+    const value = window.localStorage.getItem(storageKey);
+    return value ? { ...defaultSettings, ...JSON.parse(value) } : defaultSettings;
+  } catch {
+    return defaultSettings;
+  }
+}
+
 function SettingLine({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between border-b border-white/[.08] py-3 text-sm last:border-0">
@@ -22,11 +41,20 @@ function LinkLine({ label, onClick }: { label: string; onClick: () => void }) {
 }
 
 export default function SettingsPage() {
-  const [dark, setDark] = useState(true);
-  const [bonus, setBonus] = useState(true);
-  const [rewards, setRewards] = useState(true);
-  const [cashback, setCashback] = useState(true);
+  const [settings, setSettings] = useState(readSettings);
   const [note, setNote] = useState("");
+
+  const toggle = (key: keyof Settings) => {
+    setSettings((prev) => {
+      const next = { ...prev, [key]: !prev[key] };
+      try {
+        window.localStorage.setItem(storageKey, JSON.stringify(next));
+      } catch {
+        // úložiště není dostupné, stav zůstane jen pro tuto relaci
+      }
+      return next;
+    });
+  };
 
   return (
     <>
@@ -37,18 +65,15 @@ export default function SettingsPage() {
           <GlassCard className="p-4">
             <SettingLine label="Jazyk" value="Čeština" />
             <SettingLine label="Měna" value="CZK - Kč" />
-            <div className="flex items-center justify-between pt-3 text-sm">
-              <span>Tmavý režim</span>
-              <Toggle checked={dark} onChange={() => setDark((value) => !value)} />
-            </div>
+            <SettingLine label="Vzhled" value="Tmavý režim" />
           </GlassCard>
         </div>
         <div>
           <h2 className="mb-2 text-sm font-semibold text-slate-300">Notifikace</h2>
           <GlassCard className="space-y-3 p-4">
-            <div className="flex items-center justify-between text-sm"><span>Nové bonusy</span><Toggle checked={bonus} onChange={() => setBonus((value) => !value)} /></div>
-            <div className="flex items-center justify-between text-sm"><span>Pozvánky a odměny</span><Toggle checked={rewards} onChange={() => setRewards((value) => !value)} /></div>
-            <div className="flex items-center justify-between text-sm"><span>Cashback nabídky</span><Toggle checked={cashback} onChange={() => setCashback((value) => !value)} /></div>
+            <div className="flex items-center justify-between text-sm"><span>Nové bonusy</span><Toggle checked={settings.bonus} onChange={() => toggle("bonus")} /></div>
+            <div className="flex items-center justify-between text-sm"><span>Pozvánky a odměny</span><Toggle checked={settings.rewards} onChange={() => toggle("rewards")} /></div>
+            <div className="flex items-center justify-between text-sm"><span>Cashback nabídky</span><Toggle checked={settings.cashback} onChange={() => toggle("cashback")} /></div>
           </GlassCard>
         </div>
         <div>

@@ -1,6 +1,6 @@
-import { ArrowLeft, Bell, Menu } from "lucide-react";
+import { ArrowLeft, Bell, Mail } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAbandonedBonuses } from "./notificationState";
+import { useNotifications } from "./notificationState";
 import { paths } from "../routes/paths";
 import { BrandLogo } from "./ui";
 
@@ -12,10 +12,10 @@ type HeaderProps = {
 export default function Header({ title, back = false }: HeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const abandonedBonuses = useAbandonedBonuses();
-  const currentOfferId = location.pathname.match(/^\/(?:nabidky|burzy|exchanges)\/([^/]+)/)?.[1];
-  const hasNotification = abandonedBonuses.some((bonus) => bonus.id !== currentOfferId);
-  const showBack = back || Boolean(title);
+  const notifications = useNotifications();
+  const onNotifications = location.pathname === paths.notifications;
+  const notificationCount = onNotifications ? 0 : notifications.length;
+  const hasNotification = notificationCount > 0;
   const goBack = () => {
     if (window.history.length > 1) navigate(-1);
     else navigate(paths.home);
@@ -24,11 +24,11 @@ export default function Header({ title, back = false }: HeaderProps) {
   return (
     <header className="mb-5 flex items-center justify-between xl:hidden">
       <button
-        aria-label={showBack ? "Zpět" : "Menu"}
-        onClick={() => (showBack ? goBack() : navigate(paths.profit))}
+        aria-label={back ? "Zpět" : "Kontakt a podpora"}
+        onClick={() => (back ? goBack() : navigate(paths.help))}
         className="grid h-10 w-10 place-items-center rounded-2xl bg-white/5 text-white/90 transition hover:bg-white/10 active:scale-95"
       >
-        {showBack ? <ArrowLeft size={20} /> : <Menu size={20} />}
+        {back ? <ArrowLeft size={20} /> : <Mail size={19} />}
       </button>
       {title ? (
         <h1 className="text-base font-semibold">{title}</h1>
@@ -39,11 +39,15 @@ export default function Header({ title, back = false }: HeaderProps) {
         aria-label="Notifikace"
         onClick={() => navigate(paths.notifications)}
         className={`relative grid h-10 w-10 place-items-center rounded-2xl text-white/90 transition hover:bg-white/10 active:scale-95 ${
-          hasNotification ? "bg-neon/15 text-neon shadow-[0_0_24px_rgba(24,242,106,.34)]" : "bg-white/5"
+          hasNotification ? "border border-neon/25 bg-neon/10 text-neon" : "bg-white/5"
         }`}
       >
         <Bell size={19} />
-        {hasNotification ? <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-neon shadow-glow" /> : null}
+        {hasNotification ? (
+          <span className="absolute -right-1 -top-1 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-neon px-1 text-[10px] font-black text-[#03130c] shadow-[0_4px_10px_rgba(0,0,0,.35)]">
+            {notificationCount}
+          </span>
+        ) : null}
       </button>
     </header>
   );

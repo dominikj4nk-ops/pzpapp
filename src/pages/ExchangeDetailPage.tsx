@@ -1,73 +1,103 @@
-import { CheckCircle2, ExternalLink, Star } from "lucide-react";
+import { BadgeCheck, CheckCircle2, Clock3, ExternalLink, Star, Wallet } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../components/Header";
-import { cancelScheduledBonusAbandoned, markBonusAbandoned, markBonusCompleted, scheduleBonusAbandoned } from "../components/notificationState";
-import { DetailRow, GlassCard, LogoMark, NeonButton } from "../components/ui";
+import { markBonusActivated, markBonusFinished, useBonusProgress } from "../components/bonusState";
+import { ContactCard, DetailRow, GlassCard, LogoMark, NeonButton, VerifiedBadge } from "../components/ui";
 import { bonuses, detailSteps } from "../data/mockData";
 import { paths } from "../routes/paths";
 
 export default function ExchangeDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [activated, setActivated] = useState(false);
-  const completedRef = useRef(false);
+  const { activatedIds, completedIds } = useBonusProgress();
   const bonus = useMemo(() => bonuses.find((item) => item.id === id) ?? bonuses[0], [id]);
+  const activated = activatedIds.includes(bonus.id);
+  const completed = completedIds.includes(bonus.id);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const [heroVisible, setHeroVisible] = useState(true);
+
   const activateBonus = () => {
-    setActivated(true);
-    cancelScheduledBonusAbandoned(bonus.id);
+    // rozdělaná nabídka => okamžitě vznikne notifikace (aktivováno, nedokončeno)
+    markBonusActivated(bonus.id);
+    window.open(bonus.partnerUrl, "_blank", "noopener,noreferrer");
   };
+
   const finishBonus = () => {
-    completedRef.current = true;
-    setActivated(true);
-    markBonusCompleted(bonus.id);
+    markBonusFinished(bonus.id);
     navigate(paths.profit);
   };
 
   useEffect(() => {
-    completedRef.current = false;
-    setActivated(false);
-    cancelScheduledBonusAbandoned(bonus.id);
-
-    const handlePageHide = () => {
-      if (!completedRef.current) markBonusAbandoned(bonus.id);
-    };
-
-    window.addEventListener("pagehide", handlePageHide);
-
-    return () => {
-      window.removeEventListener("pagehide", handlePageHide);
-      if (!completedRef.current) scheduleBonusAbandoned(bonus.id);
-    };
+    const node = heroRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(([entry]) => setHeroVisible(entry.isIntersecting), { threshold: 0.15 });
+    observer.observe(node);
+    return () => observer.disconnect();
   }, [bonus.id]);
+
+  const steps = bonus.steps.length ? bonus.steps : detailSteps;
 
   return (
     <>
       <Header title="Detail nabídky" back />
-      <GlassCard className="mb-4 p-4">
-        <div className="flex items-start gap-4">
-          <LogoMark bonus={bonus} size="lg" />
-          <div className="min-w-0 flex-1">
-            <h2 className="text-xl font-black">{bonus.name}</h2>
-            <p className="text-sm text-slate-400">{bonus.type}</p>
+      <div ref={heroRef}>
+        <GlassCard className="mb-4 p-4">
+          <div className="flex items-start gap-4">
+            <LogoMark bonus={bonus} size="lg" />
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5">
+                <h2 className="truncate text-xl font-black">{bonus.name}</h2>
+                <VerifiedBadge size={17} />
+              </div>
+              <p className="text-sm text-slate-400">{bonus.type}</p>
+            </div>
+            <span className="flex items-center gap-1 text-sm font-bold">
+              <Star className="fill-yellow-300 text-yellow-300" size={15} />
+              {bonus.rating}
+            </span>
           </div>
-          <span className="flex items-center gap-1 text-sm font-bold">
-            <Star className="fill-yellow-300 text-yellow-300" size={15} />
-            {bonus.rating}
-          </span>
-        </div>
-        <p className="mt-5 text-3xl font-black text-neon">{bonus.bonus}</p>
-        <p className="text-sm text-slate-400">Odměna za splnění podmínek</p>
-        <NeonButton onClick={activateBonus} className="mt-5 w-full">
-          {activated ? "Bonus aktivován" : "Získat bonus"} <ExternalLink size={15} className="inline" />
-        </NeonButton>
-        {activated ? (
-          <div className="mt-3 flex items-center gap-2 rounded-2xl border border-neon/20 bg-neon/10 p-3 text-sm text-neon">
-            <CheckCircle2 size={18} />
-            Aktivace je připravená. Další postup najdeš níže.
+          <p className="mt-5 text-3xl font-black text-neon">{bonus.bonus}</p>
+          <p className="text-sm text-slate-400">Odměna za splnění podmínek</p>
+
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            <div className="rounded-2xl border border-white/10 bg-white/[.04] px-2 py-2.5 text-center">
+              <Clock3 size={16} className="mx-auto text-neon" />
+              <p className="mt-1 text-[11px] font-bold text-white">{bonus.completionTime}</p>
+              <p className="text-[10px] text-slate-500">zabere</p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/[.04] px-2 py-2.5 text-center">
+              <Wallet size={16} className="mx-auto text-neon" />
+              <p className="mt-1 truncate text-[11px] font-bold text-white">{bonus.payoutTime}</p>
+              <p className="text-[10px] text-slate-500">výplata</p>
+            </div>
+            <div className="rounded-2xl border border-white/10 bg-white/[.04] px-2 py-2.5 text-center">
+              <BadgeCheck size={16} className="mx-auto text-neon" />
+              <p className="mt-1 text-[11px] font-bold text-white">{bonus.age}</p>
+              <p className="text-[10px] text-slate-500">věk</p>
+            </div>
           </div>
-        ) : null}
-      </GlassCard>
+
+          {completed ? (
+            <div className="mt-5 flex items-center gap-2 rounded-2xl border border-neon/25 bg-neon/10 p-3 text-sm font-bold text-neon">
+              <CheckCircle2 size={18} />
+              Bonus máš dokončený. Skvělá práce!
+            </div>
+          ) : (
+            <>
+              <NeonButton onClick={activateBonus} className="mt-5 w-full">
+                {activated ? "Otevřít nabídku u partnera" : `Získat ${bonus.bonus}`} <ExternalLink size={15} className="inline" />
+              </NeonButton>
+              {activated ? (
+                <div className="mt-3 flex items-center gap-2 rounded-2xl border border-neon/20 bg-neon/10 p-3 text-sm text-neon">
+                  <CheckCircle2 size={18} />
+                  Nabídka se otevřela u partnera. Až splníš podmínky, označ dokončení níže.
+                </div>
+              ) : null}
+            </>
+          )}
+        </GlassCard>
+      </div>
 
       <GlassCard className="mb-4 p-4">
         <h3 className="mb-1 font-bold">Podmínky bonusu</h3>
@@ -94,18 +124,50 @@ export default function ExchangeDetailPage() {
       <GlassCard className="p-4">
         <h3 className="mb-3 font-bold">Jak získat bonus</h3>
         <div className="space-y-3">
-          {(bonus.steps.length ? bonus.steps : detailSteps).map((step, index, steps) => {
-            const isLastStep = index === steps.length - 1;
-
-            return (
-              <button key={step} onClick={() => (isLastStep ? finishBonus() : activateBonus())} className="glass-button flex w-full items-center gap-3 p-3 text-left text-sm transition">
-                <span className="grid h-7 w-7 place-items-center rounded-full bg-white/10 text-xs font-black text-neon">{index + 1}</span>
-                <span>{step}</span>
-              </button>
-            );
-          })}
+          {steps.map((step, index) => (
+            <div key={step} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[.04] p-3 text-sm">
+              <span
+                className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-xs font-black ${
+                  completed ? "bg-neon text-[#03130c]" : "bg-white/10 text-neon"
+                }`}
+              >
+                {completed ? <CheckCircle2 size={15} /> : index + 1}
+              </span>
+              <span className="text-slate-200">{step}</span>
+            </div>
+          ))}
         </div>
+        {!completed ? (
+          activated ? (
+            <NeonButton onClick={finishBonus} className="mt-4 w-full">
+              Splnil jsem všechny podmínky
+            </NeonButton>
+          ) : (
+            <p className="mt-4 rounded-2xl border border-white/10 bg-white/[.035] p-3 text-xs leading-5 text-slate-400">
+              Nejdřív aktivuj bonus tlačítkem výše, potom projdi kroky a označ splnění.
+            </p>
+          )
+        ) : null}
       </GlassCard>
+
+      <div className="mt-4">
+        <ContactCard title="Nevíš si s nabídkou rady?" text="Napiš nám, s dokončením ti pomůžeme." />
+      </div>
+
+      {!completed && !heroVisible ? (
+        <div className="fixed bottom-[84px] left-1/2 z-40 w-[calc(100%-40px)] max-w-[398px] -translate-x-1/2 xl:hidden">
+          <div className="flex items-center gap-3 rounded-[16px] border border-white/10 bg-[#07131b]/95 p-2 pl-4 shadow-[0_16px_44px_rgba(0,0,0,.42)] backdrop-blur-2xl">
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-xs font-bold text-slate-300">{bonus.name}</p>
+              <p className="text-sm font-black text-neon">{bonus.bonus}</p>
+            </div>
+            <NeonButton onClick={activated ? finishBonus : activateBonus} className="h-10 shrink-0 whitespace-nowrap px-4 text-xs">
+              {activated ? "Mám splněno" : "Získat bonus"}
+            </NeonButton>
+          </div>
+        </div>
+      ) : null}
+      <div className="h-16 xl:hidden" />
     </>
   );
 }
