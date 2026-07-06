@@ -1,32 +1,28 @@
 import { BadgeCheck, CheckCircle2, Clock3, ExternalLink, Star, Wallet } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Header from "../components/Header";
-import { markBonusActivated, markBonusFinished, useBonusProgress } from "../components/bonusState";
+import { markBonusStarted, markBonusViewed } from "../components/bonusState";
 import { ContactCard, DetailRow, GlassCard, LogoMark, NeonButton, VerifiedBadge } from "../components/ui";
 import { bonuses, detailSteps } from "../data/mockData";
-import { paths } from "../routes/paths";
 
 export default function ExchangeDetailPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const { activatedIds, completedIds } = useBonusProgress();
   const bonus = useMemo(() => bonuses.find((item) => item.id === id) ?? bonuses[0], [id]);
-  const activated = activatedIds.includes(bonus.id);
-  const completed = completedIds.includes(bonus.id);
   const heroRef = useRef<HTMLDivElement>(null);
   const [heroVisible, setHeroVisible] = useState(true);
 
-  const activateBonus = () => {
-    // rozdělaná nabídka => okamžitě vznikne notifikace (aktivováno, nedokončeno)
-    markBonusActivated(bonus.id);
+  const openPartner = () => {
+    // Klik = redirect na partnera přes náš odkaz. Tiše si jen poznamenáme, že uživatel odešel
+    // (kvůli upomínce „nedokončený bonus"). Nepřepínáme nabídku do žádného viditelného stavu.
+    markBonusStarted(bonus.id);
     window.open(bonus.partnerUrl, "_blank", "noopener,noreferrer");
   };
 
-  const finishBonus = () => {
-    markBonusFinished(bonus.id);
-    navigate(paths.profit);
-  };
+  // Zaznamenáme, že se uživatel na nabídku podíval (retargeting notifikace „koukal ses na…").
+  useEffect(() => {
+    markBonusViewed(bonus.id);
+  }, [bonus.id]);
 
   useEffect(() => {
     const node = heroRef.current;
@@ -78,24 +74,18 @@ export default function ExchangeDetailPage() {
             </div>
           </div>
 
-          {completed ? (
-            <div className="mt-5 flex items-center gap-2 rounded-2xl border border-neon/25 bg-neon/10 p-3 text-sm font-bold text-neon">
-              <CheckCircle2 size={18} />
-              Bonus máš dokončený. Skvělá práce!
-            </div>
-          ) : (
-            <>
-              <NeonButton onClick={activateBonus} className="mt-5 w-full">
-                {activated ? "Otevřít nabídku u partnera" : `Získat ${bonus.bonus}`} <ExternalLink size={15} className="inline" />
-              </NeonButton>
-              {activated ? (
-                <div className="mt-3 flex items-center gap-2 rounded-2xl border border-neon/20 bg-neon/10 p-3 text-sm text-neon">
-                  <CheckCircle2 size={18} />
-                  Nabídka se otevřela u partnera. Až splníš podmínky, označ dokončení níže.
-                </div>
-              ) : null}
-            </>
-          )}
+          <NeonButton onClick={openPartner} className="mt-5 w-full">
+            Získat {bonus.bonus} <ExternalLink size={15} className="inline" />
+          </NeonButton>
+          <p className="mt-3 text-center text-xs leading-5 text-slate-400">
+            Otevře se web partnera přes náš odkaz — párování proběhne automaticky. Bonus získáš splněním podmínek přímo u partnera.
+            {bonus.promoCode ? (
+              <>
+                {" "}
+                Kdyby web chtěl promo kód, je to <span className="font-bold text-neon">{bonus.promoCode}</span>.
+              </>
+            ) : null}
+          </p>
         </GlassCard>
       </div>
 
@@ -126,43 +116,28 @@ export default function ExchangeDetailPage() {
         <div className="space-y-3">
           {steps.map((step, index) => (
             <div key={step} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[.04] p-3 text-sm">
-              <span
-                className={`grid h-7 w-7 shrink-0 place-items-center rounded-full text-xs font-black ${
-                  completed ? "bg-neon text-[#03130c]" : "bg-white/10 text-neon"
-                }`}
-              >
-                {completed ? <CheckCircle2 size={15} /> : index + 1}
+              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/10 text-xs font-black text-neon">
+                {index + 1}
               </span>
               <span className="text-slate-200">{step}</span>
             </div>
           ))}
         </div>
-        {!completed ? (
-          activated ? (
-            <NeonButton onClick={finishBonus} className="mt-4 w-full">
-              Splnil jsem všechny podmínky
-            </NeonButton>
-          ) : (
-            <p className="mt-4 rounded-2xl border border-white/10 bg-white/[.035] p-3 text-xs leading-5 text-slate-400">
-              Nejdřív aktivuj bonus tlačítkem výše, potom projdi kroky a označ splnění.
-            </p>
-          )
-        ) : null}
       </GlassCard>
 
       <div className="mt-4">
         <ContactCard title="Nevíš si s nabídkou rady?" text="Napiš nám, s dokončením ti pomůžeme." />
       </div>
 
-      {!completed && !heroVisible ? (
+      {!heroVisible ? (
         <div className="fixed bottom-[84px] left-1/2 z-40 w-[calc(100%-40px)] max-w-[398px] -translate-x-1/2 xl:hidden">
           <div className="flex items-center gap-3 rounded-[16px] border border-white/10 bg-[#07131b]/95 p-2 pl-4 shadow-[0_16px_44px_rgba(0,0,0,.42)] backdrop-blur-2xl">
             <div className="min-w-0 flex-1">
               <p className="truncate text-xs font-bold text-slate-300">{bonus.name}</p>
               <p className="text-sm font-black text-neon">{bonus.bonus}</p>
             </div>
-            <NeonButton onClick={activated ? finishBonus : activateBonus} className="h-10 shrink-0 whitespace-nowrap px-4 text-xs">
-              {activated ? "Mám splněno" : "Získat bonus"}
+            <NeonButton onClick={openPartner} className="h-10 shrink-0 whitespace-nowrap px-4 text-xs">
+              Získat bonus
             </NeonButton>
           </div>
         </div>

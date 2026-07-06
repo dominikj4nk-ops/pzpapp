@@ -1,4 +1,4 @@
-import { DRAW_DAY, DRAW_TIME, formatDrawDate, WEEKLY_SHARE_BONUS, type WheelPrize } from "./wheelState";
+import { DRAW_DAY, DRAW_TIME, formatDrawDate, type WheelPrize } from "./wheelState";
 
 // Story obrázek 9:16 generovaný na míru výhře – uživatel si ho uloží do galerie
 // a dá na Instagram story. Paleta drží identitu webu (ink + neon + cyan).
@@ -379,7 +379,7 @@ function drawPrizeArt(ctx: CanvasRenderingContext2D, prize: WheelPrize) {
       drawTrophy(ctx, cx, cy + 10, 240);
       break;
     case "big":
-      drawBanknotes(ctx, cx, cy, 190, "500");
+      drawBanknotes(ctx, cx, cy, 190, "1000");
       break;
     case "medium":
       drawCoinStack(ctx, cx, cy - 30, 150);
@@ -480,7 +480,7 @@ function drawFooter(ctx: CanvasRenderingContext2D) {
   drawFittedText(ctx, "Sdílej výsledek na story a označ nás", W / 2, boxY + 148, maxTextW, 600, 32, "rgba(255,255,255,.7)");
   drawFittedText(
     ctx,
-    `Slosování +${WEEKLY_SHARE_BONUS} Kč v ${DRAW_DAY} ${formatDrawDate()} v ${DRAW_TIME}`,
+    `V ${DRAW_DAY} ${formatDrawDate()} v ${DRAW_TIME} jednomu z vás výhru proplatíme`,
     W / 2,
     boxY + 206,
     maxTextW,

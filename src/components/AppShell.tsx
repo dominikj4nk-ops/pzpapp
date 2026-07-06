@@ -1,4 +1,4 @@
-import { Bell, ChevronRight, FerrisWheel, HelpCircle, Home, Landmark, Mail, MessageCircle, Percent, Search, Settings, UserPlus, WalletCards } from "lucide-react";
+import { Bell, ChevronRight, FerrisWheel, HelpCircle, Home, Landmark, Mail, Percent, Search, Settings, UserPlus, WalletCards } from "lucide-react";
 import { ReactNode } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { bonusAmount, bonuses, formatKc, REFERRAL_REWARD, totalPotential } from "../data/mockData";
@@ -7,7 +7,7 @@ import BottomNav from "./BottomNav";
 import ErrorBoundary from "./ErrorBoundary";
 import { useBonusProgress } from "./bonusState";
 import { useNotifications } from "./notificationState";
-import { BrandLogo, GlassCard } from "./ui";
+import { BrandLogo, GlassCard, TikTokIcon } from "./ui";
 
 const topOffersTotal = bonuses
   .filter((bonus) => bonus.type === "Banky" || bonus.type === "Investice")
@@ -163,13 +163,13 @@ export default function AppShell({ children }: AppShellProps) {
               </div>
             </div>
             <div className="mt-3 space-y-2">
-              <a href="mailto:podpora@prachyzaregistraci.cz" className="glass-button flex h-11 items-center gap-3 px-4 text-sm font-bold transition">
+              <a href="mailto:kontakt@prachyzaregistraci.cz" className="glass-button flex h-11 items-center gap-3 px-4 text-sm font-bold transition">
                 <Mail size={16} className="shrink-0 text-neon" />
-                <span className="truncate">podpora@prachyzaregistraci.cz</span>
+                <span className="truncate">kontakt@prachyzaregistraci.cz</span>
               </a>
-              <a href="https://wa.me/420777123456" target="_blank" rel="noopener noreferrer" className="glass-button flex h-11 items-center gap-3 px-4 text-sm font-bold transition">
-                <MessageCircle size={16} className="shrink-0 text-neon" />
-                <span>WhatsApp</span>
+              <a href="https://www.tiktok.com/@prachyzaregistraci" target="_blank" rel="noopener noreferrer" className="glass-button flex h-11 items-center gap-3 px-4 text-sm font-bold transition">
+                <span className="shrink-0 text-neon"><TikTokIcon size={16} /></span>
+                <span>TikTok</span>
               </a>
             </div>
             <button onClick={() => navigate(paths.help)} className="glass-button mt-3 flex h-11 w-full items-center justify-between px-4 text-sm font-bold">

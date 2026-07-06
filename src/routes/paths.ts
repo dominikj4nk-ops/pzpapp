@@ -9,5 +9,6 @@ export const paths = {
   wheel: "/kolo",
   profit: "/zisk",
   settings: "/nastaveni",
-  help: "/podpora"
+  help: "/podpora",
+  reviews: "/recenze"
 };

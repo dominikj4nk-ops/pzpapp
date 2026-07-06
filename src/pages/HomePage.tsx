@@ -94,7 +94,7 @@ export default function HomePage() {
         </span>
         <span className="min-w-0 flex-1">
           <span className="block truncate font-bold">Týdenní kolo o {JACKPOT_LABEL} zdarma</span>
-          <span className="mt-0.5 block text-xs leading-5 text-slate-400">Zatoč, dej výsledek na story a hraj o týdenní bonus +500 Kč.</span>
+          <span className="mt-0.5 block text-xs leading-5 text-slate-400">Zatoč, sdílej story — a když tě vylosujeme, proplatíme ti, co ti padlo.</span>
         </span>
         <ChevronRight size={18} className="shrink-0 text-neon" />
       </button>

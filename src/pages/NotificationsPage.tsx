@@ -1,11 +1,86 @@
-import { ArrowRight, CheckCheck, Clock3, FerrisWheel, Gift, Inbox, Timer, UserPlus } from "lucide-react";
+import { ArrowRight, CheckCheck, FerrisWheel, Inbox, Timer, UserPlus, X } from "lucide-react";
+import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { dismissNotification, dismissNotifications, useNotifications } from "../components/notificationState";
 import { formatCountdown, JACKPOT_LABEL, useWheel } from "../components/wheelState";
-import { GlassCard, LogoMark, NeonButton } from "../components/ui";
-import { REFERRAL_REWARD, formatKc } from "../data/mockData";
+import { LogoMark } from "../components/ui";
+import { REFERRAL_REWARD, formatKc, type Bonus } from "../data/mockData";
 import { paths } from "../routes/paths";
+
+function NotifCard({
+  icon,
+  title,
+  subtitle,
+  cta,
+  primary = false,
+  onOpen,
+  onDismiss,
+  testId
+}: {
+  icon: ReactNode;
+  title: string;
+  subtitle: string;
+  cta: string;
+  primary?: boolean;
+  onOpen: () => void;
+  onDismiss: () => void;
+  testId: string;
+}) {
+  return (
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={onOpen}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          onOpen();
+        }
+      }}
+      data-testid={`open-${testId}`}
+      className="glass relative flex cursor-pointer items-center gap-2.5 p-3 transition hover:border-neon/25 active:scale-[.99]"
+    >
+      <span className="shrink-0">{icon}</span>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-bold">{title}</p>
+        <p className="line-clamp-2 text-xs leading-4 text-slate-400">{subtitle}</p>
+      </div>
+      <span
+        className={`shrink-0 rounded-xl px-3 py-2 text-xs font-black ${
+          primary ? "bg-neon text-[#02130c]" : "border border-white/12 text-slate-200"
+        }`}
+      >
+        {cta}
+      </span>
+      <button
+        onClick={(event) => {
+          event.stopPropagation();
+          onDismiss();
+        }}
+        data-testid={`dismiss-${testId}`}
+        aria-label="Přečteno"
+        className="absolute -right-1.5 -top-1.5 grid h-6 w-6 place-items-center rounded-full border border-white/15 bg-[#0d1c2b] text-slate-400 shadow-[0_6px_14px_rgba(0,0,0,.4)] transition hover:border-white/30 hover:text-white"
+      >
+        <X size={13} strokeWidth={2.5} />
+      </button>
+    </div>
+  );
+}
+
+// Psychologický háček k prohlédnuté nabídce – deterministický podle id, takže se nemění při každém překreslení.
+function offerHook(bonus: Bonus) {
+  let seed = 0;
+  for (const ch of bonus.id) seed = (seed * 31 + ch.charCodeAt(0)) >>> 0;
+  const people = 30 + (seed % 90);
+  const hooks = [
+    `Dneska si ${bonus.name} vzalo dalších ${people} lidí. ${bonus.bonus} pořád čeká na tebe.`,
+    `${bonus.name} má hodnocení ${bonus.rating}★ — jedna z nejoblíbenějších. Škoda nechat ${bonus.bonus} ležet.`,
+    `Zabere jen ${bonus.completionTime} a máš ${bonus.bonus}. Většina to dá na jeden zátah.`,
+    `Byl jsi kousek od ${bonus.bonus}. Dokonči ${bonus.name}, než ti to uteče.`
+  ];
+  return hooks[seed % hooks.length];
+}
 
 export default function NotificationsPage() {
   const navigate = useNavigate();
@@ -25,7 +100,6 @@ export default function NotificationsPage() {
           }`}
         >
           <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-neon/15 blur-2xl" />
-          <div className="pointer-events-none absolute -bottom-10 left-10 h-24 w-24 rounded-full bg-cyanGlow/10 blur-2xl" />
           <div className="relative flex items-center gap-3">
             <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-emerald-300 to-green-500 text-white shadow-glow ${canSpin ? "wheel-glow" : ""}`}>
               <FerrisWheel size={24} />
@@ -47,99 +121,58 @@ export default function NotificationsPage() {
         </button>
 
         {notifications.length ? (
-          <div className="flex items-center justify-between gap-3">
-            <p className="text-sm text-slate-400">Nové pro tebe: {notifications.length}</p>
-            <button
-              onClick={dismissAll}
-              data-testid="dismiss-all-notifications"
-              className="glass-button flex h-9 shrink-0 items-center gap-1.5 px-3 text-xs font-bold text-slate-200 transition active:scale-95"
-            >
-              <CheckCheck size={14} /> Přečíst vše
-            </button>
-          </div>
-        ) : null}
+          <>
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-sm text-slate-400">Nové pro tebe: {notifications.length}</p>
+              <button
+                onClick={dismissAll}
+                data-testid="dismiss-all-notifications"
+                className="glass-button flex h-9 shrink-0 items-center gap-1.5 px-3 text-xs font-bold text-slate-200 transition active:scale-95"
+              >
+                <CheckCheck size={14} /> Přečíst vše
+              </button>
+            </div>
 
-        {notifications.length ? (
-          <div className="space-y-3">
-            {notifications.map((notification) => {
-              if (notification.kind === "referral") {
+            <div className="space-y-2">
+              {notifications.map((notification) => {
+                if (notification.kind === "referral") {
+                  return (
+                    <NotifCard
+                      key={notification.id}
+                      testId={notification.id}
+                      icon={
+                        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-amber-300/15 text-amber-300">
+                          <UserPlus size={20} />
+                        </span>
+                      }
+                      title="Pozvi kamaráda a vydělej"
+                      subtitle={`${formatKc(REFERRAL_REWARD)} za každého, kdo dokončí bonus`}
+                      cta="Pozvat"
+                      onOpen={() => navigate(paths.rewards)}
+                      onDismiss={() => dismissNotification(notification.id)}
+                    />
+                  );
+                }
+
+                const isViewed = notification.kind === "viewed";
                 return (
-                  <GlassCard key={notification.id} className="p-3 transition hover:border-neon/25">
-                    <div className="flex items-start gap-3">
-                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-amber-300/15 text-amber-300">
-                        <UserPlus size={19} />
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-bold">Pozvi kamaráda</p>
-                        <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-400">
-                          Pošli svůj odkaz a získej {formatKc(REFERRAL_REWARD)}, když kamarád dokončí bonus.
-                        </p>
-                      </div>
-                      <button
-                        onClick={() => dismissNotification(notification.id)}
-                        data-testid={`dismiss-${notification.id}`}
-                        className="shrink-0 rounded-lg px-2 py-1 text-[11px] font-bold text-slate-500 transition hover:text-white"
-                      >
-                        Přečteno
-                      </button>
-                    </div>
-                    <button
-                      onClick={() => navigate(paths.rewards)}
-                      className="glass-button mt-3 flex h-10 w-full items-center justify-center gap-1.5 whitespace-nowrap px-3 text-xs font-bold text-slate-200 transition active:scale-95"
-                    >
-                      <UserPlus size={14} className="text-neon" /> Získat pozvací odkaz
-                    </button>
-                  </GlassCard>
+                  <NotifCard
+                    key={notification.id}
+                    testId={notification.id}
+                    icon={<LogoMark bonus={notification.bonus} size="sm" />}
+                    title={isViewed ? `Koukal ses na ${notification.bonus.name}` : `Dokonči a získej ${notification.bonus.bonus}`}
+                    subtitle={isViewed ? offerHook(notification.bonus) : `${notification.bonus.name} · už jsi to načal/a`}
+                    cta={isViewed ? "Zobrazit" : "Dokončit"}
+                    primary={!isViewed}
+                    onOpen={() => navigate(paths.exchangeDetail(notification.bonus.id))}
+                    onDismiss={() => dismissNotification(notification.id)}
+                  />
                 );
-              }
-
-              const isNew = notification.kind === "new-offer";
-              return (
-                <GlassCard key={notification.id} className="p-3 transition hover:border-neon/25">
-                  <div className="flex items-start gap-3">
-                    <div className="relative shrink-0">
-                      <LogoMark bonus={notification.bonus} size="sm" />
-                      <span
-                        className={`absolute -right-1 -top-1 grid h-5 w-5 place-items-center rounded-full border-2 border-[#07111b] ${
-                          isNew ? "bg-sky-400 text-[#02130c]" : "bg-neon text-[#02130c]"
-                        }`}
-                      >
-                        {isNew ? <Gift size={11} /> : <Clock3 size={11} />}
-                      </span>
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-bold">
-                        {isNew ? `Nová nabídka: ${notification.bonus.name}` : `${notification.bonus.bonus} čeká na dokončení`}
-                      </p>
-                      <p className="mt-1 line-clamp-2 text-xs leading-5 text-slate-400">
-                        {isNew
-                          ? `Nový bonus ${notification.bonus.bonus} je k dispozici. Mrkni na něj a dokonči podmínky u partnera.`
-                          : `U ${notification.bonus.name} už máš první krok za sebou. Dokonči podmínky za ${notification.bonus.completionTime} a získej odměnu.`}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => dismissNotification(notification.id)}
-                      data-testid={`dismiss-${notification.id}`}
-                      className="shrink-0 rounded-lg px-2 py-1 text-[11px] font-bold text-slate-500 transition hover:text-white"
-                    >
-                      Přečteno
-                    </button>
-                  </div>
-                  <div className="mt-3">
-                    <NeonButton
-                      onClick={() => navigate(paths.exchangeDetail(notification.bonus.id))}
-                      className="h-10 w-full whitespace-nowrap px-3 text-xs"
-                      data-testid={`open-${notification.id}`}
-                    >
-                      {isNew ? "Mrkni na nabídku" : `Dokončit · ${notification.bonus.bonus}`}
-                    </NeonButton>
-                  </div>
-                </GlassCard>
-              );
-            })}
-          </div>
+              })}
+            </div>
+          </>
         ) : (
-          <GlassCard className="p-5 text-center">
+          <div className="glass p-5 text-center">
             <span className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-white/[.06] text-slate-300">
               <Inbox size={22} />
             </span>
@@ -153,7 +186,7 @@ export default function NotificationsPage() {
             >
               Projít bonusy <ArrowRight size={15} />
             </button>
-          </GlassCard>
+          </div>
         )}
       </section>
     </>

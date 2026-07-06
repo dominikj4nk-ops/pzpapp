@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 import { bonuses } from "../data/mockData";
 import type { Bonus } from "../data/mockData";
-import { bonusStateEvent, getBonusProgress } from "./bonusState";
+import { bonusStateEvent, getBonusProgress, getViewedOffers } from "./bonusState";
 
 const dismissedKey = "pzp:dismissed-notifications";
 export const notificationStateEvent = "pzp:notification-state";
 
-// Nabídka, kterou aktuálně komunikujeme jako novou (změň ID, když přidáš další).
-const NEW_OFFER_ID = "robinhood-trading";
 const REFERRAL_NOTIFICATION_ID = "referral-invite";
 
 type OfferNotification = {
   id: string;
-  kind: "in-progress" | "new-offer";
+  kind: "in-progress" | "viewed";
   bonus: Bonus;
 };
 
@@ -49,21 +47,29 @@ export function dismissNotifications(ids: string[]) {
 export function getNotifications(): AppNotification[] {
   const dismissed = new Set(readDismissed());
   const { activatedIds, completedIds } = getBonusProgress();
+  const viewed = getViewedOffers();
   const list: AppNotification[] = [];
 
-  // 1) Rozpracovaná nabídka: aktivovaná, ale nedokončená (spolehlivé, bez detekce odchodu)
+  // 1) Rozdělaná nabídka: klikl „Získat" (odešel k partnerovi), ale nedokončil.
   bonuses.forEach((bonus) => {
     if (activatedIds.includes(bonus.id) && !completedIds.includes(bonus.id) && !dismissed.has(`prog-${bonus.id}`)) {
       list.push({ id: `prog-${bonus.id}`, kind: "in-progress", bonus });
     }
   });
 
-  // 2) Nová nabídka (systémová notifikace)
-  const newBonus = bonuses.find((bonus) => bonus.id === NEW_OFFER_ID);
-  if (newBonus && !completedIds.includes(newBonus.id) && !dismissed.has(`new-${newBonus.id}`)) {
-    list.push({ id: `new-${newBonus.id}`, kind: "new-offer", bonus: newBonus });
-  }
+  // 2) Prohlédnutá nabídka: otevřel detail, ale ještě nezačal – retargeting „koukal ses na…".
+  bonuses.forEach((bonus) => {
+    if (
+      viewed[bonus.id] &&
+      !activatedIds.includes(bonus.id) &&
+      !completedIds.includes(bonus.id) &&
+      !dismissed.has(`view-${bonus.id}`)
+    ) {
+      list.push({ id: `view-${bonus.id}`, kind: "viewed", bonus });
+    }
+  });
 
+  // 3) Pozvi přátele – trvalé promo.
   if (!dismissed.has(REFERRAL_NOTIFICATION_ID)) {
     list.push({ id: REFERRAL_NOTIFICATION_ID, kind: "referral" });
   }

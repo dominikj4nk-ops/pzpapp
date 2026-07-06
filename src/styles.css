@@ -131,38 +131,32 @@ a {
 .sidebar-link {
   position: relative;
   display: flex;
-  min-height: 42px;
+  min-height: 44px;
   align-items: center;
-  gap: 14px;
-  border-radius: 0 10px 10px 0;
-  padding: 0 16px;
+  gap: 13px;
+  border-radius: 13px;
+  padding: 0 14px;
   font-size: 14px;
   font-weight: 600;
-  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
-}
-
-.sidebar-link::before {
-  content: "";
-  position: absolute;
-  bottom: 7px;
-  left: 0;
-  top: 7px;
-  width: 2px;
-  border-radius: 999px;
-  background: transparent;
-  box-shadow: none;
-  transition: background 0.18s ease, box-shadow 0.18s ease;
+  transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .sidebar-link-active {
-  background:
-    linear-gradient(90deg, rgba(24, 242, 106, 0.18), rgba(24, 242, 106, 0.08) 48%, rgba(24, 242, 106, 0.02)),
-    rgba(6, 42, 38, 0.58);
+  background: rgba(24, 242, 106, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(24, 242, 106, 0.28);
 }
 
 .sidebar-link-active::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  height: 18px;
+  width: 3px;
+  transform: translateY(-50%);
+  border-radius: 999px;
   background: #18f26a;
-  box-shadow: none;
+  box-shadow: 0 0 10px rgba(24, 242, 106, 0.55);
 }
 
 .hero-section {
@@ -221,6 +215,12 @@ a {
   aspect-ratio: 1;
   margin: 0 auto;
   border-radius: 50%;
+}
+
+@media (min-width: 1280px) {
+  .wheel-wrap {
+    width: min(34vw, 430px);
+  }
 }
 
 .wheel-wrap::before {
@@ -321,6 +321,49 @@ a {
   from {
     opacity: 0;
     transform: scale(0.8) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.reviews-hero {
+  background:
+    radial-gradient(circle at 12% -10%, rgba(24, 242, 106, 0.18), transparent 46%),
+    radial-gradient(circle at 92% 120%, rgba(33, 212, 253, 0.1), transparent 44%),
+    linear-gradient(150deg, rgba(10, 30, 45, 0.9), rgba(4, 16, 26, 0.96) 60%, rgba(3, 11, 18, 0.98));
+}
+
+.proof-tile {
+  background:
+    radial-gradient(circle at 50% 18%, rgba(24, 242, 106, 0.16), transparent 40%),
+    linear-gradient(160deg, rgba(8, 24, 36, 0.96), rgba(4, 14, 23, 0.97) 55%, rgba(2, 8, 15, 0.98));
+}
+
+.reminder-toast {
+  animation: reminderToast 0.3s cubic-bezier(0.18, 1.1, 0.4, 1) both;
+}
+
+@keyframes reminderToast {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.wheel-toast {
+  animation: wheelToast 0.28s cubic-bezier(0.18, 1.2, 0.4, 1) both;
+}
+
+@keyframes wheelToast {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.94);
   }
   to {
     opacity: 1;

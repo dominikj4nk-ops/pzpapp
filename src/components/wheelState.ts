@@ -9,9 +9,9 @@ export const wheelStateEvent = "pzp:wheel-state";
 export const SPIN_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 export const DRAW_TIME = "19:30";
 export const DRAW_DAY = "neděli";
-export const WEEKLY_SHARE_BONUS = 500;
+export const TOP_REGULAR_PRIZE = "1 000 Kč";
 export const JACKPOT_LABEL = "5 000 Kč";
-export const WHEEL_TEST_MODE = true;
+export const WHEEL_TEST_MODE = false;
 
 export type WheelTier = "small" | "medium" | "big" | "spin" | "jackpot";
 
@@ -35,7 +35,7 @@ export const wheelPrizes: WheelPrize[] = [
   { id: "kc50", label: "50 Kč na účet", short: "50 Kč", emoji: "💰", weight: 1600, tier: "small" },
   { id: "kc250", label: "250 Kč na účet", short: "250 Kč", emoji: "🤑", weight: 355, tier: "medium" },
   { id: "spin", label: "Toč znova hned", short: "Toč znova", emoji: "🎡", weight: 2000, tier: "spin" },
-  { id: "kc500", label: "500 Kč na účet", short: "500 Kč", emoji: "💸", weight: 40, tier: "big" }
+  { id: "kc1000", label: "1 000 Kč na účet", short: "1 000 Kč", emoji: "💸", weight: 40, tier: "big" }
 ];
 
 const totalWeight = wheelPrizes.reduce((sum, prize) => sum + prize.weight, 0);

@@ -1,14 +1,15 @@
-import { Clock3, HelpCircle, Instagram, Mail, MessageCircle, Send, ShieldCheck } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { Clock3, HelpCircle, Instagram, Lightbulb, Mail, Send, ShieldCheck } from "lucide-react";
+import type { LucideIcon, LucideProps } from "lucide-react";
+import type { ComponentType } from "react";
 import { useState } from "react";
 import Header from "../components/Header";
-import { GlassCard } from "../components/ui";
+import { GlassCard, TikTokIcon } from "../components/ui";
 
+const CONTACT_EMAIL = "kontakt@prachyzaregistraci.cz";
 const SUPPORT_EMAIL = "podpora@prachyzaregistraci.cz";
-const SUPPORT_WHATSAPP = "420777123456";
 
 type ContactMethod = {
-  icon: LucideIcon;
+  icon: LucideIcon | ComponentType<LucideProps>;
   label: string;
   value: string;
   hint: string;
@@ -20,16 +21,23 @@ const contactMethods: ContactMethod[] = [
   {
     icon: Mail,
     label: "E-mail",
+    value: CONTACT_EMAIL,
+    hint: "Hlavní kontakt — odpovídáme do pár hodin.",
+    href: `mailto:${CONTACT_EMAIL}`
+  },
+  {
+    icon: Mail,
+    label: "Podpora",
     value: SUPPORT_EMAIL,
-    hint: "Odpovídáme obvykle do pár hodin.",
+    hint: "Pomoc s nabídkami a výplatami.",
     href: `mailto:${SUPPORT_EMAIL}`
   },
   {
-    icon: MessageCircle,
-    label: "WhatsApp",
-    value: "Napsat na WhatsApp",
-    hint: "Nejrychlejší odpověď během dne.",
-    href: `https://wa.me/${SUPPORT_WHATSAPP}`,
+    icon: TikTokIcon as ComponentType<LucideProps>,
+    label: "TikTok",
+    value: "@prachyzaregistraci",
+    hint: "Sleduj nás, ať ti neuteče nová akce.",
+    href: "https://www.tiktok.com/@prachyzaregistraci",
     external: true
   },
   {
@@ -37,21 +45,25 @@ const contactMethods: ContactMethod[] = [
     label: "Instagram",
     value: "@prachyzaregistraci",
     hint: "Napiš nám do DM.",
-    href: "https://instagram.com/",
+    href: "https://instagram.com/prachyzaregistraci",
     external: true
   }
 ];
 
 const faqs = [
-  ["Jak získat bonus?", "Vyber nabídku, otevři detail a pokračuj přes tlačítko Získat bonus. Přesměrujeme tě k partnerovi, kde dokončíš registraci."],
-  ["Kdy dostanu odměnu za kamaráda?", "Odměnu vyplácíme po tom, co partner potvrdí registraci tvého kamaráda. Obvykle do 30 dnů od odeslání žádosti."],
-  ["Jak funguje cashback?", "Aktivuj obchod v sekci Cashback a nakup přes něj. Cashback se ti připíše podle podmínek partnera."],
-  ["Nepřišel mi bonus, co teď?", "Napiš nám na e-mail nebo WhatsApp číslo nabídky a datum dokončení. Ověříme to u partnera a poradíme dál."]
+  ["Je to opravdu zdarma?", "Ano. Registrace u partnerů jsou zdarma a my si z tvého bonusu nic nebereme — platí nás partneři za doporučení."],
+  ["Jak získám bonus?", "Vyber nabídku, klikni na Získat bonus a dokonči registraci u partnera přesně podle kroků v detailu nabídky. Bonus pak vyplatí partner."],
+  ["Kdy mi přijdou peníze?", "Záleží na partnerovi — Air Bank vyplácí obvykle do 2 dnů, mBank do 30 dnů od měsíce platby. Přesný termín najdeš u každé nabídky."],
+  ["Je to bezpečné a legální?", "Ano. Jde o oficiální akce bank a platforem pro nové klienty. Registruješ se vždy přímo u partnera, my tvoje údaje nevidíme."],
+  ["Musím účet po získání bonusu zrušit?", "Nemusíš. Účet můžeš dál používat, nebo ho po vyplacení bonusu zrušit — záleží jen na tobě a podmínkách partnera."],
+  ["Kdy dostanu odměnu za kamaráda?", "Po tom, co partner potvrdí registraci tvého kamaráda. Obvykle do 30 dnů od odeslání žádosti — o výsledku dáme vědět e-mailem."],
+  ["Nepřišel mi bonus, co teď?", "Napiš nám na e-mail název nabídky a datum dokončení. Ověříme to u partnera a poradíme, jak dál."]
 ];
 
 export default function HelpPage() {
   const [open, setOpen] = useState<string>("");
   const [sent, setSent] = useState(false);
+  const [tipSent, setTipSent] = useState(false);
   const toggleFaq = (title: string) => setOpen((current) => (current === title ? "" : title));
 
   return (
@@ -85,7 +97,7 @@ export default function HelpPage() {
 
             return (
               <a
-                key={method.label}
+                key={`${method.label}-${method.value}`}
                 href={method.href}
                 target={method.external ? "_blank" : undefined}
                 rel={method.external ? "noopener noreferrer" : undefined}
@@ -112,8 +124,8 @@ export default function HelpPage() {
           {sent ? (
             <div className="rounded-[18px] border border-neon/25 bg-neon/10 p-4 text-sm leading-6 text-slate-200">
               Zpráva je připravená k odeslání ve tvém e-mailovém klientovi. Kdyby se neotevřel, napiš nám přímo na{" "}
-              <a href={`mailto:${SUPPORT_EMAIL}`} className="font-bold text-neon">
-                {SUPPORT_EMAIL}
+              <a href={`mailto:${CONTACT_EMAIL}`} className="font-bold text-neon">
+                {CONTACT_EMAIL}
               </a>
               .
             </div>
@@ -123,12 +135,20 @@ export default function HelpPage() {
                 event.preventDefault();
                 const data = new FormData(event.currentTarget);
                 const subject = encodeURIComponent("Dotaz z aplikace");
-                const body = encodeURIComponent(String(data.get("message") ?? ""));
-                window.location.href = `mailto:${SUPPORT_EMAIL}?subject=${subject}&body=${body}`;
+                const body = encodeURIComponent(`${String(data.get("message") ?? "")}\n\n—\nOdpověď posílejte na: ${String(data.get("email") ?? "")}`);
+                window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
                 setSent(true);
               }}
               className="space-y-3"
             >
+              <input
+                required
+                type="email"
+                name="email"
+                placeholder="Tvůj e-mail (ať víme, kam odpovědět)"
+                autoComplete="email"
+                className="h-12 w-full rounded-[18px] border border-white/10 bg-[#07131b] px-4 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-neon/50"
+              />
               <textarea
                 required
                 name="message"
@@ -141,6 +161,55 @@ export default function HelpPage() {
                 className="neon-button flex h-12 w-full items-center justify-center gap-2 rounded-[18px] px-4 text-sm font-black text-[#02130c] active:scale-95"
               >
                 <Send size={17} /> Odeslat zprávu
+              </button>
+            </form>
+          )}
+        </GlassCard>
+
+        <GlassCard className="p-4 xl:p-5">
+          <div className="mb-3 flex items-center gap-2">
+            <Lightbulb size={16} className="text-neon" />
+            <h2 className="text-base font-black">Poděl se o nabídku</h2>
+          </div>
+          <p className="mb-3 text-xs leading-5 text-slate-400">
+            Narazil jsi na bonus za registraci, který u nás chybí? Pošli nám odkaz — prověříme ho a přidáme.
+          </p>
+          {tipSent ? (
+            <div className="rounded-[18px] border border-neon/25 bg-neon/10 p-4 text-sm leading-6 text-slate-200">
+              Díky za tip! Zpráva je připravená ve tvém e-mailovém klientovi.
+            </div>
+          ) : (
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                const data = new FormData(event.currentTarget);
+                const subject = encodeURIComponent("Tip na novou nabídku");
+                const body = encodeURIComponent(
+                  `Odkaz na nabídku: ${String(data.get("link") ?? "")}\nPoznámka: ${String(data.get("note") ?? "") || "—"}`
+                );
+                window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+                setTipSent(true);
+              }}
+              className="space-y-3"
+            >
+              <input
+                required
+                type="url"
+                name="link"
+                placeholder="https://… odkaz na nabídku"
+                className="h-12 w-full rounded-[18px] border border-white/10 bg-[#07131b] px-4 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-neon/50"
+              />
+              <input
+                type="text"
+                name="note"
+                placeholder="Poznámka (nepovinné) — např. výše bonusu"
+                className="h-12 w-full rounded-[18px] border border-white/10 bg-[#07131b] px-4 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-neon/50"
+              />
+              <button
+                type="submit"
+                className="glass-button flex h-12 w-full items-center justify-center gap-2 rounded-[18px] px-4 text-sm font-black text-white active:scale-95"
+              >
+                <Lightbulb size={16} className="text-neon" /> Poslat tip
               </button>
             </form>
           )}

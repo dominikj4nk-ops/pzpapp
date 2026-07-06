@@ -11,6 +11,15 @@ export function GlassCard({ children, className = "" }: { children: ReactNode; c
   return <div className={`glass ${className}`}>{children}</div>;
 }
 
+/** TikTok logo – lucide brand ikony nemá, proto vlastní minimalistické SVG. */
+export function TikTokIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M16.6 3c.4 2.1 1.8 3.7 3.9 4v3c-1.5 0-2.9-.5-3.9-1.2v6.4c0 3.3-2.6 5.8-5.8 5.8S5 18.5 5 15.2c0-3.2 2.5-5.7 5.7-5.8v3.1c-1.5 0-2.7 1.2-2.7 2.7s1.2 2.8 2.8 2.8 2.8-1.3 2.8-2.8V3h3Z" />
+    </svg>
+  );
+}
+
 export function SectionHeading({ title, action, onAction }: { title: string; action?: string; onAction?: () => void }) {
   return (
     <div className="mb-3 flex items-center justify-between gap-3">
@@ -284,7 +293,7 @@ export function ContactCard({ title = "Potřebuješ poradit?", text = "Odpovíd�
       </div>
       <div className="mt-3 grid grid-cols-2 gap-2">
         <a
-          href="mailto:podpora@prachyzaregistraci.cz"
+          href="mailto:kontakt@prachyzaregistraci.cz"
           className="glass-button flex h-11 items-center justify-center gap-2 px-3 text-xs font-bold text-white transition active:scale-95"
         >
           <Mail size={15} className="text-neon" /> Napsat e-mail

@@ -13,6 +13,7 @@ export type Bonus = {
   logoClass: string;
   logoUrl: string;
   partnerUrl: string;
+  promoCode?: string;
   description: string;
   requirements: string[];
   steps: string[];
@@ -34,14 +35,19 @@ export const bonuses: Bonus[] = [
     logo: "mB",
     logoClass: "bg-white text-pink-600",
     logoUrl: "https://play-lh.googleusercontent.com/rvyT-isZRd9AxtgK20HG-uG6IVarqEDJ_sivrkrD7eZCiEMMSVvMCrqFBB4d_Nt-47M",
-    // TODO: nahradit skutečným affiliate odkazem
-    partnerUrl: "https://www.mbank.cz/osobni/ucty/",
-    description: "Moderní online účet od mBank. Za založení účtu a splnění podmínek můžeš získat bonus až 1 000 Kč.",
-    requirements: ["Věk 15+", "Nejsi klientem mBank", "Platný doklad totožnosti", "10 plateb kartou v telefonu"],
-    steps: ["Zaregistruj se přes odkaz", "Vyplň online žádost", "Ověř identitu", "Aktivuj účet", "Proveď 10 plateb kartou"],
+    partnerUrl: "https://www.mbank.cz/mgm/ucty-mkonto.html?numer=dominikj5463",
+    promoCode: "dominikj5463",
+    description: "Moderní online bankovnictví s bonusem pro nové klienty. Za platby kartou v telefonu ti mBank vrací 100 Kč za každou platbu, celkem až 1 000 Kč.",
+    requirements: ["Věk 15+", "Český občanský průkaz", "Nejsi klientem mBank", "Platby kartou v telefonu (Google Pay / Apple Pay)"],
+    steps: [
+      "Klikni na náš odkaz a vyplň údaje",
+      "Do kolonky „Přicházím na základě akce“ vepiš kód dominikj5463",
+      "Plať za nákupy kartou v telefonu — za každou platbu ti mBank vrátí 100 Kč",
+      "Takhle získáš až 1 000 Kč (10 plateb × 100 Kč)"
+    ],
     completionTime: "15 min",
-    minRequirement: "10 plateb kartou v telefonu",
-    payoutTime: "do 30 dnů"
+    minRequirement: "platby kartou v telefonu",
+    payoutTime: "do 30 dnů od měsíce platby"
   },
   {
     id: "airbank-ucet",
@@ -54,20 +60,23 @@ export const bonuses: Bonus[] = [
     logo: "AB",
     logoClass: "bg-white text-lime-600",
     logoUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsBMNGhZVKbQ66rdl8e-xLyDwhp9jmwjSWKw&s",
-    // TODO: nahradit skutečným affiliate odkazem
-    partnerUrl: "https://www.airbank.cz/produkty/bezny-ucet/",
-    description: "Moderní česká banka s bonusem za založení účtu a splnění jednoduchých podmínek.",
-    requirements: ["Věk 15+", "Občan ČR", "Nejsi klientem Air Bank", "5 plateb kartou"],
-    steps: ["Vyplň online žádost", "Ověř identitu", "Aktivuj účet", "Proveď 5 plateb kartou", "Bonus se připíše po splnění podmínek"],
+    partnerUrl: "https://www.airbank.cz/pozvani-pratel?referrer=pkddk9",
+    description: "Moderní česká banka s přívětivým přístupem. Za založení účtu a splnění podmínek získáš bonus 500 Kč.",
+    requirements: ["Věk 15+", "Český občanský průkaz", "Nejsi klientem Air Bank", "5 plateb kartou"],
+    steps: [
+      "Klikni na náš odkaz, vyplň telefonní číslo a založ si účet",
+      "Proveď 5 plateb kartou (tip: pošli si na účet 100 Kč a kup 5 maličkostí)",
+      "Bonus ti Air Bank vyplatí většinou tentýž den, nejpozději do druhého dne"
+    ],
     completionTime: "20 min",
     minRequirement: "5 plateb kartou",
-    payoutTime: "po splnění podmínek"
+    payoutTime: "obvykle do 2 dnů"
   },
   {
     id: "tipli-cashback",
     name: "Tipli",
     type: "Ostatní",
-    bonus: "150 Kč",
+    bonus: "300 Kč",
     age: "15+",
     ageGroups: ["15+", "18+"],
     rating: 4.7,
@@ -75,14 +84,17 @@ export const bonuses: Bonus[] = [
     logo: "T",
     logoClass: "bg-white text-emerald-600",
     logoUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqODw9HVnKipgsRQlgFQBH2p955fK33V2mGw&s",
-    // TODO: nahradit skutečným affiliate odkazem
-    partnerUrl: "https://www.tipli.cz/",
-    description: "Český cashback portál. Po registraci a prvním nákupu přes Tipli získáš bonus a další peníze zpět z nákupů.",
-    requirements: ["Emailová adresa", "Registrace přes odkaz", "První nákup přes Tipli"],
-    steps: ["Zaregistruj se přes odkaz", "Vyber obchod přes Tipli", "Proveď první nákup", "Po potvrzení obchodu dostaneš bonus"],
+    partnerUrl: "https://www.tipli.cz/p/5332612",
+    description: "Největší český cashback portál. Zaregistruj se přes náš odkaz, nakup přes Tipli a jakmile nasbíráš 50 Kč potvrzeného cashbacku, odemkne se ti bonus 300 Kč za registraci.",
+    requirements: ["Věk 15+", "Platná e-mailová adresa", "Registrace přes náš odkaz", "Nákup přes Tipli do 30 dnů od registrace"],
+    steps: [
+      "Zaregistruj se přes náš odkaz",
+      "Do 30 dnů od registrace nakup přes Tipli a začni sbírat cashback",
+      "Jakmile máš na účtu aspoň 50 Kč z potvrzených odměn, odemkne se ti bonus 300 Kč"
+    ],
     completionTime: "5 min",
-    minRequirement: "první nákup přes Tipli",
-    payoutTime: "po potvrzení obchodu"
+    minRequirement: "50 Kč potvrzeného cashbacku",
+    payoutTime: "po potvrzení odměn obchodem"
   },
   {
     id: "patrongo",
@@ -95,8 +107,7 @@ export const bonuses: Bonus[] = [
     logo: "P",
     logoClass: "bg-white text-emerald-600",
     logoUrl: "https://www.google.com/s2/favicons?domain=patrongo.com&sz=128",
-    // TODO: nahradit skutečným affiliate odkazem
-    partnerUrl: "https://www.patrongo.com/",
+    partnerUrl: "https://patrongoapp.app.link/invite/prachyzaregistraci",
     description: "Aplikace, která projde tvé pravidelné platby a poradí, kde ušetřit. Za samotnou registraci dostaneš bonus 200 Kč, další odměny pak za vyřešené tipy na úsporu.",
     requirements: ["Věk 18+", "Chytrý telefon", "Propojení bankovního výpisu", "Doplnění PSČ"],
     steps: ["Stáhni aplikaci a zaregistruj se", "Doplň PSČ a základní údaje", "Povol bance poslat online výpis", "Bonus 200 Kč se připíše po registraci"],
@@ -113,16 +124,20 @@ export const bonuses: Bonus[] = [
     rating: 4.5,
     tags: ["15 min", "Vklad"],
     logo: "R",
-    logoClass: "bg-emerald-500 text-white",
-    logoUrl: "https://play-lh.googleusercontent.com/TPCKgN9QNFPW1YvD6cq35MuLOCUOsKqPbDNYEM5HbbLzWlbJ9DZQTZqSpbB5j_DYLO2R",
-    // TODO: nahradit skutečným affiliate odkazem
-    partnerUrl: "https://robinhood.com/signup",
-    description: "Investiční platforma, kde získáš bonus po registraci, ověření identity a prvním vkladu.",
-    requirements: ["Věk 18+", "Platný doklad totožnosti", "Minimální vklad", "První obchod podle podmínek"],
-    steps: ["Zaregistruj se přes odkaz", "Ověř identitu", "Vlož první vklad", "Proveď první obchod", "Bonus se připíše automaticky"],
+    logoClass: "bg-white text-emerald-600",
+    logoUrl: "https://www.google.com/s2/favicons?domain=robinhood.com&sz=128",
+    partnerUrl: "https://join.robinhood.com/eu_crypto/petrak-376f276/",
+    description: "Populární investiční platforma bez poplatků. Za registraci přes náš odkaz a vklad 20 € získáš bonus 50 € (cca 1 250 Kč).",
+    requirements: ["Věk 18+", "Platný doklad totožnosti", "Možnost vložit 20 €"],
+    steps: [
+      "Klikni na náš odkaz a zadej svůj e-mail",
+      "Na ten e-mail dokonči registraci",
+      "Vlož 20 € zahraniční platbou (údaje vyskočí po kliknutí na tlačítko Deposit)",
+      "Druhý den od poslání platby se ti přičte bonus 50 € (cca 1 250 Kč)"
+    ],
     completionTime: "15 min",
-    minRequirement: "první vklad",
-    payoutTime: "po připsání vkladu a splnění podmínek"
+    minRequirement: "vklad 20 €",
+    payoutTime: "druhý den po vkladu"
   }
 ];
 
@@ -135,6 +150,8 @@ export const formatKc = (amount: number) => `${amount.toLocaleString("cs-CZ")} 
 export const REFERRAL_REWARD = 100;
 
 export const cashbackStores = [
+  { name: "Bolt", text: "bonus na jízdy za pozvání", logo: "B", logoUrl: "https://www.google.com/s2/favicons?domain=bolt.eu&sz=128", icon: Zap, color: "from-emerald-400 to-green-600" },
+  { name: "Vosíme.cz", text: "bonus na rozvoz za pozvání", logo: "V", logoUrl: "https://www.google.com/s2/favicons?domain=vosime.cz&sz=128", icon: ShoppingBag, color: "from-orange-400 to-red-500" },
   { name: "Alza.cz", text: "až 5 % cashback", logo: "a", logoUrl: "https://www.google.com/s2/favicons?domain=alza.cz&sz=128", icon: ShoppingBag, color: "from-blue-500 to-indigo-700" },
   { name: "Mall.cz", text: "až 4 % cashback", logo: "M", logoUrl: "https://www.google.com/s2/favicons?domain=mall.cz&sz=128", icon: ShoppingBag, color: "from-red-500 to-orange-500" },
   { name: "Booking.com", text: "až 6 % cashback", logo: "B.", logoUrl: "https://www.google.com/s2/favicons?domain=booking.com&sz=128", icon: Hotel, color: "from-sky-500 to-blue-800" },

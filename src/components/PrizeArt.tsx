@@ -65,8 +65,8 @@ function BanknotesArt({ size }: { size: number }) {
       <rect x="7" y="17" width="34" height="18" rx="4" fill={`url(#${id})`} />
       <rect x="10.5" y="20.5" width="27" height="11" rx="2.5" stroke="rgba(3,19,12,.42)" strokeWidth="1.4" />
       <circle cx="24" cy="26" r="5.4" fill="rgba(3,19,12,.16)" />
-      <text x="24" y="26.6" textAnchor="middle" dominantBaseline="central" fontSize="6.6" fontWeight="900" fill="#03130c">
-        500
+      <text x="24" y="26.6" textAnchor="middle" dominantBaseline="central" fontSize="5.4" fontWeight="900" fill="#03130c">
+        1000
       </text>
     </svg>
   );
@@ -105,7 +105,7 @@ export default function PrizeArt({ prizeId, size = 30 }: { prizeId: string; size
   switch (prizeId) {
     case "jackpot":
       return <TrophyArt size={size} />;
-    case "kc500":
+    case "kc1000":
       return <BanknotesArt size={size} />;
     case "kc250":
       return <CoinStackArt size={size} />;

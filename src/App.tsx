@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import AppShell from "./components/AppShell";
+import ScrollToTop from "./components/ScrollToTop";
 import CashbackPage from "./pages/CashbackPage";
 import ExchangeDetailPage from "./pages/ExchangeDetailPage";
 import ExchangesPage from "./pages/ExchangesPage";
@@ -8,6 +9,7 @@ import HomePage from "./pages/HomePage";
 import NotificationsPage from "./pages/NotificationsPage";
 import ProfitPage from "./pages/ProfitPage";
 import RewardsPage from "./pages/RewardsPage";
+import ReviewsPage from "./pages/ReviewsPage";
 import SearchPage from "./pages/SearchPage";
 import SettingsPage from "./pages/SettingsPage";
 import WheelPage from "./pages/WheelPage";
@@ -15,7 +17,18 @@ import { paths } from "./routes/paths";
 
 export default function App() {
   return (
+    <Routes>
+      {/* Samostatný landing recenzí (subdoména recenze.…) – bez aplikačního menu. */}
+      <Route path={paths.reviews} element={<ReviewsPage />} />
+      <Route path="*" element={<AppLayout />} />
+    </Routes>
+  );
+}
+
+function AppLayout() {
+  return (
     <AppShell>
+      <ScrollToTop />
       <Routes>
         <Route path={paths.home} element={<HomePage />} />
         <Route path={paths.exchanges} element={<ExchangesPage />} />

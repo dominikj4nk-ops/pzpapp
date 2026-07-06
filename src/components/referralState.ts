@@ -7,7 +7,7 @@ export const referralStateEvent = "pzp:referral-state";
 export type ReferralClaim = {
   id: string;
   offer: string;
-  completedAt: string;
+  email: string;
   name: string;
   account: string;
   fileName: string;

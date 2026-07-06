@@ -14,20 +14,18 @@ export default function RewardsPage() {
   const [copied, setCopied] = useState(false);
   const [justSubmitted, setJustSubmitted] = useState(false);
   const [offer, setOffer] = useState("");
-  const [completedAt, setCompletedAt] = useState("");
+  const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [account, setAccount] = useState("");
   const [fileName, setFileName] = useState("");
   const [consent, setConsent] = useState(false);
   const copyTimer = useRef<number | undefined>(undefined);
-  const today = new Date().toISOString().slice(0, 10);
 
   useEffect(() => {
     setInviteLink(getReferralLink());
     return () => window.clearTimeout(copyTimer.current);
   }, []);
 
-  const pendingClaims = useMemo(() => claims.filter((claim) => claim.status === "V kontrole"), [claims]);
   const monthlyClaims = useMemo(() => {
     const now = new Date();
     return claims.filter((claim) => {
@@ -58,10 +56,10 @@ export default function RewardsPage() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    addReferralClaim({ offer, completedAt, name: name.trim(), account: account.trim(), fileName });
+    addReferralClaim({ offer, email: email.trim(), name: name.trim(), account: account.trim(), fileName });
     event.currentTarget.reset();
     setOffer("");
-    setCompletedAt("");
+    setEmail("");
     setName("");
     setAccount("");
     setFileName("");
@@ -98,13 +96,13 @@ export default function RewardsPage() {
           <div className="mt-2 grid grid-cols-2 gap-2">
             <button
               onClick={copyInviteLink}
-              className="glass-button flex h-11 items-center justify-center gap-2 px-3 text-sm font-bold text-white transition active:scale-95"
+              className="glass-button flex h-12 items-center justify-center gap-2 px-3 text-sm font-bold text-white transition active:scale-95"
             >
               {copied ? <CheckCircle2 size={17} className="text-neon" /> : <Copy size={17} />}
               {copied ? "Zkopírováno" : "Kopírovat"}
             </button>
-            <NeonButton onClick={shareInvite} className="h-11 px-3 text-sm">
-              <Share2 size={16} className="inline" /> Sdílet
+            <NeonButton onClick={shareInvite} className="flex h-12 items-center justify-center gap-2 px-3 text-sm">
+              <Share2 size={16} /> Sdílet
             </NeonButton>
           </div>
         </GlassCard>
@@ -132,11 +130,12 @@ export default function RewardsPage() {
                 />
                 <input
                   required
-                  type="date"
-                  value={completedAt}
-                  max={today}
-                  onChange={(event) => setCompletedAt(event.target.value)}
-                  className="h-12 w-full rounded-[18px] border border-white/10 bg-[#07131b] px-4 text-sm text-white outline-none transition focus:border-neon/50"
+                  type="email"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder="Tvůj e-mail (dáme vědět o výsledku)"
+                  autoComplete="email"
+                  className="h-12 w-full rounded-[18px] border border-white/10 bg-[#07131b] px-4 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-neon/50"
                 />
               </div>
 
@@ -196,31 +195,25 @@ export default function RewardsPage() {
 
         {claims.length ? (
           <section>
-            <SectionHeading title="Tvoje žádosti" />
+            <SectionHeading title="Historie žádostí" />
             <div className="space-y-2">
               {claims.map((claim) => (
                 <GlassCard key={claim.id} className="flex items-center gap-3 p-3">
-                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl bg-amber-300/15 text-amber-300">
-                    {claim.status === "Vyplaceno" ? <CheckCircle2 size={17} /> : <Hourglass size={17} />}
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl bg-neon/12 text-neon">
+                    <CheckCircle2 size={17} />
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-bold">{claim.offer || "Doporučení"}</p>
-                    <p className="text-xs text-slate-500">{claim.name}</p>
-                  </div>
-                  <div className="shrink-0 text-right">
-                    <p className="text-sm font-black text-neon">{formatKc(REFERRAL_REWARD)}</p>
-                    <span className={`text-[11px] font-bold ${claim.status === "Vyplaceno" ? "text-neon" : "text-amber-300"}`}>
-                      {claim.status}
-                    </span>
+                    <p className="text-xs text-slate-500">
+                      Odesláno {new Date(claim.createdAt).toLocaleDateString("cs-CZ", { day: "numeric", month: "numeric", year: "numeric" })}
+                    </p>
                   </div>
                 </GlassCard>
               ))}
             </div>
-            {pendingClaims.length ? (
-              <p className="mt-2 text-xs text-slate-500">
-                Ve frontě na kontrolu: {pendingClaims.length} · po potvrzení dostaneš {formatKc(pendingClaims.length * REFERRAL_REWARD)}.
-              </p>
-            ) : null}
+            <p className="mt-2 text-xs leading-5 text-slate-500">
+              O vyplacení nebo případném zamítnutí žádosti tě budeme informovat e-mailem.
+            </p>
           </section>
         ) : null}
 
@@ -232,6 +225,7 @@ export default function RewardsPage() {
             <li>• Pokud důkaz nebude jasný nebo ho nepůjde ověřit, nemáme povinnost odměnu vyplatit.</li>
             <li>• Max. {MONTHLY_CLAIM_LIMIT} odměn měsíčně, jedna za kamaráda a nabídku.</li>
             <li>• Nelze pozvat sám sebe. Nikdy nechceme hesla ani přístupy do banky.</li>
+            <li>• Pokud nám žádost nebude připadat důvěryhodná, máme právo ji kdykoliv zamítnout.</li>
           </ul>
         </details>
       </section>
