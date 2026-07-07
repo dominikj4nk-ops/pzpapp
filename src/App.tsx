@@ -12,6 +12,7 @@ import RewardsPage from "./pages/RewardsPage";
 import ReviewsPage from "./pages/ReviewsPage";
 import SearchPage from "./pages/SearchPage";
 import SettingsPage from "./pages/SettingsPage";
+import TermsPage from "./pages/TermsPage";
 import WheelPage from "./pages/WheelPage";
 import { paths } from "./routes/paths";
 
@@ -41,6 +42,7 @@ function AppLayout() {
         <Route path={paths.profit} element={<ProfitPage />} />
         <Route path={paths.settings} element={<SettingsPage />} />
         <Route path={paths.help} element={<HelpPage />} />
+        <Route path={paths.terms} element={<TermsPage />} />
         <Route path="/burzy" element={<Navigate to={paths.exchanges} replace />} />
         <Route path="/burzy/:id" element={<ExchangeDetailPage />} />
         <Route path="/exchanges" element={<Navigate to={paths.exchanges} replace />} />

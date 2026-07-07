@@ -10,5 +10,6 @@ export const paths = {
   profit: "/zisk",
   settings: "/nastaveni",
   help: "/podpora",
-  reviews: "/recenze"
+  reviews: "/recenze",
+  terms: "/podminky"
 };

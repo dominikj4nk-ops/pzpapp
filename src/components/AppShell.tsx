@@ -67,7 +67,12 @@ export default function AppShell({ children }: AppShellProps) {
               );
             })}
           </nav>
-          <p className="mt-auto border-t border-white/10 pt-5 text-xs leading-5 text-slate-500">© 2026 prachyzaregistraci.cz<br />Všechna práva vyhrazena</p>
+          <p className="mt-auto border-t border-white/10 pt-5 text-xs leading-5 text-slate-500">
+            © 2026 prachyzaregistraci.cz<br />Všechna práva vyhrazena<br />
+            <NavLink to={paths.terms} className="text-[11px] text-slate-600 underline-offset-2 hover:text-slate-400 hover:underline">
+              Podmínky použití
+            </NavLink>
+          </p>
         </aside>
 
         <section className="flex min-h-screen min-w-0 flex-col xl:min-h-[calc(100vh-32px)]">
@@ -96,6 +101,12 @@ export default function AppShell({ children }: AppShellProps) {
           <div className="relative flex-1 overflow-hidden xl:rounded-[22px] xl:border xl:border-white/10 xl:bg-[#04111c]/70">
             <div key={location.pathname} className="page-fade relative z-10 min-h-full px-4 pb-28 pt-5 xl:px-6 xl:pb-8 xl:pt-6">
               <ErrorBoundary key={location.pathname}>{children}</ErrorBoundary>
+              <p className="mt-8 text-center text-[10px] text-slate-600 xl:hidden">
+                © 2026 prachyzaregistraci.cz ·{" "}
+                <NavLink to={paths.terms} className="underline underline-offset-2">
+                  Podmínky použití
+                </NavLink>
+              </p>
             </div>
           </div>
         </section>

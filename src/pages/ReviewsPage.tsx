@@ -1,4 +1,4 @@
-import { BadgeCheck, Banknote, Clock3, Instagram, Quote, ShieldCheck, Sparkles, Star, Users, Wallet } from "lucide-react";
+import { Banknote, Clock3, Quote, ShieldCheck, Star, Users, Wallet } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BrandLogo } from "../components/ui";
 import { paths } from "../routes/paths";
@@ -15,13 +15,11 @@ const stats = [
 const trustPoints = [
   { icon: ShieldCheck, title: "Jen ověřené nabídky", text: "Spolupracujeme s reálnými bankami a platformami. Žádné pochybné programy ani skryté poplatky." },
   { icon: Wallet, title: "Peníze jdou přímo tobě", text: "Bonus vyplácí partner nebo my na tvůj účet. Nic si nestrháváme, výdělek je celý tvůj." },
-  { icon: BadgeCheck, title: "Reálné, ověřené recenze", text: "Recenze níže jsou od skutečných uživatelů, kteří bonusy dokončili a dostali zaplaceno." }
+  { icon: Star, title: "Žádné skryté podmínky", text: "U každé nabídky přesně popisujeme, co je potřeba splnit, jak dlouho to trvá a kdy se odměna vyplácí." }
 ];
 
 type Review = {
   name: string;
-  handle: string;
-  source: "Instagram" | "Google" | "Ověřený uživatel";
   rating: number;
   amount: string;
   offer: string;
@@ -32,8 +30,6 @@ type Review = {
 const reviews: Review[] = [
   {
     name: "Petra N.",
-    handle: "@peta.spori",
-    source: "Instagram",
     rating: 5,
     amount: "1 000 Kč",
     offer: "mBank",
@@ -42,8 +38,6 @@ const reviews: Review[] = [
   },
   {
     name: "Jakub M.",
-    handle: "@kuba_invest",
-    source: "Google",
     rating: 5,
     amount: "1 250 Kč",
     offer: "Robinhood",
@@ -52,8 +46,6 @@ const reviews: Review[] = [
   },
   {
     name: "Tereza K.",
-    handle: "@terka.fit",
-    source: "Instagram",
     rating: 5,
     amount: "500 Kč",
     offer: "Air Bank",
@@ -62,8 +54,6 @@ const reviews: Review[] = [
   },
   {
     name: "David H.",
-    handle: "@david.cash",
-    source: "Ověřený uživatel",
     rating: 5,
     amount: "2 500 Kč",
     offer: "3 bonusy",
@@ -72,8 +62,6 @@ const reviews: Review[] = [
   },
   {
     name: "Anna P.",
-    handle: "@anna.penize",
-    source: "Instagram",
     rating: 5,
     amount: "150 Kč",
     offer: "Tipli",
@@ -82,8 +70,6 @@ const reviews: Review[] = [
   },
   {
     name: "Martin S.",
-    handle: "@martys",
-    source: "Google",
     rating: 4,
     amount: "200 Kč",
     offer: "Patron GO",
@@ -92,8 +78,6 @@ const reviews: Review[] = [
   },
   {
     name: "Klára V.",
-    handle: "@klara.v",
-    source: "Instagram",
     rating: 5,
     amount: "1 000 Kč",
     offer: "mBank",
@@ -102,8 +86,6 @@ const reviews: Review[] = [
   },
   {
     name: "Ondřej T.",
-    handle: "@ondra.t",
-    source: "Ověřený uživatel",
     rating: 5,
     amount: "500 Kč",
     offer: "Doporučení",
@@ -157,7 +139,7 @@ export default function ReviewsPage() {
           <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-neon/15 blur-3xl" />
           <div className="relative">
             <p className="inline-flex items-center gap-1.5 rounded-full border border-neon/25 bg-neon/10 px-3 py-1 text-[11px] font-black uppercase tracking-wide text-neon">
-              <BadgeCheck size={13} /> Ověřené recenze uživatelů
+              <Quote size={13} /> Zkušenosti uživatelů
             </p>
             <h1 className="mt-4 max-w-[640px] text-[34px] font-black leading-[1.05] sm:text-[52px]">
               Už jsme vyplatili přes <span className="text-neon">73 000 Kč</span> na bonusech
@@ -201,35 +183,24 @@ export default function ReviewsPage() {
           <div className="mb-5 flex items-end justify-between gap-4">
             <div>
               <h2 className="text-2xl font-black sm:text-3xl">Co říkají lidé</h2>
-              <p className="mt-1 text-sm text-slate-400">Reálné recenze od uživatelů, kteří bonusy dokončili.</p>
+              <p className="mt-1 text-sm text-slate-400">Zkušenosti uživatelů s bonusy a výplatami.</p>
             </div>
-            <span className="hidden shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-white/[.04] px-3 py-1.5 text-xs font-bold text-slate-300 sm:flex">
-              <BadgeCheck size={14} className="text-neon" /> 100 % ověřené
-            </span>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {reviews.map((review) => {
-              const avatar = avatarFor(review.handle);
+              const avatar = avatarFor(review.name);
               return (
-                <article key={review.handle} className="glass flex flex-col p-4">
+                <article key={review.name} className="glass flex flex-col p-4">
                   <div className="flex items-center gap-3">
-                    <span className="relative shrink-0">
-                      <span
-                        className={`grid h-11 w-11 place-items-center rounded-full bg-gradient-to-br ${avatar.gradient} text-xs font-black text-[#03130c] shadow-[inset_0_1px_0_rgba(255,255,255,.4)]`}
-                      >
-                        {avatar.initials}
-                      </span>
-                      <span className="absolute -bottom-1 -right-1 grid h-5 w-5 place-items-center rounded-full border-2 border-[#0a1620] bg-neon text-[#03130c]">
-                        <BadgeCheck size={11} />
-                      </span>
+                    <span
+                      className={`grid h-11 w-11 shrink-0 place-items-center rounded-full bg-gradient-to-br ${avatar.gradient} text-xs font-black text-[#03130c] shadow-[inset_0_1px_0_rgba(255,255,255,.4)]`}
+                    >
+                      {avatar.initials}
                     </span>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-black">{review.name}</p>
-                      <p className="flex items-center gap-1 truncate text-[11px] text-slate-500">
-                        {review.source === "Instagram" ? <Instagram size={11} /> : null}
-                        {review.handle} · {review.date}
-                      </p>
+                      <p className="truncate text-[11px] text-slate-500">{review.date}</p>
                     </div>
                     <Stars rating={review.rating} />
                   </div>
@@ -279,13 +250,18 @@ export default function ReviewsPage() {
             onClick={() => navigate(paths.exchanges)}
             className="neon-button mx-auto mt-6 flex h-[52px] items-center gap-2 rounded-[18px] px-8 text-base font-black text-[#02130c]"
           >
-            <Sparkles size={18} /> Získat svůj první bonus
+            Získat svůj první bonus
           </button>
         </section>
 
         <footer className="mt-10 border-t border-white/10 pt-6 text-center text-xs leading-5 text-slate-500">
           <BrandLogo className="justify-center text-sm" onClick={() => navigate(paths.home)} />
-          <p className="mt-2">© 2026 prachyzaregistraci.cz · Recenze jsou od reálných uživatelů. Výše a doba výplaty se liší podle nabídky a partnera.</p>
+          <p className="mt-2">
+            © 2026 prachyzaregistraci.cz · Výše a doba výplaty se liší podle nabídky a partnera. ·{" "}
+            <button onClick={() => navigate(paths.terms)} className="underline underline-offset-2 hover:text-slate-300">
+              Podmínky použití
+            </button>
+          </p>
         </footer>
       </div>
     </main>
