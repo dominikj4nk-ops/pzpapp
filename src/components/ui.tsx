@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { useId } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Bonus } from "../data/mockData";
+import { FORM_TARGET_EMAIL } from "./formMailer";
 import { paths } from "../routes/paths";
 
 export function GlassCard({ children, className = "" }: { children: ReactNode; className?: string }) {
@@ -293,7 +294,7 @@ export function ContactCard({ title = "Potřebuješ poradit?", text = "Odpovíd�
       </div>
       <div className="mt-3 grid grid-cols-2 gap-2">
         <a
-          href="mailto:kontakt@prachyzaregistraci.cz"
+          href={`mailto:${FORM_TARGET_EMAIL}`}
           className="glass-button flex h-11 items-center justify-center gap-2 px-3 text-xs font-bold text-white transition active:scale-95"
         >
           <Mail size={15} className="text-neon" /> Napsat e-mail

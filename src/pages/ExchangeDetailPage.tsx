@@ -78,7 +78,7 @@ export default function ExchangeDetailPage() {
             Získat {bonus.bonus} <ExternalLink size={15} className="inline" />
           </NeonButton>
           <p className="mt-3 text-center text-xs leading-5 text-slate-400">
-            Otevře se web partnera přes náš odkaz — párování proběhne automaticky. Bonus získáš splněním podmínek přímo u partnera.
+            Otevře se web partnera přes náš odkaz a párování proběhne automaticky. Bonus získáš splněním podmínek přímo u partnera.
             {bonus.promoCode ? (
               <>
                 {" "}

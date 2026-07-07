@@ -5,6 +5,7 @@ import { bonusAmount, bonuses, formatKc, REFERRAL_REWARD, totalPotential } from 
 import { paths } from "../routes/paths";
 import BottomNav from "./BottomNav";
 import ErrorBoundary from "./ErrorBoundary";
+import { FORM_TARGET_EMAIL } from "./formMailer";
 import { useBonusProgress } from "./bonusState";
 import { useNotifications } from "./notificationState";
 import { BrandLogo, GlassCard, TikTokIcon } from "./ui";
@@ -163,9 +164,9 @@ export default function AppShell({ children }: AppShellProps) {
               </div>
             </div>
             <div className="mt-3 space-y-2">
-              <a href="mailto:kontakt@prachyzaregistraci.cz" className="glass-button flex h-11 items-center gap-3 px-4 text-sm font-bold transition">
+              <a href={`mailto:${FORM_TARGET_EMAIL}`} className="glass-button flex h-11 items-center gap-3 px-4 text-sm font-bold transition">
                 <Mail size={16} className="shrink-0 text-neon" />
-                <span className="truncate">kontakt@prachyzaregistraci.cz</span>
+                <span className="truncate">{FORM_TARGET_EMAIL}</span>
               </a>
               <a href="https://www.tiktok.com/@prachyzaregistraci" target="_blank" rel="noopener noreferrer" className="glass-button flex h-11 items-center gap-3 px-4 text-sm font-bold transition">
                 <span className="shrink-0 text-neon"><TikTokIcon size={16} /></span>

@@ -476,7 +476,7 @@ function drawFooter(ctx: CanvasRenderingContext2D) {
   ctx.lineWidth = 2;
   ctx.stroke();
 
-  drawFittedText(ctx, "@prachyzaregistraci", W / 2, boxY + 72, maxTextW, 900, 50, NEON_BRIGHT);
+  drawFittedText(ctx, "@prachyzaregistracicz", W / 2, boxY + 72, maxTextW, 900, 50, NEON_BRIGHT);
   drawFittedText(ctx, "Sdílej výsledek na story a označ nás", W / 2, boxY + 148, maxTextW, 600, 32, "rgba(255,255,255,.7)");
   drawFittedText(
     ctx,

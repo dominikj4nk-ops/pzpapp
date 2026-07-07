@@ -69,9 +69,9 @@ function slicePath(index: number) {
 }
 
 const steps = [
-  { title: "Ulož si obrázek výhry", text: "Ke každému výsledku ti vygenerujeme obrázek na míru — jedním klikem ho uložíš do galerie." },
-  { title: "Dej ho na story a označ @prachyzaregistraci", text: "Bez označení tě nemůžeme zařadit do slosování." },
-  { title: `Každou ${DRAW_DAY} v ${DRAW_TIME} losujeme`, text: "Ze všech, kdo ten týden sdíleli, vylosujeme jednoho — a proplatíme mu přesně to, co mu na kole padlo." }
+  { title: "Ulož si obrázek výhry", text: "Ke každému výsledku ti vygenerujeme obrázek na míru. Jedním klikem ho uložíš do galerie." },
+  { title: "Dej ho na story a označ @prachyzaregistracicz", text: "Bez označení tě nemůžeme zařadit do slosování." },
+  { title: `Každou ${DRAW_DAY} v ${DRAW_TIME} losujeme`, text: "Ze všech, kdo ten týden sdíleli, vylosujeme jednoho a proplatíme mu přesně to, co mu na kole padlo." }
 ];
 
 function maskHandle(handle: string) {
@@ -314,7 +314,7 @@ export default function WheelPage() {
                     <p className="text-[13px] font-black text-white">Chceš, abychom ti výhru proplatili?</p>
                     <ol className="mt-2 space-y-1.5 text-xs leading-5 text-white/80">
                       <li>1. Ulož si obrázek výhry do galerie.</li>
-                      <li>2. Dej ho na Instagram story a označ <span className="font-black text-neon">@prachyzaregistraci</span>.</li>
+                      <li>2. Dej ho na Instagram story a označ <span className="font-black text-neon">@prachyzaregistracicz</span>.</li>
                       <li>3. V {DRAW_DAY} {formatDrawDate()} v {DRAW_TIME} vylosujeme jednoho ze sdílejících a proplatíme mu, co mu padlo.</li>
                     </ol>
                   </div>
@@ -365,8 +365,8 @@ export default function WheelPage() {
                 Hraj o <span className="text-neon">{JACKPOT_LABEL}</span>
               </h2>
               <p className="mt-2 text-sm leading-6 text-slate-300">
-                Zatoč si, výsledek dej na story a označ <span className="font-bold text-neon">@prachyzaregistraci</span>. Každou {DRAW_DAY}
-                {" "}vylosujeme jednoho ze sdílejících a proplatíme mu, co mu padlo — výhry až <span className="whitespace-nowrap font-bold text-white">{TOP_REGULAR_PRIZE}</span>.
+                Zatoč si, výsledek dej na story a označ <span className="font-bold text-neon">@prachyzaregistracicz</span>. Každou {DRAW_DAY}
+                {" "}vylosujeme jednoho ze sdílejících a proplatíme mu, co mu padlo. Výhry až <span className="whitespace-nowrap font-bold text-white">{TOP_REGULAR_PRIZE}</span>.
               </p>
             </div>
           </section>
@@ -454,7 +454,7 @@ export default function WheelPage() {
                 <Gift size={20} />
               </span>
               <div className="min-w-0 flex-1">
-                <h2 className="font-black leading-tight">Sdílej story — výhru ti proplatíme</h2>
+                <h2 className="font-black leading-tight">Sdílej story a výhru ti proplatíme</h2>
                 <p className="mt-0.5 text-xs text-slate-400">Nejbližší losování: neděle {formatDrawDate()} v {DRAW_TIME}</p>
               </div>
             </div>

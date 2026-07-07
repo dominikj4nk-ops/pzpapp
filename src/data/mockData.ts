@@ -1,5 +1,3 @@
-import { Hotel, ShoppingBag, Zap } from "lucide-react";
-
 export type Bonus = {
   id: string;
   name: string;
@@ -34,7 +32,7 @@ export const bonuses: Bonus[] = [
     tags: ["15 min", "Snadné"],
     logo: "mB",
     logoClass: "bg-white text-pink-600",
-    logoUrl: "https://play-lh.googleusercontent.com/rvyT-isZRd9AxtgK20HG-uG6IVarqEDJ_sivrkrD7eZCiEMMSVvMCrqFBB4d_Nt-47M",
+    logoUrl: `${import.meta.env.BASE_URL}assets/mbank-logo.png`,
     partnerUrl: "https://www.mbank.cz/mgm/ucty-mkonto.html?numer=dominikj5463",
     promoCode: "dominikj5463",
     description: "Moderní online bankovnictví s bonusem pro nové klienty. Za platby kartou v telefonu ti mBank vrací 100 Kč za každou platbu, celkem až 1 000 Kč.",
@@ -42,7 +40,7 @@ export const bonuses: Bonus[] = [
     steps: [
       "Klikni na náš odkaz a vyplň údaje",
       "Do kolonky „Přicházím na základě akce“ vepiš kód dominikj5463",
-      "Plať za nákupy kartou v telefonu — za každou platbu ti mBank vrátí 100 Kč",
+      "Plať za nákupy kartou v telefonu, za každou platbu ti mBank vrátí 100 Kč",
       "Takhle získáš až 1 000 Kč (10 plateb × 100 Kč)"
     ],
     completionTime: "15 min",
@@ -149,15 +147,113 @@ export const formatKc = (amount: number) => `${amount.toLocaleString("cs-CZ")} 
 
 export const REFERRAL_REWARD = 100;
 
-export const cashbackStores = [
-  { name: "Bolt", text: "bonus na jízdy za pozvání", logo: "B", logoUrl: "https://www.google.com/s2/favicons?domain=bolt.eu&sz=128", icon: Zap, color: "from-emerald-400 to-green-600" },
-  { name: "Vosíme.cz", text: "bonus na rozvoz za pozvání", logo: "V", logoUrl: "https://www.google.com/s2/favicons?domain=vosime.cz&sz=128", icon: ShoppingBag, color: "from-orange-400 to-red-500" },
-  { name: "Alza.cz", text: "až 5 % cashback", logo: "a", logoUrl: "https://www.google.com/s2/favicons?domain=alza.cz&sz=128", icon: ShoppingBag, color: "from-blue-500 to-indigo-700" },
-  { name: "Mall.cz", text: "až 4 % cashback", logo: "M", logoUrl: "https://www.google.com/s2/favicons?domain=mall.cz&sz=128", icon: ShoppingBag, color: "from-red-500 to-orange-500" },
-  { name: "Booking.com", text: "až 6 % cashback", logo: "B.", logoUrl: "https://www.google.com/s2/favicons?domain=booking.com&sz=128", icon: Hotel, color: "from-sky-500 to-blue-800" },
-  { name: "Rohlik.cz", text: "až 3 % cashback", logo: "R", logoUrl: "https://www.google.com/s2/favicons?domain=rohlik.cz&sz=128", icon: ShoppingBag, color: "from-yellow-400 to-orange-500" },
-  { name: "Notino.cz", text: "až 4 % cashback", logo: "N", logoUrl: "https://www.google.com/s2/favicons?domain=notino.cz&sz=128", icon: ShoppingBag, color: "from-zinc-700 to-black" },
-  { name: "Datart.cz", text: "až 2 % cashback", logo: "D", logoUrl: "https://www.google.com/s2/favicons?domain=datart.cz&sz=128", icon: Zap, color: "from-amber-400 to-yellow-600" }
+export type ReferralDeal = {
+  id: string;
+  name: string;
+  reward: string;
+  tagline: string;
+  logo: string;
+  logoUrl: string;
+  color: string;
+  description: string;
+  steps: string[];
+  note?: string;
+  // TODO: nahradit našimi pozvánkovými odkazy / kódy
+  partnerUrl: string;
+};
+
+// Jen akce, které novému uživateli reálně něco dají (kredit / slevu v penězích).
+export const referralDeals: ReferralDeal[] = [
+  {
+    id: "shein",
+    name: "SHEIN",
+    reward: "60 %",
+    tagline: "60% sleva na nákup pro nové uživatele",
+    logo: "S",
+    logoUrl: "https://www.google.com/s2/favicons?domain=shein.com&sz=128",
+    color: "from-slate-600 to-slate-900",
+    description:
+      "Módní e-shop s oblečením a doplňky za nízké ceny. Přes naši exkluzivní pozvánku získáš jako nový uživatel slevu 60 % na nákup – jedna z nejvyšších slev, jaké SHEIN nabízí.",
+    steps: [
+      "Klikni na náš odkaz, nebo v aplikaci SHEIN vyhledej kód 9XP543G",
+      "Zaregistruj se jako nový uživatel",
+      "Sleva 60 % se ti uplatní na nákup"
+    ],
+    note: "Platí jen pro nové účty. Pokud už na SHEIN účet máš, stačí si vytvořit nový a sleva platí i pro tebe.",
+    partnerUrl: "https://onelink.shein.com/41/5uzgm7pyfokh"
+  },
+  {
+    id: "bolt",
+    name: "Bolt",
+    reward: "100 Kč",
+    tagline: "100 Kč sleva na 2 první jízdy",
+    logo: "B",
+    logoUrl: "https://www.google.com/s2/favicons?domain=bolt.eu&sz=128",
+    color: "from-emerald-400 to-green-600",
+    description:
+      "Taxi a sdílené koloběžky. Přes naši pozvánku dostaneš jako nový uživatel slevu 100 Kč, která se ti rozloží na 2 první jízdy. Ideální na cestu domů z večírku nebo rychlý přesun po městě.",
+    steps: [
+      "Stáhni si appku Bolt přes náš odkaz",
+      "Při registraci zadej náš pozvánkový kód 22UJ1U",
+      "Sleva 100 Kč se ti automaticky uplatní na 2 první jízdy"
+    ],
+    note: "Platí pro nové uživatele. Přesná výše promo akce se může lišit podle města.",
+    partnerUrl: "https://invite.bolt.eu/22UJ1U"
+  },
+  {
+    id: "liftago",
+    name: "Liftago",
+    reward: "50 %",
+    tagline: "50% sleva na první jízdu nebo doručení",
+    logo: "L",
+    logoUrl: "https://www.google.com/s2/favicons?domain=liftago.cz&sz=128",
+    color: "from-blue-400 to-indigo-600",
+    description:
+      "Česká appka na taxi, odvoz tvého vozu i kurýrní doručení. Přes naši pozvánku dostaneš 50% slevu na první objednávku – je jedno, jestli pojedeš taxíkem, necháš si odvézt auto, nebo pošleš balík kurýrem.",
+    steps: [
+      "Stáhni si aplikaci Liftago přes náš odkaz",
+      "Při registraci zadej náš slevový kód 3C5Y3G",
+      "50% sleva se ti uplatní na první jízdu, odvoz vozu nebo doručení"
+    ],
+    note: "Platí pro nové uživatele na první objednávku v aplikaci.",
+    partnerUrl: "https://www.liftago.cz/invite?code=3C5Y3G"
+  },
+  {
+    id: "wolt",
+    name: "Wolt",
+    reward: "150 Kč",
+    tagline: "3× 50 Kč sleva na první objednávky",
+    logo: "W",
+    logoUrl: "https://www.google.com/s2/favicons?domain=wolt.com&sz=128",
+    color: "from-sky-400 to-blue-600",
+    description:
+      "Rozvoz jídla a nákupů. Přes naši pozvánku dostaneš slevu 50 Kč na každou z prvních 3 objednávek s doručením – celkem tedy ušetříš 150 Kč.",
+    steps: [
+      "Stáhni si appku Wolt přes náš odkaz",
+      "Při registraci zadej náš pozvánkový kód ZH23BQT",
+      "Sleva 50 Kč se ti automaticky uplatní na každou z prvních 3 objednávek s doručením"
+    ],
+    note: "Platí pro nové uživatele na objednávky s doručením.",
+    partnerUrl: "https://get.wolt.com/ZH23BQT"
+  },
+  {
+    id: "vosime",
+    name: "Vosíme.cz",
+    reward: "100 Kč",
+    tagline: "100 Kč na první objednávku jídla",
+    logo: "V",
+    logoUrl: "https://www.google.com/s2/favicons?domain=vosime.cz&sz=128",
+    color: "from-orange-400 to-red-500",
+    description:
+      "Rozvoz jídla po českých městech. Přes náš pozvánkový odkaz dostaneš 100 Kč slevu na první objednávku, takže tě pizza může vyjít na pár desetikorun.",
+    steps: [
+      "Otevři Vosíme.cz přes náš odkaz – kupón se ti aktivuje automaticky",
+      "Vyber si jídlo a objednej",
+      "100 Kč se ti odečte rovnou z první objednávky"
+    ],
+    note: "Platí pro nové zákazníky na první objednávku.",
+    partnerUrl: "https://vosime.cz/coupon-go/REF6UOVVEG4"
+  }
 ];
 
 export const suggestions = ["mBank", "Air Bank", "Tipli", "Robinhood", "1 000 Kč bonus"];

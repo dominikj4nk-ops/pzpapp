@@ -75,7 +75,7 @@ function offerHook(bonus: Bonus) {
   const people = 30 + (seed % 90);
   const hooks = [
     `Dneska si ${bonus.name} vzalo dalších ${people} lidí. ${bonus.bonus} pořád čeká na tebe.`,
-    `${bonus.name} má hodnocení ${bonus.rating}★ — jedna z nejoblíbenějších. Škoda nechat ${bonus.bonus} ležet.`,
+    `${bonus.name} má hodnocení ${bonus.rating}★ a patří k nejoblíbenějším. Škoda nechat ${bonus.bonus} ležet.`,
     `Zabere jen ${bonus.completionTime} a máš ${bonus.bonus}. Většina to dá na jeden zátah.`,
     `Byl jsi kousek od ${bonus.bonus}. Dokonči ${bonus.name}, než ti to uteče.`
   ];

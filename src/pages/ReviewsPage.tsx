@@ -14,7 +14,7 @@ const stats = [
 
 const trustPoints = [
   { icon: ShieldCheck, title: "Jen ověřené nabídky", text: "Spolupracujeme s reálnými bankami a platformami. Žádné pochybné programy ani skryté poplatky." },
-  { icon: Wallet, title: "Peníze jdou přímo tobě", text: "Bonus vyplácí partner nebo my na tvůj účet. My si nic nestrháváme — výdělek je celý tvůj." },
+  { icon: Wallet, title: "Peníze jdou přímo tobě", text: "Bonus vyplácí partner nebo my na tvůj účet. Nic si nestrháváme, výdělek je celý tvůj." },
   { icon: BadgeCheck, title: "Reálné, ověřené recenze", text: "Recenze níže jsou od skutečných uživatelů, kteří bonusy dokončili a dostali zaplaceno." }
 ];
 
@@ -164,7 +164,7 @@ export default function ReviewsPage() {
             </h1>
             <p className="mt-4 max-w-[560px] text-sm leading-6 text-slate-300 sm:text-base">
               Nejsme sliby na papíře. Tisíce lidí si přes nás sáhly na reálné peníze za registrace u bank a platforem. Přečti si,
-              co říkají — a přidej se.
+              co říkají, a přidej se.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <button

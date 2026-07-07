@@ -2,7 +2,8 @@ import { CheckCircle2, Copy, Hourglass, Send, Share2, UserPlus } from "lucide-re
 import type { FormEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Header from "../components/Header";
-import { addReferralClaim, getReferralLink, useReferralClaims } from "../components/referralState";
+import { HONEYPOT_FIELD, sendForm } from "../components/formMailer";
+import { addReferralClaim, getReferralCode, getReferralLink, useReferralClaims } from "../components/referralState";
 import { GlassCard, NeonButton, SectionHeading } from "../components/ui";
 import { formatKc, REFERRAL_REWARD } from "../data/mockData";
 
@@ -17,9 +18,12 @@ export default function RewardsPage() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [account, setAccount] = useState("");
-  const [fileName, setFileName] = useState("");
+  const [file, setFile] = useState<File | null>(null);
   const [consent, setConsent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
   const copyTimer = useRef<number | undefined>(undefined);
+  const fileName = file?.name ?? "";
 
   useEffect(() => {
     setInviteLink(getReferralLink());
@@ -54,15 +58,40 @@ export default function RewardsPage() {
     }
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (sending) return;
+    const form = event.currentTarget;
+    const honeypot = String(new FormData(form).get(HONEYPOT_FIELD) ?? "");
+    if (!offer.trim() || !email.trim() || !name.trim() || !account.trim()) return;
+
+    setSending(true);
+    setSubmitError(false);
+    const ok = await sendForm(
+      "Nová žádost o odměnu za pozvaného kamaráda",
+      {
+        [HONEYPOT_FIELD]: honeypot,
+        "Nabídka": offer,
+        "E-mail žadatele": email,
+        "Jméno pro výplatu": name,
+        "Číslo účtu": account,
+        "Pozvánkový kód": getReferralCode()
+      },
+      file
+    );
+    setSending(false);
+    if (!ok) {
+      setSubmitError(true);
+      return;
+    }
+
     addReferralClaim({ offer, email: email.trim(), name: name.trim(), account: account.trim(), fileName });
-    event.currentTarget.reset();
+    form.reset();
     setOffer("");
     setEmail("");
     setName("");
     setAccount("");
-    setFileName("");
+    setFile(null);
     setConsent(false);
     setJustSubmitted(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -149,9 +178,10 @@ export default function RewardsPage() {
                 <input
                   required
                   type="file"
+                  name="attachment"
                   accept="image/*,.pdf"
                   className="sr-only"
-                  onChange={(event) => setFileName(event.target.files?.[0]?.name ?? "")}
+                  onChange={(event) => setFile(event.target.files?.[0] ?? null)}
                 />
               </label>
 
@@ -186,8 +216,23 @@ export default function RewardsPage() {
                 <span>Souhlasím s podmínkami a zpracováním údajů pro vyplacení odměny.</span>
               </label>
 
-              <NeonButton type="submit" className="w-full">
-                <Send size={17} className="inline" /> Odeslat ke kontrole
+              <input
+                type="text"
+                name={HONEYPOT_FIELD}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                className="pointer-events-none absolute left-[-9999px] opacity-0"
+              />
+
+              {submitError ? (
+                <p className="rounded-[18px] border border-red-400/25 bg-red-400/10 p-3 text-sm leading-5 text-red-200">
+                  Žádost se nepodařilo odeslat. Zkontroluj připojení a zkus to prosím znovu.
+                </p>
+              ) : null}
+
+              <NeonButton type="submit" disabled={sending} className="w-full disabled:opacity-60">
+                <Send size={17} className="inline" /> {sending ? "Odesílám…" : "Odeslat ke kontrole"}
               </NeonButton>
             </form>
           )}
