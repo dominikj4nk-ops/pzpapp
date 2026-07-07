@@ -3,12 +3,12 @@ import type { LucideIcon, LucideProps } from "lucide-react";
 import type { ComponentType, FormEvent } from "react";
 import { useState } from "react";
 import Header from "../components/Header";
-import { FORM_TARGET_EMAIL, HONEYPOT_FIELD, sendForm } from "../components/formMailer";
+import { FORM_TARGET_EMAIL, HONEYPOT_FIELD, RATE_LIMIT_MESSAGE, sendForm } from "../components/formMailer";
 import { GlassCard, TikTokIcon } from "../components/ui";
 
 const CONTACT_EMAIL = FORM_TARGET_EMAIL;
 
-type FormStatus = "idle" | "sending" | "sent" | "error";
+type FormStatus = "idle" | "sending" | "sent" | "error" | "rate-limited";
 
 type ContactMethod = {
   icon: LucideIcon | ComponentType<LucideProps>;
@@ -70,12 +70,12 @@ export default function HelpPage() {
     if (!email || !message) return;
 
     setContactStatus("sending");
-    const ok = await sendForm("Dotaz z webu prachyzaregistraci.cz", {
+    const result = await sendForm("Dotaz z webu prachyzaregistraci.cz", {
       [HONEYPOT_FIELD]: String(data.get(HONEYPOT_FIELD) ?? ""),
       "E-mail pro odpověď": email,
       "Zpráva": message
     });
-    setContactStatus(ok ? "sent" : "error");
+    setContactStatus(result === "sent" ? "sent" : result === "rate-limited" ? "rate-limited" : "error");
   };
 
   const submitTip = async (event: FormEvent<HTMLFormElement>) => {
@@ -86,12 +86,12 @@ export default function HelpPage() {
     if (!link) return;
 
     setTipStatus("sending");
-    const ok = await sendForm("Tip na novou nabídku", {
+    const result = await sendForm("Tip na novou nabídku", {
       [HONEYPOT_FIELD]: String(data.get(HONEYPOT_FIELD) ?? ""),
       "Odkaz na nabídku": link,
       "Poznámka": String(data.get("note") ?? "").trim() || "bez poznámky"
     });
-    setTipStatus(ok ? "sent" : "error");
+    setTipStatus(result === "sent" ? "sent" : result === "rate-limited" ? "rate-limited" : "error");
   };
 
   return (
@@ -178,6 +178,9 @@ export default function HelpPage() {
                 aria-hidden="true"
                 className="pointer-events-none absolute left-[-9999px] opacity-0"
               />
+              {contactStatus === "rate-limited" ? (
+                <p className="rounded-[18px] border border-amber-300/25 bg-amber-300/10 p-3 text-sm leading-5 text-amber-100">{RATE_LIMIT_MESSAGE}</p>
+              ) : null}
               {contactStatus === "error" ? (
                 <p className="rounded-[18px] border border-red-400/25 bg-red-400/10 p-3 text-sm leading-5 text-red-200">
                   Zprávu se nepodařilo odeslat. Zkus to prosím znovu, nebo nám napiš přímo na{" "}
@@ -233,6 +236,9 @@ export default function HelpPage() {
                 aria-hidden="true"
                 className="pointer-events-none absolute left-[-9999px] opacity-0"
               />
+              {tipStatus === "rate-limited" ? (
+                <p className="rounded-[18px] border border-amber-300/25 bg-amber-300/10 p-3 text-sm leading-5 text-amber-100">{RATE_LIMIT_MESSAGE}</p>
+              ) : null}
               {tipStatus === "error" ? (
                 <p className="rounded-[18px] border border-red-400/25 bg-red-400/10 p-3 text-sm leading-5 text-red-200">
                   Tip se nepodařilo odeslat. Zkus to prosím znovu za chvíli.

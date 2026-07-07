@@ -2,12 +2,13 @@ import { CheckCircle2, Copy, Hourglass, Send, Share2, UserPlus } from "lucide-re
 import type { FormEvent } from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Header from "../components/Header";
-import { HONEYPOT_FIELD, sendForm } from "../components/formMailer";
+import { HONEYPOT_FIELD, submitWithAttachment } from "../components/formMailer";
 import { addReferralClaim, getReferralCode, getReferralLink, useReferralClaims } from "../components/referralState";
 import { GlassCard, NeonButton, SectionHeading } from "../components/ui";
 import { formatKc, REFERRAL_REWARD } from "../data/mockData";
 
 const MONTHLY_CLAIM_LIMIT = 5;
+const PENDING_CLAIM_KEY = "pzp:pending-claim";
 
 export default function RewardsPage() {
   const claims = useReferralClaims();
@@ -21,12 +22,33 @@ export default function RewardsPage() {
   const [file, setFile] = useState<File | null>(null);
   const [consent, setConsent] = useState(false);
   const [sending, setSending] = useState(false);
-  const [submitError, setSubmitError] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const copyTimer = useRef<number | undefined>(undefined);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const fileName = file?.name ?? "";
 
   useEffect(() => {
     setInviteLink(getReferralLink());
+
+    // Návrat z FormSubmitu po odeslání žádosti s přílohou (viz submitWithAttachment):
+    // teprve teď je jisté, že e-mail odešel – zapíšeme žádost do historie.
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("odeslano") === "1") {
+      try {
+        const pending = window.localStorage.getItem(PENDING_CLAIM_KEY);
+        if (pending) {
+          addReferralClaim(JSON.parse(pending));
+          window.localStorage.removeItem(PENDING_CLAIM_KEY);
+          setJustSubmitted(true);
+        }
+      } catch {
+        // poškozený záznam – ignorujeme
+      }
+      params.delete("odeslano");
+      const query = params.toString();
+      window.history.replaceState(null, "", `${window.location.pathname}${query ? `?${query}` : ""}`);
+    }
+
     return () => window.clearTimeout(copyTimer.current);
   }, []);
 
@@ -58,16 +80,26 @@ export default function RewardsPage() {
     }
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (sending) return;
-    const form = event.currentTarget;
-    const honeypot = String(new FormData(form).get(HONEYPOT_FIELD) ?? "");
-    if (!offer.trim() || !email.trim() || !name.trim() || !account.trim()) return;
+    const honeypot = String(new FormData(event.currentTarget).get(HONEYPOT_FIELD) ?? "");
+    const fileInput = fileInputRef.current;
+    if (!offer.trim() || !email.trim() || !name.trim() || !account.trim() || !fileInput?.files?.length) return;
 
-    setSending(true);
-    setSubmitError(false);
-    const ok = await sendForm(
+    setSubmitError("");
+
+    // Žádost si odložíme; do historie ji zapíšeme až po návratu z FormSubmitu.
+    try {
+      window.localStorage.setItem(
+        PENDING_CLAIM_KEY,
+        JSON.stringify({ offer, email: email.trim(), name: name.trim(), account: account.trim(), fileName })
+      );
+    } catch {
+      // localStorage nedostupné – žádost se odešle, jen nebude v historii
+    }
+
+    const submitted = submitWithAttachment(
       "Nová žádost o odměnu za pozvaného kamaráda",
       {
         [HONEYPOT_FIELD]: honeypot,
@@ -77,24 +109,14 @@ export default function RewardsPage() {
         "Číslo účtu": account,
         "Pozvánkový kód": getReferralCode()
       },
-      file
+      fileInput,
+      `${window.location.origin}${window.location.pathname}?odeslano=1`
     );
-    setSending(false);
-    if (!ok) {
-      setSubmitError(true);
-      return;
-    }
 
-    addReferralClaim({ offer, email: email.trim(), name: name.trim(), account: account.trim(), fileName });
-    form.reset();
-    setOffer("");
-    setEmail("");
-    setName("");
-    setAccount("");
-    setFile(null);
-    setConsent(false);
-    setJustSubmitted(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (submitted) {
+      // Stránka teď přejde na FormSubmit a vrátí se zpět s ?odeslano=1.
+      setSending(true);
+    }
   };
 
   return (
@@ -177,6 +199,7 @@ export default function RewardsPage() {
                 <span className="truncate font-bold">{fileName || "Nahrát screenshot potvrzení"}</span>
                 <input
                   required
+                  ref={fileInputRef}
                   type="file"
                   name="attachment"
                   accept="image/*,.pdf"
@@ -226,9 +249,7 @@ export default function RewardsPage() {
               />
 
               {submitError ? (
-                <p className="rounded-[18px] border border-red-400/25 bg-red-400/10 p-3 text-sm leading-5 text-red-200">
-                  Žádost se nepodařilo odeslat. Zkontroluj připojení a zkus to prosím znovu.
-                </p>
+                <p className="rounded-[18px] border border-red-400/25 bg-red-400/10 p-3 text-sm leading-5 text-red-200">{submitError}</p>
               ) : null}
 
               <NeonButton type="submit" disabled={sending} className="w-full disabled:opacity-60">
