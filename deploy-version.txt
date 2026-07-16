@@ -1,2 +1,0 @@
-﻿source_commit=c4fad14
-deployed_utc=2026-07-16T15:01:03.7106939Z
