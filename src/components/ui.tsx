@@ -53,7 +53,7 @@ export function BrandLogo({ className = "", onClick, tone = "white" }: { classNa
 
   if (onClick) {
     return (
-      <button onClick={onClick} className={`flex items-center gap-1 whitespace-nowrap font-black tracking-normal ${className}`}>
+      <button onClick={onClick} aria-label="Přejít na úvodní stránku" className={`flex items-center gap-1 whitespace-nowrap font-black tracking-normal ${className}`}>
         {content}
       </button>
     );
@@ -139,12 +139,19 @@ export function FilterTabs({
 
 export function LogoMark({ bonus, size = "md" }: { bonus: Bonus; size?: "sm" | "md" | "lg" }) {
   const dimensions = size === "lg" ? "h-16 w-16 text-2xl" : size === "sm" ? "h-10 w-10 text-sm" : "h-14 w-14 text-xl";
+  const imageFit =
+    bonus.logoFit === "symbol"
+      ? "h-full w-auto max-w-none object-left"
+      : bonus.logoFit === "contain"
+        ? "h-full w-full object-contain"
+        : "h-full w-full object-cover";
+
   return (
-    <div className={`relative grid ${dimensions} shrink-0 place-items-center overflow-hidden rounded-2xl border border-black/10 ${bonus.logoClass} font-black shadow-[0_12px_28px_rgba(0,0,0,.28)]`}>
+    <div className={`relative grid ${dimensions} shrink-0 place-items-center overflow-hidden rounded-[14px] ${bonus.logoClass} font-black shadow-[0_12px_28px_rgba(0,0,0,.28)]`}>
       <img
         src={bonus.logoUrl}
         alt={`${bonus.name} logo`}
-        className="relative z-10 h-full w-full object-contain p-2 xl:p-0.5"
+        className={`relative z-10 ${imageFit}`}
         onError={(event) => {
           event.currentTarget.style.display = "none";
           event.currentTarget.nextElementSibling?.classList.remove("hidden");

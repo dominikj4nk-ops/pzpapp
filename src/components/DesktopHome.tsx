@@ -28,8 +28,8 @@ import { LogoMark } from "./ui";
 
 const ageBonusOrder: Record<string, string[]> = {
   "15+": ["mbank-ucet", "airbank-ucet", "tipli-cashback"],
-  "18+": ["robinhood-trading", "revolut-cestovani", "raiffeisenbank-ucet", "tipli-cashback"],
-  Vše: ["mbank-ucet", "airbank-ucet", "raiffeisenbank-ucet", "tipli-cashback", "robinhood-trading", "revolut-cestovani"]
+  "18+": ["robinhood-trading", "patrongo", "raiffeisenbank-ucet", "tipli-cashback"],
+  Vše: ["mbank-ucet", "airbank-ucet", "raiffeisenbank-ucet", "tipli-cashback", "robinhood-trading", "patrongo"]
 };
 
 const bonusMatchesAge = (bonus: (typeof bonuses)[number], filter: string) => {
@@ -141,31 +141,31 @@ export default function DesktopHome() {
             </div>
           </div>
 
-          <div className="mt-5 grid grid-cols-[repeat(auto-fit,minmax(430px,1fr))] gap-4">
+          <div className="mt-5 grid grid-cols-2 gap-4">
             {visibleBonuses.map((bonus, index) => (
               <article
                 key={bonus.id}
                 onClick={() => navigate(paths.exchangeDetail(bonus.id))}
                 className={`group relative flex min-h-[226px] cursor-pointer flex-col overflow-hidden rounded-[12px] border p-5 transition duration-200 hover:-translate-y-0.5 hover:border-neon/40 hover:bg-white/[.065] ${index === 0 ? "border-neon/30 bg-neon/[.045]" : "border-white/10 bg-white/[.035]"}`}
               >
-                <div className="grid min-w-0 grid-cols-[28px_64px_minmax(0,1fr)_minmax(112px,180px)] items-start gap-3">
+                <div className="grid min-w-0 grid-cols-[28px_56px_minmax(0,1fr)_148px] items-start gap-3">
                   <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-[10px] text-[10px] font-black ${index === 0 ? "bg-neon text-[#02130c]" : "border border-white/10 bg-[#111f29] text-slate-400"}`}>
                     {index + 1}
                   </span>
 
-                  <LogoMark bonus={bonus} size="lg" />
+                  <LogoMark bonus={bonus} />
 
                   <div className="min-w-0 flex-1 pt-0.5">
                     <div className="flex min-w-0 items-center gap-2">
-                      <h3 className="truncate text-lg font-black">{bonus.name}</h3>
+                      <h3 className="truncate text-[17px] font-black leading-tight">{bonus.name}</h3>
                       <BadgeCheck size={16} className="shrink-0 text-neon" />
                     </div>
                     <p className="mt-1 text-[10px] font-bold uppercase text-slate-600">{bonus.type} · ověřený partner</p>
                   </div>
 
-                  <div className="shrink-0 text-right">
+                  <div className="w-[148px] shrink-0 text-right">
                     <p className="text-[9px] font-black uppercase text-slate-600">{offerValueLabel(bonus)}</p>
-                    <p className="mt-1 max-w-[180px] text-[23px] font-black leading-tight text-neon">{bonus.bonus}</p>
+                    <p className="mt-1 text-[22px] font-black leading-[1.08] text-neon">{bonus.bonus}</p>
                   </div>
                 </div>
 

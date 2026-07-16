@@ -9,7 +9,7 @@ import {
   Trophy,
   X
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Header from "../components/Header";
 import PrizeArt from "../components/PrizeArt";
@@ -32,7 +32,9 @@ import {
 } from "../components/wheelState";
 
 const SEGMENT = 360 / wheelPrizes.length;
-const SPIN_DURATION_MS = 4400;
+const SPIN_DURATION_MS = 5200;
+const REDUCED_SPIN_DURATION_MS = 900;
+const SPIN_FALLBACK_BUFFER_MS = 350;
 
 const sliceFill: Record<WheelTier, string> = {
   small: "#0a1a29",
@@ -92,7 +94,7 @@ function HeroDecor() {
   return (
     <div className="pointer-events-none absolute -right-10 -top-10 h-44 w-44 sm:h-48 sm:w-48">
       <div className="absolute inset-6 rounded-full bg-neon/15 blur-2xl" />
-      <svg viewBox="0 0 100 100" className="relative h-full w-full opacity-90 [animation:spin_26s_linear_infinite]">
+      <svg viewBox="0 0 100 100" className="relative h-full w-full opacity-90 [animation:wheelIconSpin_26s_linear_infinite]">
         <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(24,242,106,.4)" strokeWidth="1" strokeDasharray="1 5" />
         {segments}
         <circle cx="50" cy="50" r="9" fill="#050f18" stroke="rgba(24,242,106,.55)" strokeWidth="1.4" />
@@ -105,15 +107,21 @@ export default function WheelPage() {
   const { canSpin, remaining, bonusSpins, sharedThisWeek } = useWheel();
   const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
+  const [spinDuration, setSpinDuration] = useState(SPIN_DURATION_MS);
+  const [landedIndex, setLandedIndex] = useState<number | null>(null);
   const [resultPrize, setResultPrize] = useState<WheelPrize | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [storyImage, setStoryImage] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const timeoutRef = useRef<number | undefined>(undefined);
   const toastRef = useRef<number | undefined>(undefined);
+  const spinningRef = useRef(false);
+  const pendingPrizeRef = useRef<WheelPrize | null>(null);
+  const pendingIndexRef = useRef<number | null>(null);
 
   useEffect(
     () => () => {
+      spinningRef.current = false;
       window.clearTimeout(timeoutRef.current);
       window.clearTimeout(toastRef.current);
     },
@@ -130,18 +138,59 @@ export default function WheelPage() {
     };
   }, [showResult]);
 
+  const finishSpin = useCallback(() => {
+    if (!spinningRef.current) return;
+
+    const prize = pendingPrizeRef.current;
+    const index = pendingIndexRef.current;
+    spinningRef.current = false;
+    pendingPrizeRef.current = null;
+    pendingIndexRef.current = null;
+    window.clearTimeout(timeoutRef.current);
+
+    if (!prize || index === null) {
+      setSpinning(false);
+      return;
+    }
+
+    setSpinning(false);
+    setRotation((current) => ((current % 360) + 360) % 360);
+    setLandedIndex(index);
+    recordSpin(prize.id);
+
+    if (prize.tier === "spin") {
+      setToast("Toč znova! Máš otočku zdarma navíc.");
+      window.clearTimeout(toastRef.current);
+      toastRef.current = window.setTimeout(() => setToast(null), 2600);
+      return;
+    }
+
+    setResultPrize(prize);
+    setShowResult(true);
+  }, []);
+
   const handleSpin = () => {
-    if (spinning || !canSpin) return;
+    if (spinningRef.current || !canSpin) return;
+
     const index = pickPrizeIndex();
     const prize = wheelPrizes[index];
     const center = index * SEGMENT + SEGMENT / 2;
     const targetMod = (360 - center + 360) % 360;
     const currentMod = ((rotation % 360) + 360) % 360;
-    const jitter = (Math.random() - 0.5) * (SEGMENT - 12);
-    const forward = ((targetMod - currentMod + 360) % 360) + jitter;
-    const delta = 360 * 6 + forward;
+    const safeOffset = (Math.random() - 0.5) * SEGMENT * 0.38;
+    const forward = ((targetMod - currentMod + 360) % 360) + safeOffset;
+    const fullTurns = 7 + Math.floor(Math.random() * 2);
+    const delta = 360 * fullTurns + forward;
+    const duration = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? REDUCED_SPIN_DURATION_MS
+      : SPIN_DURATION_MS;
 
+    spinningRef.current = true;
+    pendingPrizeRef.current = prize;
+    pendingIndexRef.current = index;
     setSpinning(true);
+    setSpinDuration(duration);
+    setLandedIndex(null);
     setShowResult(false);
     setToast(null);
     setRotation((current) => current + delta);
@@ -153,20 +202,8 @@ export default function WheelPage() {
       void prizeStoryDataUrl(prize).then(setStoryImage).catch(() => setStoryImage(null));
     }
 
-    timeoutRef.current = window.setTimeout(() => {
-      setSpinning(false);
-      recordSpin(prize.id);
-
-      // Padla otočka navíc → žádný modal, jen krátká hláška a kolo je hned připravené k dalšímu točení.
-      if (prize.tier === "spin") {
-        setToast("Toč znova! Máš otočku zdarma navíc.");
-        toastRef.current = window.setTimeout(() => setToast(null), 2600);
-        return;
-      }
-
-      setResultPrize(prize);
-      setShowResult(true);
-    }, SPIN_DURATION_MS);
+    window.clearTimeout(timeoutRef.current);
+    timeoutRef.current = window.setTimeout(finishSpin, duration + SPIN_FALLBACK_BUFFER_MS);
   };
 
   const particles = useMemo(() => {
@@ -319,13 +356,34 @@ export default function WheelPage() {
           </section>
 
           <div className="wheel-stage">
-            <div className="wheel-wrap">
+            <div className="wheel-stage-status" aria-live="polite">
+              <span className={`wheel-status-dot ${spinning ? "wheel-status-dot-spinning" : ""}`} aria-hidden />
+              <span className="min-w-0 flex-1 truncate font-bold">
+                {spinning
+                  ? "Kolo právě vybírá výhru"
+                  : canSpin
+                    ? bonusSpins > 0
+                      ? "Otočka navíc je připravená"
+                      : "Dnešní otočka je připravená"
+                    : "Dnešní otočka byla využita"}
+              </span>
+              <span className="wheel-stage-count">8 výher</span>
+            </div>
+
+            <div className="wheel-wrap" data-spinning={spinning ? "true" : "false"}>
               <div className="wheel-pointer" />
               <div
                 className={`wheel ${spinning ? "wheel-spinning" : ""}`}
-                style={{ transform: `rotate(${rotation}deg)` }}
+                style={{
+                  transform: `rotate(${rotation}deg)`,
+                  transitionDuration: spinning ? `${spinDuration}ms` : "0ms"
+                }}
+                onTransitionEnd={(event) => {
+                  if (event.propertyName === "transform") finishSpin();
+                }}
+                aria-busy={spinning}
               >
-                <svg viewBox="0 0 200 200" className="h-full w-full">
+                <svg viewBox="0 0 200 200" className="h-full w-full" role="img" aria-label="Kolo s osmi možnými výhrami">
                   <defs>
                     <linearGradient id="wheelJackpotGradient" x1="0" y1="0" x2="1" y2="1">
                       <stop stopColor="#22f979" />
@@ -333,11 +391,16 @@ export default function WheelPage() {
                     </linearGradient>
                   </defs>
                   {wheelPrizes.map((prize, index) => (
-                    <path key={prize.id} d={slicePath(index)} fill={sliceFill[prize.tier]} stroke="rgba(255,255,255,.09)" strokeWidth="1" />
+                    <path
+                      key={prize.id}
+                      d={slicePath(index)}
+                      fill={sliceFill[prize.tier]}
+                      className={`wheel-slice ${landedIndex === index && !spinning ? "wheel-slice-selected" : ""}`}
+                    />
                   ))}
                   {wheelPrizes.map((prize, index) => {
                     const mid = index * SEGMENT + SEGMENT / 2;
-                    const labelPos = pointAt(mid, 72);
+                    const labelPos = pointAt(mid, 70);
                     return (
                       <g key={`label-${prize.id}`}>
                         <text
@@ -345,10 +408,13 @@ export default function WheelPage() {
                           y={labelPos.y}
                           textAnchor="middle"
                           dominantBaseline="central"
-                          fontSize="8"
+                          fontSize={prize.tier === "spin" ? "7.3" : "7.8"}
                           fontWeight="900"
                           fill={sliceText[prize.tier]}
-                          style={prize.tier === "jackpot" ? undefined : { textShadow: "0 1px 3px rgba(0,0,0,.58)" }}
+                          stroke={prize.tier === "jackpot" ? "transparent" : "rgba(2,8,15,.72)"}
+                          strokeWidth={prize.tier === "jackpot" ? "0" : "0.85"}
+                          paintOrder="stroke"
+                          letterSpacing="0"
                         >
                           {prize.short}
                         </text>
@@ -361,37 +427,46 @@ export default function WheelPage() {
                 <Trophy size={22} className="text-neon" />
               </div>
             </div>
-          </div>
 
-          {canSpin ? (
-            <div className="space-y-2">
+            {canSpin ? (
               <button
+                type="button"
                 onClick={handleSpin}
                 disabled={spinning}
-                className="neon-button flex h-16 w-full items-center justify-center gap-2.5 rounded-[20px] text-lg font-black uppercase tracking-wide text-[#02130c] shadow-[0_16px_38px_rgba(0,0,0,.42)] transition active:scale-95 disabled:opacity-70"
+                className={`wheel-spin-button ${spinning ? "wheel-spin-button-active" : ""}`}
               >
-                <FerrisWheel size={23} className={spinning ? "animate-spin" : ""} /> {spinning ? "Točím…" : "Zatočit kolem"}
-              </button>
-              {bonusSpins > 0 ? (
-                <p className="text-center text-xs font-bold text-neon">
-                  Máš {bonusSpins === 1 ? "1 otočku navíc" : `${bonusSpins} otočky navíc`} z minulé výhry.
-                </p>
-              ) : null}
-            </div>
-          ) : (
-            <GlassCard className="flex items-center justify-between gap-3 p-4">
-              <div className="flex items-center gap-3">
-                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/[.07] text-neon">
-                  <Timer size={20} />
+                <span className="wheel-spin-button-icon" aria-hidden>
+                  <FerrisWheel size={22} />
                 </span>
-                <div>
-                  <p className="text-sm font-bold">Další otočka za</p>
-                  <p className="text-xs text-slate-400">Vrať se zítra a zatoč znovu.</p>
+                <span className="min-w-0 text-left">
+                  <span className="block text-[16px] font-black leading-tight">
+                    {spinning ? "Kolo se točí" : "Zatočit zdarma"}
+                  </span>
+                  <span className="mt-0.5 block text-[11px] font-bold leading-tight opacity-65">
+                    {spinning
+                      ? "Výsledek se právě vybírá"
+                      : bonusSpins > 0
+                        ? "Použije se tvoje otočka navíc"
+                        : "Jeden pokus každých 24 hodin"}
+                  </span>
+                </span>
+                <span className="wheel-spin-button-badge">1×</span>
+              </button>
+            ) : (
+              <GlassCard className="wheel-countdown flex items-center justify-between gap-3 p-4">
+                <div className="flex items-center gap-3">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/[.07] text-neon">
+                    <Timer size={20} />
+                  </span>
+                  <div>
+                    <p className="text-sm font-bold">Další otočka za</p>
+                    <p className="text-xs text-slate-400">Vrať se zítra a zatoč znovu.</p>
+                  </div>
                 </div>
-              </div>
-              <p className="font-mono text-xl font-black tabular-nums text-neon">{formatCountdown(remaining)}</p>
-            </GlassCard>
-          )}
+                <p className="font-mono text-xl font-black tabular-nums text-neon">{formatCountdown(remaining)}</p>
+              </GlassCard>
+            )}
+          </div>
         </section>
 
         <section className="mt-4 space-y-4 xl:mt-0">

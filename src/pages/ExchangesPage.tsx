@@ -3,11 +3,12 @@ import { useMemo, useState } from "react";
 import Header from "../components/Header";
 import { trackEvent } from "../analytics/events";
 import { BonusCard, FilterTabs, GlassCard, SearchBar } from "../components/ui";
-import { bonusAmount, bonuses, exchangeFilters, formatKc } from "../data/mockData";
+import { ageFilters, bonusAmount, bonuses, exchangeFilters, formatKc } from "../data/mockData";
 
 export default function ExchangesPage() {
   const [query, setQuery] = useState("");
   const [active, setActive] = useState("Vše");
+  const [activeAge, setActiveAge] = useState("Vše");
   const filtered = useMemo(
     () =>
       bonuses.filter((bonus) => {
@@ -18,9 +19,10 @@ export default function ExchangesPage() {
           bonus.type.toLowerCase().includes(normalized) ||
           bonus.bonus.toLowerCase().includes(normalized);
         const matchesFilter = active === "Vše" || bonus.type === active;
-        return matchesQuery && matchesFilter;
+        const matchesAge = activeAge === "Vše" || (bonus.ageGroups ?? [bonus.age]).includes(activeAge as "15+" | "18+");
+        return matchesQuery && matchesFilter && matchesAge;
       }),
-    [active, query]
+    [active, activeAge, query]
   );
   const filteredTotal = filtered.reduce((sum, bonus) => sum + bonusAmount(bonus), 0);
   const offerWord = filtered.length === 1 ? "nabídka" : filtered.length >= 2 && filtered.length <= 4 ? "nabídky" : "nabídek";
@@ -40,11 +42,22 @@ export default function ExchangesPage() {
         />
       </div>
 
-      <div className="mt-4 flex items-center justify-between gap-3 rounded-[18px] border border-neon/20 bg-neon/[.07] px-4 py-3">
-        <p className="text-sm text-slate-300">
-          {filtered.length} {offerWord} k dispozici
-        </p>
-        <p className="whitespace-nowrap text-sm font-black text-neon">až {formatKc(filteredTotal)}</p>
+      <div className="mt-4 flex flex-col gap-3 rounded-[16px] border border-white/10 bg-white/[.035] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center justify-between gap-4 sm:block">
+          <p className="text-sm font-bold text-slate-200">{filtered.length} {offerWord} k dispozici</p>
+          <p className="whitespace-nowrap text-xs font-bold text-neon sm:mt-0.5">Potenciál {formatKc(filteredTotal)}</p>
+        </div>
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="shrink-0 text-[10px] font-black uppercase text-slate-500">Věk</span>
+          <FilterTabs
+            tabs={ageFilters}
+            active={activeAge}
+            onChange={(filter) => {
+              setActiveAge(filter);
+              trackEvent("offer_filter", { filter: `věk:${filter}` });
+            }}
+          />
+        </div>
       </div>
 
       <section className="mt-4 grid gap-3 lg:grid-cols-2">

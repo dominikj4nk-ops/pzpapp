@@ -9,9 +9,9 @@ const routes = [
   ["/nabidky/mbank-ucet", "dist/nabidky/mbank-ucet/index.html"],
   ["/nabidky/airbank-ucet", "dist/nabidky/airbank-ucet/index.html"],
   ["/nabidky/tipli-cashback", "dist/nabidky/tipli-cashback/index.html"],
+  ["/nabidky/patrongo", "dist/nabidky/patrongo/index.html"],
   ["/nabidky/robinhood-trading", "dist/nabidky/robinhood-trading/index.html"],
   ["/nabidky/raiffeisenbank-ucet", "dist/nabidky/raiffeisenbank-ucet/index.html"],
-  ["/nabidky/revolut-cestovani", "dist/nabidky/revolut-cestovani/index.html"],
   ["/jak-overujeme", "dist/jak-overujeme/index.html"],
   ["/podpora", "dist/podpora/index.html"],
   ["/podminky", "dist/podminky/index.html"]

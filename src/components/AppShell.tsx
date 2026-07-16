@@ -1,4 +1,6 @@
 import {
+  ArrowRight,
+  BadgeCheck,
   BadgePercent,
   Gift,
   HelpCircle,
@@ -64,15 +66,6 @@ export default function AppShell({ children }: AppShellProps) {
         </div>
 
         <div className="dashboard-sidebar-scroll flex min-h-0 flex-1 flex-col overflow-y-auto px-3 py-4">
-          <button
-            onClick={() => navigate(paths.search)}
-            className="mb-6 flex h-11 w-full items-center gap-3 rounded-[12px] border border-white/10 bg-white/[.04] px-3.5 text-left text-sm font-semibold text-slate-400 transition hover:border-neon/35 hover:bg-white/[.07] hover:text-white"
-          >
-            <Search size={17} />
-            <span className="flex-1">Hledat nabídku</span>
-            <kbd className="rounded border border-white/10 bg-black/20 px-1.5 py-0.5 text-[9px] font-bold text-slate-600">/</kbd>
-          </button>
-
           <p className="mb-2 px-3 text-[10px] font-black uppercase tracking-normal text-slate-600">Katalog</p>
           <nav className="space-y-1" aria-label="Hlavní navigace">
             {navItems.map((item) => {
@@ -110,17 +103,24 @@ export default function AppShell({ children }: AppShellProps) {
           </nav>
 
           <div className="mt-auto pt-6">
-            <div className="rounded-[12px] border border-neon/20 bg-neon/[.055] p-4">
-              <div className="flex items-center gap-2 text-[11px] font-black text-white">
-                <span className="h-2 w-2 rounded-full bg-neon shadow-[0_0_12px_rgba(0,239,126,.8)]" />
-                {bonuses.length} aktivních nabídek
+            <div className="border-t border-white/10 px-1 pt-5">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-[9px] font-black uppercase text-slate-600">Stav katalogu</p>
+                  <p className="mt-1 text-[22px] font-black leading-none text-white">
+                    {bonuses.length} <span className="text-[11px] font-bold text-slate-400">aktivních nabídek</span>
+                  </p>
+                </div>
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-[12px] bg-neon/10 text-neon">
+                  <BadgeCheck size={18} />
+                </span>
               </div>
-              <p className="mt-2 text-[11px] leading-5 text-slate-500">Podmínky a odkazy kontrolujeme podle oficiálních zdrojů.</p>
+              <p className="mt-3 text-[11px] leading-5 text-slate-500">Každá nabídka má podmínky, zdroj a srozumitelný postup.</p>
               <button
                 onClick={() => navigate(paths.exchanges)}
-                className="neon-button mt-4 h-10 w-full rounded-[12px] text-xs font-black text-[#02130c]"
+                className="glass-button mt-3 flex h-10 w-full items-center justify-between rounded-[12px] px-3.5 text-[11px] font-black text-slate-200 transition hover:border-neon/30 hover:text-white"
               >
-                Otevřít katalog
+                Procházet katalog <ArrowRight size={14} className="text-neon" />
               </button>
             </div>
 

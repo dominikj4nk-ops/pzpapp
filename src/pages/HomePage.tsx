@@ -17,8 +17,8 @@ const socialProof: Array<{ label: string; icon: LucideIcon; color: string }> = [
 
 const ageBonusOrder: Record<string, string[]> = {
   "15+": ["mbank-ucet", "airbank-ucet", "tipli-cashback"],
-  "18+": ["robinhood-trading", "revolut-cestovani", "raiffeisenbank-ucet", "tipli-cashback"],
-  "Vše": ["mbank-ucet", "airbank-ucet", "tipli-cashback", "robinhood-trading", "raiffeisenbank-ucet", "revolut-cestovani"]
+  "18+": ["robinhood-trading", "patrongo", "raiffeisenbank-ucet", "tipli-cashback"],
+  "Vše": ["mbank-ucet", "airbank-ucet", "tipli-cashback", "robinhood-trading", "patrongo", "raiffeisenbank-ucet"]
 };
 
 const bonusMatchesAge = (bonus: (typeof bonuses)[number], filter: string) => {
@@ -48,7 +48,7 @@ export default function HomePage() {
         <section className="hero-section relative mb-8 min-h-[305px] p-4 sm:mb-7 sm:min-h-[340px] sm:rounded-[16px] sm:p-7 lg:min-h-[360px] lg:p-8">
           <div className="hero-copy relative z-10 max-w-[82%] sm:max-w-[54%]">
             <h2 className="text-[44px] font-black leading-[0.98] tracking-normal sm:text-[50px] md:text-[56px] lg:text-[62px]">
-              <span className="block">Získej až</span>
+              <span className="block">Získej</span>
               <span className="block whitespace-nowrap pt-1.5 leading-[1.04] text-neon -mb-1.5">{formatKc(totalPotential)}</span>
               <span className="block whitespace-nowrap">na bonusech</span>
             </h2>
@@ -79,7 +79,7 @@ export default function HomePage() {
         </div>
 
         <section className="mb-5">
-          <SectionHeading title="Nejlepší nabídky tohoto týdne" action="Zobrazit všechny" onAction={() => navigate(paths.exchanges)} />
+          <SectionHeading title="Doporučené nabídky" action="Zobrazit všechny" onAction={() => navigate(paths.exchanges)} />
           <div className="mb-3"><FilterTabs tabs={ageFilters} active={ageFilter} onChange={setAgeFilter} /></div>
           <div className="grid gap-3 md:grid-cols-2">
             {visibleBonuses.slice(0, 4).map((bonus, index) => (

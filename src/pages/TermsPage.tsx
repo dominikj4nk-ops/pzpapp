@@ -1,4 +1,4 @@
-import { ScrollText } from "lucide-react";
+import { CalendarDays, ChevronRight, Mail, ScrollText, ShieldCheck } from "lucide-react";
 import Header from "../components/Header";
 import { FORM_TARGET_EMAIL } from "../components/formMailer";
 import { GlassCard } from "../components/ui";
@@ -61,34 +61,95 @@ const sections: { title: string; body: string[] }[] = [
 
 export default function TermsPage() {
   return (
-    <div className="xl:mx-auto xl:max-w-[1320px]">
+    <div className="xl:mx-auto xl:max-w-[1280px]">
       <Header title="Podmínky použití" back />
-      <GlassCard className="mb-4 p-4">
-        <div className="flex items-center gap-3">
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-neon/12 text-neon">
-            <ScrollText size={20} />
+      <GlassCard className="mb-4 p-4 xl:p-6">
+        <div className="flex items-start gap-4 xl:items-center">
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[14px] bg-neon/12 text-neon">
+            <ScrollText size={22} />
           </span>
-          <div className="min-w-0">
-            <h2 className="font-black">Podmínky použití a ochrana soukromí</h2>
-            <p className="mt-0.5 text-xs leading-5 text-slate-400">Platné od 7. 7. 2026 · Používáním webu s podmínkami souhlasíš.</p>
+          <div className="min-w-0 flex-1">
+            <p className="text-[11px] font-bold uppercase text-neon">Pravidla služby</p>
+            <h2 className="mt-1 text-lg font-black leading-tight text-white xl:text-2xl">Podmínky použití a ochrana soukromí</h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
+              Přehledně vysvětlujeme, jak web funguje, kdo odpovídá za jednotlivé nabídky a jak zacházíme s údaji, které nám sám poskytneš.
+            </p>
+          </div>
+          <div className="hidden shrink-0 items-center gap-5 xl:flex">
+            <div className="flex items-center gap-2 text-xs text-slate-400">
+              <CalendarDays size={16} className="text-neon" />
+              <span>Platné od 7. 7. 2026</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-slate-400">
+              <ShieldCheck size={16} className="text-neon" />
+              <span>7 přehledných oddílů</span>
+            </div>
           </div>
         </div>
       </GlassCard>
 
-      <section className="space-y-3 xl:grid xl:grid-cols-2 xl:items-start xl:gap-3 xl:space-y-0">
-        {sections.map((section) => (
-          <GlassCard key={section.title} className="p-4">
-            <h3 className="text-sm font-black text-white">{section.title}</h3>
-            <div className="mt-2 space-y-2">
-              {section.body.map((paragraph) => (
-                <p key={paragraph.slice(0, 40)} className="text-xs leading-5 text-slate-400">
-                  {paragraph}
-                </p>
+      <div className="grid items-start gap-4 xl:grid-cols-[260px_minmax(0,1fr)]">
+        <aside className="hidden space-y-3 xl:block">
+          <GlassCard className="p-3">
+            <p className="px-3 pb-2 pt-1 text-[10px] font-bold uppercase text-slate-500">Obsah dokumentu</p>
+            <nav aria-label="Obsah podmínek" className="space-y-0.5">
+              {sections.map((section, index) => (
+                <a
+                  key={section.title}
+                  href={`#oddil-${index + 1}`}
+                  className="group flex min-h-10 items-center gap-3 rounded-[12px] px-3 py-2 text-xs font-semibold leading-4 text-slate-400 transition hover:bg-white/[0.05] hover:text-white"
+                >
+                  <span className="grid h-6 w-6 shrink-0 place-items-center rounded-lg bg-white/[0.05] text-[10px] font-black text-slate-300 group-hover:bg-neon/12 group-hover:text-neon">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <span className="min-w-0 flex-1">{section.title.replace(/^\d+\.\s*/, "")}</span>
+                  <ChevronRight size={14} className="shrink-0 text-slate-600 group-hover:text-neon" />
+                </a>
               ))}
-            </div>
+            </nav>
           </GlassCard>
-        ))}
-      </section>
+
+          <GlassCard className="p-4">
+            <div className="flex items-center gap-2 text-sm font-bold text-white">
+              <Mail size={17} className="text-neon" />
+              Potřebuješ vysvětlení?
+            </div>
+            <p className="mt-2 text-xs leading-5 text-slate-400">Napiš nám a konkrétní část podmínek s tebou projdeme.</p>
+            <a href={`mailto:${FORM_TARGET_EMAIL}`} className="mt-3 block break-all text-xs font-bold text-neon hover:text-neon/80">
+              {FORM_TARGET_EMAIL}
+            </a>
+          </GlassCard>
+        </aside>
+
+        <GlassCard className="overflow-hidden p-4 xl:p-8">
+          <div className="mb-1 flex items-center gap-2 text-xs text-slate-400 xl:hidden">
+            <CalendarDays size={15} className="text-neon" />
+            Platné od 7. 7. 2026
+          </div>
+
+          {sections.map((section, index) => (
+            <section
+              id={`oddil-${index + 1}`}
+              key={section.title}
+              className="scroll-mt-6 border-b border-white/[0.07] py-5 first:pt-3 last:border-b-0 last:pb-1 xl:grid xl:grid-cols-[48px_minmax(0,1fr)] xl:gap-5 xl:py-7 xl:first:pt-0"
+            >
+              <span className="mb-3 grid h-9 w-9 place-items-center rounded-[12px] bg-neon/10 text-xs font-black text-neon xl:mb-0">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <div className="min-w-0">
+                <h3 className="text-base font-black leading-6 text-white xl:text-lg">{section.title.replace(/^\d+\.\s*/, "")}</h3>
+                <div className="mt-3 space-y-3 xl:mt-4">
+                  {section.body.map((paragraph) => (
+                    <p key={paragraph.slice(0, 40)} className="text-sm leading-6 text-slate-400 xl:leading-7">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            </section>
+          ))}
+        </GlassCard>
+      </div>
     </div>
   );
 }

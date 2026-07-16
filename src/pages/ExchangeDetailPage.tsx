@@ -1,11 +1,12 @@
 import { AlertTriangle, BadgeCheck, CheckCircle2, ChevronDown, ChevronUp, ClipboardCheck, Clock3, ExternalLink, Lightbulb, ShieldCheck, Wallet } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useParams } from "react-router-dom";
 import { trackEvent } from "../analytics/events";
 import Header from "../components/Header";
 import { markBonusStarted, markBonusViewed } from "../components/bonusState";
 import { ContactCard, DetailRow, GlassCard, LogoMark, NeonButton, VerifiedBadge } from "../components/ui";
-import { allBonuses, detailSteps, isTravelOffer, offerCtaLabel, offerValueLabel } from "../data/mockData";
+import { allBonuses, detailSteps, isTravelOffer, offerCompactCtaLabel, offerCtaLabel, offerValueLabel } from "../data/mockData";
 import { offerGuides } from "../data/offerGuides";
 
 export default function ExchangeDetailPage() {
@@ -62,6 +63,7 @@ export default function ExchangeDetailPage() {
   const steps = bonus.steps.length ? bonus.steps : detailSteps;
   const travelOffer = isTravelOffer(bonus);
   const guide = offerGuides[bonus.id];
+  const payoutSummary = bonus.payoutTimeLabel ?? bonus.payoutTime;
 
   const toggleGuide = () => {
     const nextOpen = !guideOpen;
@@ -84,7 +86,7 @@ export default function ExchangeDetailPage() {
               </div>
               <p className="text-sm text-slate-400">{bonus.type}</p>
             </div>
-            <span className="flex items-center gap-1 text-xs font-bold text-slate-300">
+            <span className="hidden items-center gap-1 text-xs font-bold text-slate-300 sm:flex">
               <ShieldCheck className="text-neon" size={15} />
               Ověřeno
             </span>
@@ -94,20 +96,20 @@ export default function ExchangeDetailPage() {
           {bonus.pitch ? <p className="mt-3 text-sm font-semibold leading-6 text-slate-200">{bonus.pitch}</p> : null}
 
           <div className="mt-4 grid grid-cols-3 gap-2">
-            <div className="rounded-2xl border border-white/10 bg-white/[.04] px-2 py-2.5 text-center">
+            <div className="flex min-h-[84px] flex-col items-center justify-center rounded-[14px] border border-white/10 bg-white/[.04] p-2 text-center">
               <Clock3 size={16} className="mx-auto text-neon" />
-              <p className="mt-1 text-[11px] font-bold text-white">{bonus.completionTime}</p>
-              <p className="text-[10px] text-slate-500">zabere</p>
+              <p className="mt-1.5 text-[11px] font-bold leading-4 text-white">{bonus.completionTime}</p>
+              <p className="mt-0.5 text-[10px] leading-3 text-slate-500">zabere</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/[.04] px-2 py-2.5 text-center">
+            <div className="flex min-h-[84px] flex-col items-center justify-center rounded-[14px] border border-white/10 bg-white/[.04] p-2 text-center">
               <Wallet size={16} className="mx-auto text-neon" />
-              <p className="mt-1 min-h-6 text-[10px] font-bold leading-3 text-white">{bonus.payoutTime}</p>
-              <p className="text-[10px] text-slate-500">{travelOffer ? "charakter" : "výplata"}</p>
+              <p className="mt-1.5 flex min-h-7 items-center justify-center text-[10px] font-bold leading-[14px] text-white">{payoutSummary}</p>
+              <p className="mt-0.5 text-[10px] leading-3 text-slate-500">{travelOffer ? "charakter" : "výplata"}</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/[.04] px-2 py-2.5 text-center">
+            <div className="flex min-h-[84px] flex-col items-center justify-center rounded-[14px] border border-white/10 bg-white/[.04] p-2 text-center">
               <BadgeCheck size={16} className="mx-auto text-neon" />
-              <p className="mt-1 text-[11px] font-bold text-white">{bonus.age}</p>
-              <p className="text-[10px] text-slate-500">věk</p>
+              <p className="mt-1.5 text-[11px] font-bold leading-4 text-white">{bonus.age}</p>
+              <p className="mt-0.5 text-[10px] leading-3 text-slate-500">věk</p>
             </div>
           </div>
 
@@ -118,14 +120,14 @@ export default function ExchangeDetailPage() {
           ) : (
             <p className="mt-5 rounded-[18px] border border-amber-300/20 bg-amber-300/10 p-3 text-center text-sm font-bold text-amber-100">Nabídka není v aktivním přehledu</p>
           )}
-          <p className="mt-2 flex items-center justify-center gap-1.5 text-[11px] font-semibold text-slate-500">
-            <ShieldCheck size={13} className="text-neon" /> Odkaz se otevře v nové kartě, tento postup ti zůstane otevřený
+          <p className="mt-2 flex items-center justify-center gap-1.5 text-center text-[11px] font-semibold leading-4 text-slate-500">
+            <ShieldCheck size={13} className="shrink-0 text-neon" /> Otevře se nová karta. Návod ti zůstane otevřený.
           </p>
           <p className="mt-3 text-center text-xs leading-5 text-slate-400">
             {bonus.isAffiliate
-              ? "Odkaz na partnera je affiliate. Pokud nabídku využiješ, můžeme získat provizi; podmínky poskytovatele se tím nemění. "
-              : "Odkaz vede přímo na oficiální web poskytovatele a není affiliate. "}
-            Podmínky vždy ověř na oficiálním webu.
+              ? "Používáme partnerský odkaz; tvoje odměna ani podmínky se tím nemění. "
+              : "Přejdeš přímo na oficiální web poskytovatele. "}
+            Před dokončením zkontroluj pravidla poskytovatele.
             {bonus.promoCode ? (
               <>
                 {" "}
@@ -262,18 +264,19 @@ export default function ExchangeDetailPage() {
       </div>
       </div>
 
-      {!heroVisible ? (
-        <div className="fixed bottom-[84px] left-1/2 z-40 w-[calc(100%-40px)] max-w-[398px] -translate-x-1/2 xl:hidden">
-          <div className="flex items-center gap-3 rounded-[16px] border border-white/10 bg-[#07131b]/95 p-2 pl-4 shadow-[0_16px_44px_rgba(0,0,0,.42)] backdrop-blur-2xl">
+      {!heroVisible && typeof document !== "undefined" ? createPortal(
+        <div className="fixed bottom-[84px] left-1/2 z-[60] w-[calc(100%-40px)] max-w-[398px] -translate-x-1/2 xl:hidden">
+          <div className="flex min-h-[68px] items-center gap-2.5 rounded-[16px] border border-white/10 bg-[#07131b]/95 p-2.5 pl-4 shadow-[0_16px_44px_rgba(0,0,0,.42)] backdrop-blur-2xl">
             <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-bold text-slate-300">{bonus.name}</p>
-              <p className="text-sm font-black text-neon">{bonus.bonus}</p>
+              <p className="truncate text-[10px] font-bold uppercase text-slate-500">Odměna u {bonus.name}</p>
+              <p className="mt-0.5 truncate text-sm font-black text-neon">{bonus.bonus}</p>
             </div>
-            <NeonButton onClick={openPartner} className="h-10 shrink-0 whitespace-nowrap px-4 text-xs">
-              {offerCtaLabel(bonus)}
+            <NeonButton onClick={openPartner} className="h-11 max-w-[58%] shrink-0 whitespace-nowrap rounded-[12px] px-4 text-xs">
+              {offerCompactCtaLabel(bonus)} <ExternalLink size={13} className="ml-1 inline" />
             </NeonButton>
           </div>
-        </div>
+        </div>,
+        document.body
       ) : null}
       <div className="h-16 xl:hidden" />
     </>

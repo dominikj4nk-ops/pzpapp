@@ -22,6 +22,7 @@ export type Bonus = {
   completionTime: string;
   minRequirement: string;
   payoutTime: string;
+  payoutTimeLabel?: string;
   status: "Aktivní" | "Dokončeno" | "Neaktivní";
   provider: string;
   rewardType: "Peněžní bonus" | "Cashback" | "Kryptoměna" | "Proměnlivá odměna" | "Cestovní výhody";
@@ -42,7 +43,7 @@ const offerRecords: Bonus[] = [
     id: "mbank-ucet",
     name: "mBank",
     type: "Banky",
-    bonus: "až 1 000 Kč",
+    bonus: "1 000 Kč",
     age: "15+",
     tags: ["15 min", "Snadné"],
     logo: "mB",
@@ -51,17 +52,20 @@ const offerRecords: Bonus[] = [
     partnerUrl: "https://www.mbank.cz/mgm/ucty-mkonto.html?numer=dominikj5463",
     promoCode: "dominikj5463",
     pitch: "100 Kč za každou z prvních 10 plateb mobilem nebo chytrým zařízením.",
-    description: "mBank připisuje novému klientovi 100 Kč za každou z prvních deseti kvalifikovaných plateb mobilem nebo nositelným zařízením. Celkem lze podle aktuálních pravidel získat až 1 000 Kč.",
-    requirements: ["Věk 15+", "Český občanský průkaz", "Nejsi klientem mBank", "Platby kartou v telefonu (Google Pay / Apple Pay)"],
+    compactCtaLabel: "Získat 1 000 Kč",
+    description: "Po založení nového účtu přes doporučovací kód získáš 100 Kč za každou z prvních deseti kvalifikovaných plateb provedených do 60 dnů mobilem, hodinkami, prstenem nebo náramkem. Celkem může být připsáno 1 000 Kč.",
+    requirements: ["Věk alespoň 15 let", "Nové mKonto nebo mKonto #navlastnitriko založené do 30. 9. 2026", "Promo kód vyplněný přímo v žádosti", "Telefon, hodinky, prsten nebo náramek pro kvalifikované platby"],
     steps: [
-      "Klikni na náš odkaz, sjeď na stránce dolů a klikni na tlačítko „Založit účet“",
-      "Do kolonky „Přicházím na základě akce“ vepiš kód dominikj5463",
-      "Plať za nákupy kartou v telefonu, za každou platbu ti mBank vrátí 100 Kč",
-      "Takhle získáš až 1 000 Kč (10 plateb × 100 Kč)"
+      "Otevři mBank přes náš odkaz a spusť žádost o mKonto nebo mKonto #navlastnitriko",
+      "Do pole „Přicházím na základě akce“ ještě před odesláním žádosti zadej kód dominikj5463",
+      "Po otevření účtu přidej kartu do podporovaného telefonu, hodinek, prstenu nebo náramku",
+      "Do 60 dnů proveď prvních 10 kvalifikovaných a následně zaúčtovaných plateb",
+      "Za každou uznanou platbu obdržíš 100 Kč, celkem 1 000 Kč"
     ],
     completionTime: "15 min",
-    minRequirement: "platby kartou v telefonu",
+    minRequirement: "promo kód v žádosti a 10 kvalifikovaných plateb do 60 dnů",
     payoutTime: "nejpozději do 45 dnů",
+    payoutTimeLabel: "do 45 dnů",
     status: "Aktivní",
     provider: "mBank S.A.",
     rewardType: "Peněžní bonus",
@@ -73,13 +77,13 @@ const offerRecords: Bonus[] = [
     nextReview: "2026-08-16",
     validUntil: "2026-09-30",
     fees: ["Založení a vedení mKonta je podle oficiální stránky zdarma."],
-    warnings: ["Je nutné použít doporučovací kód a splnit podmínky do 60 dnů od otevření účtu."]
+    warnings: ["Promo kód nelze doplnit zpětně a akci nelze kombinovat s jinou akcí mBank pro nové klienty.", "Nezapočítávají se platby u hazardních, finančních, platebních, pojišťovacích, investičních a kryptoměnových služeb ani platby samotnou plastovou kartou."]
   },
   {
     id: "airbank-ucet",
     name: "Air Bank",
     type: "Banky",
-    bonus: "Účet zdarma",
+    bonus: "500 Kč",
     age: "15+",
     tags: ["20 min", "5 plateb"],
     logo: "AB",
@@ -87,32 +91,33 @@ const offerRecords: Bonus[] = [
     logoUrl: `${import.meta.env.BASE_URL}assets/airbank-logo.png`,
     logoFit: "contain",
     partnerUrl: "https://www.airbank.cz/pozvani-pratel?referrer=pkddk9",
-    pitch: "Běžný účet bez poplatku za vedení. Peněžní odměnu 500 Kč podle pravidel doporučovacího programu získává doporučitel.",
-    ctaLabel: "Otevřít nabídku",
-    compactCtaLabel: "Detail nabídky",
-    valueLabel: "Hlavní výhoda",
-    description: "Přes pozvánku si může nový klient založit první běžný účet u Air Bank. Aktuální pravidla programu uvádějí odměnu 500 Kč pro doporučitele po založení účtu a pěti platbách nového klienta; novému klientovi peněžní odměnu automaticky neslibují.",
-    requirements: ["Věk 15+", "Český občanský průkaz", "Nejsi klientem Air Bank", "5 plateb kartou"],
+    pitch: "500 Kč po založení prvního účtu a pěti platbách kartou.",
+    ctaLabel: "Získat 500 Kč",
+    compactCtaLabel: "Získat 500 Kč",
+    valueLabel: "Odměna",
+    description: "Air Bank připíše novému klientovi 500 Kč po registraci přes pozvánku, založení prvního účtu do 45 dnů a alespoň pěti platbách kartou v jednom způsobilém měsíci.",
+    requirements: ["Věk alespoň 15 let", "České telefonní číslo s předvolbou +420", "První vlastní rámcová smlouva s aktivním účtem u Air Bank", "5 plateb kartou nebo metodou Cvak v jednom způsobilém měsíci"],
     steps: [
-      "Klikni na náš odkaz, vyplň telefonní číslo a založ si účet",
-      "Proveď 5 plateb kartou (tip: pošli si na účet 100 Kč a kup 5 maličkostí)",
-      "V měsíci aktivace nebo v bezprostředně následujícím měsíci proveď 5 plateb kartou",
-      "Odměna 500 Kč podle pravidel připadne doporučiteli, nikoli automaticky novému klientovi"
+      "Otevři pozvánku a před vstupem do žádosti zaregistruj své české telefonní číslo",
+      "Do 45 dnů si se stejným číslem založ a aktivuj svůj první vlastní běžný účet",
+      "V měsíci aktivace nebo v bezprostředně následujícím měsíci proveď 5 plateb kartou nebo metodou Cvak",
+      "Air Bank připíše 500 Kč nejpozději do konce následujícího kalendářního měsíce"
     ],
     completionTime: "20 min",
     minRequirement: "první účet do 45 dnů a 5 plateb kartou",
-    payoutTime: "500 Kč získává doporučitel",
+    payoutTime: "nejpozději do konce následujícího kalendářního měsíce",
+    payoutTimeLabel: "do konce dalšího měsíce",
     status: "Aktivní",
     provider: "Air Bank a.s.",
-    rewardType: "Proměnlivá odměna",
-    bonusValueCzk: null,
+    rewardType: "Peněžní bonus",
+    bonusValueCzk: 500,
     officialSourceUrl: "https://www.airbank.cz/co-vas-nejvic-zajima/jak-se-stat-klientem-air-bank-na-doporuceni-pritele/",
     isAffiliate: true,
     verificationStatus: "verified",
     lastVerified: "2026-07-16",
     nextReview: "2026-08-16",
     fees: ["Vedení běžného účtu je podle oficiální stránky zdarma."],
-    warnings: ["500 Kč je podle aktuálních pravidel odměna pro doporučitele, ne garantovaný bonus pro nového klienta.", "Účet je nutné založit do 45 dnů na stejné české telefonní číslo a provést alespoň 5 plateb kartou v určeném období."]
+    warnings: ["Účet je nutné založit do 45 dnů na stejné české telefonní číslo.", "Pět plateb musí proběhnout v měsíci aktivace účtu nebo v bezprostředně následujícím měsíci; platby z obou měsíců se nesčítají."]
   },
   {
     id: "tipli-cashback",
@@ -128,16 +133,19 @@ const offerRecords: Bonus[] = [
     logoFit: "contain",
     partnerUrl: "https://www.tipli.cz/p/5332612",
     pitch: "Tipli během prvních 7 dnů dorovnává cashback z nákupů až do souhrnné výše 300 Kč.",
-    description: "Cashback portál Tipli uvádí pro nové uživatele uvítací bonus až 300 Kč. Akce je aktivní prvních 7 dnů po registraci a bonus se potvrzuje po dosažení 50 Kč v potvrzených odměnách.",
+    compactCtaLabel: "Získat bonus",
+    description: "Tipli během prvních 7 dnů od registrace připisuje k cashbacku z nákupů bonus ve stejné výši, dokud součet bonusu nedosáhne 300 Kč. Bonus není jednorázový a k jeho výplatě musí být na účtu v jednom okamžiku alespoň 100 Kč potvrzených odměn z nákupů.",
     requirements: ["Věk 15+", "Platná e-mailová adresa", "Registrace přes náš odkaz", "Nákup přes Tipli v prvních 7 dnech od registrace"],
     steps: [
       "Zaregistruj se přes náš odkaz",
       "V prvních 7 dnech od registrace nakup přes Tipli a začni sbírat cashback",
-      "Jakmile máš na účtu aspoň 50 Kč z potvrzených odměn, odemkne se ti bonus 300 Kč"
+      "Tipli během prvních 7 dnů dorovnává získaný cashback stejnou částkou, celkem do 300 Kč",
+      "Počkej na potvrzení nákupů a pro výplatu udrž alespoň 100 Kč v potvrzených odměnách z nákupů"
     ],
     completionTime: "5 min",
-    minRequirement: "50 Kč potvrzeného cashbacku",
+    minRequirement: "nákupy přes Tipli během prvních 7 dnů a 100 Kč potvrzených odměn pro výplatu bonusu",
     payoutTime: "po potvrzení odměn obchodem",
+    payoutTimeLabel: "po potvrzení",
     status: "Aktivní",
     provider: "Tipli s.r.o.",
     rewardType: "Cashback",
@@ -148,7 +156,7 @@ const offerRecords: Bonus[] = [
     lastVerified: "2026-07-16",
     nextReview: "2026-08-16",
     fees: ["Registrace je zdarma; pro potvrzení bonusu je nutný nákup přes Tipli."],
-    warnings: ["Konkrétní výše uvítacího bonusu může být nižší než maximum 300 Kč."]
+    warnings: ["Konkrétní výše bonusu závisí na cashbacku z nákupů uskutečněných v prvních 7 dnech.", "Cizí slevový kód, změna objednávky, vrácení zboží nebo porušení podmínek obchodu může připsání cashbacku zrušit."]
   },
   {
     id: "patrongo",
@@ -156,34 +164,40 @@ const offerRecords: Bonus[] = [
     type: "Ostatní",
     bonus: "200 Kč",
     age: "18+",
-    tags: ["1 min", "Bonus"],
+    tags: ["1 min", "Úspory"],
     logo: "P",
-    logoClass: "bg-white text-emerald-600",
-    logoUrl: "https://www.google.com/s2/favicons?domain=patrongo.com&sz=128",
+    logoClass: "bg-[#f1e9f8] text-[#31006f]",
+    logoUrl: `${import.meta.env.BASE_URL}assets/patron-go-logo.svg`,
+    logoFit: "contain",
     partnerUrl: "https://patrongoapp.app.link/invite/prachyzaregistraci",
-    description: "Aplikace, která projde tvé pravidelné platby a poradí, kde ušetřit. Za samotnou registraci dostaneš bonus 200 Kč, další odměny pak za vyřešené tipy na úsporu.",
+    pitch: "Získej 200 Kč za dokončení odměnové příležitosti, kterou ti aplikace nabídne.",
+    ctaLabel: "Získat 200 Kč",
+    compactCtaLabel: "Získat 200 Kč",
+    valueLabel: "Odměna",
+    description: "Patron GO analyzuje pravidelné platby a upozorní tě, kde můžeš platit méně. Za dokončení odměnové příležitosti v aplikaci můžeš získat 200 Kč; samotná registrace k připsání odměny nestačí.",
     requirements: ["Věk 18+", "Chytrý telefon", "Propojení bankovního výpisu", "Doplnění PSČ"],
-    steps: ["Stáhni aplikaci a zaregistruj se", "Doplň PSČ a základní údaje", "Povol bance poslat online výpis", "Bonus 200 Kč se připíše po registraci"],
+    steps: ["Stáhni aplikaci přes náš odkaz a zaregistruj se", "Doplň PSČ a základní údaje", "Povol bance bezpečně poslat online výpis", "Vyber příležitost k úspoře a dokonči její podmínky", "Odměnu si vyber na účet nebo ji použij v Premium katalogu"],
     completionTime: "1 min",
-    minRequirement: "dokončení registrace",
-    payoutTime: "podle konkrétní příležitosti",
-    status: "Neaktivní",
+    minRequirement: "dokončení odměnové příležitosti v aplikaci",
+    payoutTime: "po splnění podmínek konkrétní příležitosti",
+    payoutTimeLabel: "dle příležitosti",
+    status: "Aktivní",
     provider: "Patron GO",
-    rewardType: "Proměnlivá odměna",
-    bonusValueCzk: null,
+    rewardType: "Peněžní bonus",
+    bonusValueCzk: 200,
     officialSourceUrl: "https://www.patrongo.com/",
     isAffiliate: true,
-    verificationStatus: "needs-review",
+    verificationStatus: "verified",
     lastVerified: "2026-07-16",
-    nextReview: null,
-    fees: [],
-    warnings: ["Oficiální zdroj nepotvrzuje garantovaných 200 Kč pouze za registraci. Nabídka proto není v aktivním přehledu."]
+    nextReview: "2026-08-16",
+    fees: ["Registrace a používání aplikace jsou zdarma; případné změny služby vždy zkontroluj přímo v aplikaci."],
+    warnings: ["Odměna 200 Kč se nepřipisuje pouze za registraci; je potřeba dokončit odměnovou příležitost zobrazenou v aplikaci.", "Pro analýzu plateb je potřeba povolit bance pasivní předání transakční historie přes PSD2."]
   },
   {
     id: "robinhood-trading",
     name: "Robinhood",
     type: "Investice",
-    bonus: "až 50 EUR v kryptu",
+    bonus: "50 EUR v kryptu",
     age: "18+",
     tags: ["15 min", "Vklad"],
     logo: "R",
@@ -192,6 +206,7 @@ const offerRecords: Bonus[] = [
     logoFit: "contain",
     partnerUrl: "https://join.robinhood.com/eu_crypto/petrak-376f276/",
     pitch: "Přesná odměna a minimální vklad se zobrazí v aplikaci před dokončením podmínek.",
+    compactCtaLabel: "Získat krypto",
     description: "Robinhood Crypto uvádí odměnu až 50 EUR v kryptoměně po schválení účtu a splnění minimálního vkladu zobrazeného v aplikaci. Přesná výše odměny i minimální vklad jsou proměnlivé.",
     requirements: ["Věk 18+", "Platný doklad totožnosti", "Minimální vklad zobrazený v aplikaci"],
     steps: [
@@ -203,11 +218,12 @@ const offerRecords: Bonus[] = [
     completionTime: "15 min",
     minRequirement: "minimální vklad dle aplikace",
     payoutTime: "po schválení účtu a splnění podmínek",
+    payoutTimeLabel: "po splnění",
     status: "Aktivní",
     provider: "Robinhood Europe, UAB",
     rewardType: "Kryptoměna",
     bonusValueCzk: null,
-    officialSourceUrl: "https://robinhood.com/eu/en/crypto/",
+    officialSourceUrl: "https://robinhood.com/eu/en/support/articles/rewards/",
     isAffiliate: true,
     verificationStatus: "verified",
     lastVerified: "2026-07-16",
@@ -220,87 +236,45 @@ const offerRecords: Bonus[] = [
     id: "raiffeisenbank-ucet",
     name: "Raiffeisenbank",
     type: "Banky",
-    bonus: "až 3 000 Kč",
+    bonus: "3 000 Kč",
     age: "18+",
     tags: ["15 min", "10 plateb"],
     logo: "RB",
     logoClass: "bg-[#ffe500] text-black",
-    logoUrl: `${import.meta.env.BASE_URL}assets/raiffeisenbank-logo.ico`,
-    logoFit: "contain",
-    partnerUrl: "https://www.rb.cz/promo/odmena",
+    logoUrl: `${import.meta.env.BASE_URL}assets/raiffeisenbank-logo.svg`,
+    logoFit: "symbol",
+    partnerUrl: "https://onb.rb.cz/onb-web?mgm=CqbQu8",
     pitch: "500 Kč za každý z prvních šesti měsíců, ve kterém uděláš alespoň 10 plateb kartou.",
+    compactCtaLabel: "Získat odměnu",
     description: "Raiffeisenbank nabízí novým klientům odměnu 500 Kč za každý z prvních šesti měsíců, ve kterém zaplatí alespoň 10krát kartou. Při splnění podmínek lze získat celkem až 3 000 Kč.",
     requirements: [
       "Věk 18+",
       "Nový klient bez osobního běžného účtu u Raiffeisenbank v předchozích 6 měsících",
       "Založení osobního běžného účtu do 31. 12. 2026",
-      "Alespoň 10 plateb kartou v každém z prvních 6 kalendářních měsíců"
+      "Alespoň 10 plateb kartou v každém ze 6 kalendářních měsíců následujících po měsíci založení"
     ],
     steps: [
-      "Otevři oficiální stránku akce a vyber si osobní běžný účet",
+      "Otevři naši pozvánku a vyber si osobní běžný účet CHYTRÝ, AKTIVNÍ nebo EXKLUZIVNÍ",
       "Dokonči online založení a aktivuj platební kartu",
-      "V každém z prvních šesti měsíců zaplať alespoň 10krát kartou",
-      "Za každý splněný měsíc ti banka připíše 500 Kč"
+      "Od následujícího kalendářního měsíce zaplať každý měsíc alespoň 10krát kartou",
+      "Za každý splněný měsíc ti banka připíše 500 Kč nejpozději do 20. dne dalšího měsíce"
     ],
     completionTime: "15 min",
     minRequirement: "10 plateb kartou měsíčně po dobu 6 měsíců",
-    payoutTime: "500 Kč v následujícím měsíci",
+    payoutTime: "nejpozději do 20. dne následujícího měsíce",
+    payoutTimeLabel: "následující měsíc",
     status: "Aktivní",
     provider: "Raiffeisenbank a.s.",
     rewardType: "Peněžní bonus",
     bonusValueCzk: 3000,
     officialSourceUrl: "https://www.rb.cz/promo/odmena",
-    isAffiliate: false,
+    isAffiliate: true,
     verificationStatus: "verified",
     lastVerified: "2026-07-16",
     nextReview: "2026-08-16",
     validUntil: "2026-12-31",
-    fees: ["Poplatky se řídí zvoleným typem účtu; před založením zkontroluj aktuální sazebník banky."],
+    fees: ["CHYTRÝ účet má podle oficiální stránky vedení zdarma; u ostatních tarifů před založením zkontroluj aktuální sazebník."],
     warnings: ["Odměna není jednorázová. Pro celých 3 000 Kč je nutné splnit 10 karetních plateb v každém z šesti po sobě jdoucích měsíců."]
-  },
-  {
-    id: "revolut-cestovani",
-    name: "Revolut",
-    type: "Cestování",
-    bonus: "Ušetři na cestách",
-    age: "18+",
-    tags: ["10 min", "Směna měn"],
-    logo: "R",
-    logoClass: "bg-white text-black",
-    logoUrl: `${import.meta.env.BASE_URL}assets/revolut-logo.png`,
-    logoFit: "contain",
-    partnerUrl: "https://www.revolut.com/cs-CZ/travel/",
-    pitch: "Plať v místní měně, směňuj v rámci limitu plánu a vyhni se zbytečným nákladům směnáren a DCC.",
-    ctaLabel: "Ušetřit na cestách",
-    compactCtaLabel: "Ušetřit",
-    valueLabel: "Jak můžeš ušetřit",
-    description: "Revolut může snížit náklady na cestách díky platbám v místní měně, směně měn v rámci limitu zvoleného plánu, výběrům z bankomatů do limitu a cestovním slevám přes RevPoints. Výše úspory závisí na plánu, způsobu použití a aktuálních poplatcích; nejde o peněžní bonus za registraci.",
-    requirements: [
-      "Věk 18+",
-      "Platný doklad totožnosti",
-      "Chytrý telefon s aplikací Revolut",
-      "Výběr plánu podle limitů a cestovních výhod, které skutečně využiješ"
-    ],
-    steps: [
-      "Porovnej plán Standard zdarma a placené plány včetně limitů a poplatků",
-      "Založ si účet a před cestou zkontroluj kurz i zbývající limit směny a výběrů",
-      "V zahraničí vždy plať v místní měně a odmítni přepočet obchodníka nebo bankomatu",
-      "RevPoints použij na podporované slevy, pobyty nebo letecké míle, pokud se ti vyplatí"
-    ],
-    completionTime: "10 min",
-    minRequirement: "založení účtu a dodržení limitů zvoleného plánu",
-    payoutTime: "průběžná úspora při cestování",
-    status: "Aktivní",
-    provider: "Revolut Bank UAB",
-    rewardType: "Cestovní výhody",
-    bonusValueCzk: null,
-    officialSourceUrl: "https://www.revolut.com/cs-CZ/travel/",
-    isAffiliate: false,
-    verificationStatus: "verified",
-    lastVerified: "2026-07-16",
-    nextReview: "2026-08-16",
-    fees: ["Plán Standard je bez měsíčního poplatku; limity směny a výběrů i širší cestovní výhody se liší podle plánu."],
-    warnings: ["Nejde o garantovanou částku úspory ani o bonus za registraci.", "U některých plánů se uplatní limity spravedlivého používání a víkendové přirážky; bankomat nebo jiná třetí strana může účtovat vlastní poplatek.", "Limity, pojištění a další podmínky vždy zkontroluj v aplikaci před použitím."]
   }
 ];
 
@@ -438,9 +412,9 @@ export const referralDeals: ReferralDeal[] = [
   }
 ];
 
-export const suggestions = ["mBank", "Raiffeisenbank", "Revolut", "Robinhood", "3 000 Kč bonus"];
+export const suggestions = ["mBank", "Raiffeisenbank", "Patron GO", "Robinhood", "3 000 Kč bonus"];
 
-export const exchangeFilters = ["Vše", "Banky", "Investice", "Cestování", "Ostatní"];
+export const exchangeFilters = ["Vše", "Banky", "Investice", "Ostatní"];
 export const ageFilters = ["Vše", "15+", "18+"];
 
 export const detailSteps = [

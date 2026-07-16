@@ -14,7 +14,7 @@ export const offerGuides: Record<string, OfferGuide> = {
   "mbank-ucet": {
     intro: "Drž se pořadí kroků. Nejdůležitější je zadat doporučovací kód ještě v žádosti a potom platit mobilem nebo chytrým zařízením, ne pouze plastovou kartou.",
     preparation: ["Platný občanský průkaz", "Bank iD, nebo účet u jiné banky pro ověřovací platbu", "Telefon s Apple Pay nebo Google Pay"],
-    commonMistake: "Zapomenutý promo kód nebo platby samotnou plastovou kartou se do této odměny nemusí započítat.",
+    commonMistake: "Promo kód nelze doplnit zpětně. Nezapočítají se platby samotnou plastovou kartou ani platby u hazardních, finančních, platebních, pojišťovacích, investičních a kryptoměnových služeb.",
     steps: [
       { title: "Otevři mBank přes náš odkaz", description: "Na stránce vyber mKonto nebo účet pro mladé a spusť online žádost. Neotvírej mezitím jiný odkaz na stejnou akci.", check: "V žádosti vidíš pole pro údaje nového klienta." },
       { title: "Vlož promo kód dominikj5463", description: "Na stránce se jménem a příjmením najdi pole „Přicházím na základě akce“ a vlož do něj kód před odesláním žádosti.", check: "Kód je v poli přesně jako dominikj5463." },
@@ -25,14 +25,14 @@ export const offerGuides: Record<string, OfferGuide> = {
     ]
   },
   "airbank-ucet": {
-    intro: "Pozvánka vede k založení prvního účtu u Air Bank. Důležité: 500 Kč podle aktuálních pravidel dostává doporučitel, ne automaticky nový klient.",
+    intro: "Přes pozvánku získáš 500 Kč na vyzkoušení prvního účtu u Air Bank. Rozhoduje stejné telefonní číslo, založení účtu do 45 dnů a pět plateb kartou v jednom způsobilém měsíci.",
     preparation: ["České telefonní číslo +420", "Doklad totožnosti", "Jistotu, že jde o tvůj první běžný účet u Air Bank"],
-    commonMistake: "Nejčastější omyl je očekávat 500 Kč na účtu nového klienta. Aktuální pravidla tuto odměnu přiznávají doporučiteli.",
+    commonMistake: "Platby z měsíce aktivace a následujícího měsíce se nesčítají. Všech pět plateb udělej v jednom z těchto dvou měsíců.",
     steps: [
       { title: "Otevři osobní pozvánku", description: "Na úvodní stránce zadej české telefonní číslo, které potom použiješ i při založení účtu.", check: "Telefonní číslo je zaregistrované přes pozvánku." },
       { title: "Do 45 dnů založ první běžný účet", description: "Pokračuj do žádosti a dokonči svou první rámcovou smlouvu s novým běžným účtem.", check: "Účet je aktivní a od registrace čísla neuplynulo více než 45 dnů." },
       { title: "Vyber jeden měsíc pro pět plateb", description: "Zaplať alespoň pětkrát kartou v měsíci aktivace, nebo v celém bezprostředně následujícím měsíci. Platby z obou měsíců se nesčítají.", check: "V jednom způsobilém kalendářním měsíci máš 5 plateb." },
-      { title: "Zkontroluj, komu jde odměna", description: "Po splnění podmínek připíše Air Bank 500 Kč doporučiteli nejpozději na konci následujícího kalendářního měsíce.", check: "Počítáš s tím, že nový klient nemá garantovaný peněžní bonus." }
+      { title: "Zkontroluj připsání 500 Kč", description: "Air Bank odměnu připíše na nový běžný účet nejpozději na konci kalendářního měsíce následujícího po měsíci, ve kterém splníš všechny podmínky.", check: "Na novém účtu vidíš připsanou odměnu 500 Kč." }
     ]
   },
   "tipli-cashback": {
@@ -45,7 +45,20 @@ export const offerGuides: Record<string, OfferGuide> = {
       { title: "Proklikni se z Tipli přímo do obchodu", description: "Povol cookies, vypni Adblock a dokonči nákup ideálně do 30 minut ve stejném okně prohlížeče.", check: "Objednávku jsi dokončil po posledním prokliku z Tipli." },
       { title: "Počkej na registraci a potvrzení cashbacku", description: "Odměna se obvykle zaregistruje do 48 hodin. Obchod ji může potvrzovat až 70 dnů kvůli vrácení nebo stornu objednávky.", check: "V Tipli vidíš registrovanou nebo potvrzenou odměnu." },
       { title: "Nasbírej bonus až 300 Kč", description: "Během prvních 7 dnů Tipli dorovnává získaný cashback stejnou částkou, dokud souhrnný bonus nedosáhne maxima 300 Kč.", check: "Rozumíš, že 300 Kč není jednorázová odměna za samotnou registraci." },
-      { title: "Požádej o výplatu", description: "Po potvrzení odměn doplň profil a český bankovní účet a v sekci Výplaty odměn odešli žádost.", check: "Výplata je zadaná na správný bankovní účet." }
+      { title: "Udrž 100 Kč v potvrzených odměnách", description: "Bonus lze vyplatit ve chvíli, kdy máš v jednom okamžiku alespoň 100 Kč potvrzených odměn z nákupů. Nevybírej cashback dříve, než se bonus potvrdí.", check: "Na účtu je alespoň 100 Kč potvrzených odměn z nákupů a bonus je připravený k výplatě." },
+      { title: "Požádej o výplatu", description: "Doplň profil a český bankovní účet a v sekci Výplaty odměn odešli žádost.", check: "Výplata je zadaná na správný bankovní účet." }
+    ]
+  },
+  patrongo: {
+    intro: "Patron GO nabízí odměnu 200 Kč za dokončení odměnové příležitosti v aplikaci. Nejprve projde tvé pravidelné platby a ukáže ti konkrétní možnosti, které můžeš vyřešit.",
+    preparation: ["Věk 18+", "Chytrý telefon", "Bankovní účet podporující bezpečné propojení přes PSD2", "Přehled o pravidelných platbách, které chceš zkontrolovat"],
+    commonMistake: "Nečekej 200 Kč ihned za registraci. Odměna se připíše až po dokončení konkrétní odměnové příležitosti podle podmínek zobrazených v aplikaci.",
+    steps: [
+      { title: "Otevři Patron GO přes náš odkaz", description: "Stáhni aplikaci a začni registraci z pozvánky. Vyplň základní údaje a PSČ; podle Patron GO zabere samotná registrace přibližně minutu.", check: "Jsi přihlášený v aplikaci Patron GO." },
+      { title: "Propoj bankovní výpis", description: "V prostředí své banky potvrď pasivní předání transakční historie. Patron GO nezná tvoje přihlašovací údaje a nemůže z účtu odesílat platby.", check: "Aplikace načetla pravidelné transakce k analýze." },
+      { title: "Projdi nalezené příležitosti", description: "Aplikace označí platby, u kterých může existovat levnější nebo výhodnější varianta. U každé si přečti očekávanou úsporu, podmínky a případnou odměnu.", check: "Vybral sis příležitost, která pro tebe dává ekonomický smysl." },
+      { title: "Dokonči řešení v aplikaci", description: "Postupuj podle chatu a pokynů u zvolené příležitosti. Neodsouhlasuj změnu služby, dokud nerozumíš ceně, délce závazku a všem podmínkám.", check: "Příležitost je v aplikaci označená jako úspěšně vyřešená." },
+      { title: "Zkontroluj odměnu 200 Kč", description: "Po uznání dokončené příležitosti se odměna objeví v Patron GO. Podle aktuálních možností ji můžeš poslat na bankovní účet nebo použít v Premium katalogu.", check: "Vidíš připsaných 200 Kč a zvolený způsob využití odměny." }
     ]
   },
   "robinhood-trading": {
@@ -71,21 +84,7 @@ export const offerGuides: Record<string, OfferGuide> = {
       { title: "Aktivuj kartu nebo mobilní peněženku", description: "Údaje karty můžeš po založení účtu přidat do Apple Pay, Peněženky Google nebo RaiPay a začít platit bez čekání na plastovou kartu.", check: "Karta je aktivní a první platba prošla." },
       { title: "Počkej na první celý kalendářní měsíc", description: "První způsobilý měsíc je kalendářní měsíc následující po měsíci založení účtu.", check: "Víš, který den začíná první z tvých šesti měsíců." },
       { title: "Každý měsíc zaplať alespoň 10krát", description: "Počítají se platby kartou v obchodě, online i přes mobilní peněženku. Udělej si rezervu a nenechávej desátou platbu na poslední den.", check: "V každém způsobilém měsíci máš alespoň 10 zaúčtovaných plateb." },
-      { title: "Kontroluj 500 Kč následující měsíc", description: "Banka připisuje odměnu do 15. dne měsíce následujícího po splněném měsíci. Opakuj postup šest měsíců.", check: "Po šesti splněných měsících máš připsáno až 3 000 Kč." }
-    ]
-  },
-  "revolut-cestovani": {
-    intro: "Revolut ti neposílá fixní bonus. Úspora vzniká správným použitím: vhodný plán, směna v rámci limitu, platba v místní měně a rozumné výběry z bankomatu.",
-    preparation: ["Doklad totožnosti a telefon", "Přehled zemí a měn na cestě", "Odhad měsíční útraty, směny a výběrů"],
-    commonMistake: "Nikdy nepotvrzuj přepočet do Kč nabízený terminálem nebo bankomatem. DCC obvykle používá kurz provozovatele, ne kurz tvé karty.",
-    steps: [
-      { title: "Nejdřív porovnej plány", description: "Začni plánem Standard zdarma a srovnej jeho limity s placenými plány. Placený plán ber jen tehdy, když jeho limity a výhody převýší měsíční cenu.", check: "Znáš cenu plánu a limity směny i výběrů." },
-      { title: "Založ a ověř účet", description: "Stáhni aplikaci, ověř totožnost a vytvoř si virtuální nebo fyzickou kartu. Virtuální kartu můžeš přidat do Apple Pay nebo Google Pay.", check: "Karta je aktivní a můžeš s ní platit." },
-      { title: "Před cestou zkontroluj směnu", description: "V aplikaci si zobraz kurz, případný poplatek a zbývající limit. U plánů s víkendovou přirážkou směňuj raději před víkendem.", check: "Před potvrzením směny vidíš celkový náklad." },
-      { title: "V zahraničí vždy vyber místní měnu", description: "Terminálu nebo bankomatu odmítni převod do CZK. Nech směnu provést Revolut v měně obchodníka.", check: "Na terminálu potvrzuješ částku v místní měně." },
-      { title: "Hlídej limit výběrů a cizí poplatky", description: "Vybírej jen do limitu svého plánu. Bankomat může účtovat vlastní poplatek, i když Revolut žádný další poplatek nepřidá.", check: "Před výběrem vidíš poplatek bankomatu a zbývající limit." },
-      { title: "RevPoints používej jen tam, kde dávají smysl", description: "Body můžeš podle podmínek převádět na letecké míle nebo slevy na podporované pobyty a aktivity. Vždy porovnej cenu i bez bodů.", check: "Zvolená odměna skutečně snižuje cenu tvé cesty." },
-      { title: "Po cestě zkontroluj reálnou úsporu", description: "Porovnej kurzy, poplatky a cenu plánu s běžnou kartou nebo směnárnou. Podle výsledku uprav plán pro další cestu.", check: "Víš, za co jsi ušetřil a za co jsi naopak zaplatil." }
+      { title: "Kontroluj 500 Kč následující měsíc", description: "Podle pravidel akce banka připisuje odměnu nejpozději do 20. dne měsíce následujícího po splněném měsíci. Opakuj postup šest měsíců.", check: "Po šesti splněných měsících máš připsáno 3 000 Kč." }
     ]
   }
 };
