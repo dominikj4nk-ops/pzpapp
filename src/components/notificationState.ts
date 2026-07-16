@@ -6,20 +6,13 @@ import { bonusStateEvent, getBonusProgress, getViewedOffers } from "./bonusState
 const dismissedKey = "pzp:dismissed-notifications";
 export const notificationStateEvent = "pzp:notification-state";
 
-const REFERRAL_NOTIFICATION_ID = "referral-invite";
-
 type OfferNotification = {
   id: string;
   kind: "in-progress" | "viewed";
   bonus: Bonus;
 };
 
-type ReferralNotification = {
-  id: string;
-  kind: "referral";
-};
-
-export type AppNotification = OfferNotification | ReferralNotification;
+export type AppNotification = OfferNotification;
 
 function readDismissed(): string[] {
   try {
@@ -69,19 +62,15 @@ export function getNotifications(): AppNotification[] {
     }
   });
 
-  // 3) Pozvi přátele – trvalé promo.
-  if (!dismissed.has(REFERRAL_NOTIFICATION_ID)) {
-    list.push({ id: REFERRAL_NOTIFICATION_ID, kind: "referral" });
-  }
-
   return list;
 }
 
 export function useNotifications() {
-  const [items, setItems] = useState(getNotifications);
+  const [items, setItems] = useState<AppNotification[]>([]);
 
   useEffect(() => {
     const sync = () => setItems(getNotifications());
+    sync();
 
     window.addEventListener(notificationStateEvent, sync);
     window.addEventListener(bonusStateEvent, sync);

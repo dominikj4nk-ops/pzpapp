@@ -30,7 +30,7 @@ const sections: { title: string; body: string[] }[] = [
   {
     title: "4. Obsah webu",
     body: [
-      "Části obsahu webu – včetně recenzí, hodnocení, statistik, ukázek výher a příkladů výdělků – mohou být ilustrativní a slouží k demonstraci fungování služby. Skutečné výsledky jednotlivých uživatelů se liší a nejsou zaručeny.",
+      "Web nezveřejňuje uživatelské recenze, hodnocení ani statistiky výplat bez doložitelného podkladu. Příklady sloužící k vysvětlení podmínek jsou vždy označené jako modelové a nepředstavují záruku výsledku.",
       "Všechny texty, grafika a loga webu jsou chráněny autorským právem. Loga a ochranné známky partnerů patří jejich vlastníkům."
     ]
   },
@@ -61,7 +61,7 @@ const sections: { title: string; body: string[] }[] = [
 
 export default function TermsPage() {
   return (
-    <>
+    <div className="xl:mx-auto xl:max-w-[1320px]">
       <Header title="Podmínky použití" back />
       <GlassCard className="mb-4 p-4">
         <div className="flex items-center gap-3">
@@ -75,7 +75,7 @@ export default function TermsPage() {
         </div>
       </GlassCard>
 
-      <section className="space-y-3">
+      <section className="space-y-3 xl:grid xl:grid-cols-2 xl:items-start xl:gap-3 xl:space-y-0">
         {sections.map((section) => (
           <GlassCard key={section.title} className="p-4">
             <h3 className="text-sm font-black text-white">{section.title}</h3>
@@ -89,6 +89,6 @@ export default function TermsPage() {
           </GlassCard>
         ))}
       </section>
-    </>
+    </div>
   );
 }

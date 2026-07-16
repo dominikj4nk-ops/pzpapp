@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import { Check, ChevronRight, HelpCircle, Mail, Search, Star } from "lucide-react";
+import { BadgeCheck, Check, ChevronRight, HelpCircle, Mail, Search } from "lucide-react";
 import type { HTMLMotionProps } from "framer-motion";
 import type { ReactNode } from "react";
 import { useId } from "react";
 import { useNavigate } from "react-router-dom";
-import type { Bonus } from "../data/mockData";
+import { type Bonus } from "../data/mockData";
 import { FORM_TARGET_EMAIL } from "./formMailer";
 import { paths } from "../routes/paths";
 
@@ -42,11 +42,11 @@ export function VerifiedBadge({ size = 18 }: { size?: number }) {
   );
 }
 
-export function BrandLogo({ className = "", onClick }: { className?: string; onClick?: () => void }) {
+export function BrandLogo({ className = "", onClick, tone = "white" }: { className?: string; onClick?: () => void; tone?: "white" | "ink" }) {
   const content = (
     <>
       <span className="whitespace-nowrap">
-        <span className="text-white">prachyzaregistraci</span><span className="text-neon">.cz</span>
+        <span className={tone === "ink" ? "text-[#0b1628]" : "text-white"}>prachyzaregistraci</span><span className={tone === "ink" ? "text-[#10a96f]" : "text-neon"}>.cz</span>
       </span>
     </>
   );
@@ -140,11 +140,11 @@ export function FilterTabs({
 export function LogoMark({ bonus, size = "md" }: { bonus: Bonus; size?: "sm" | "md" | "lg" }) {
   const dimensions = size === "lg" ? "h-16 w-16 text-2xl" : size === "sm" ? "h-10 w-10 text-sm" : "h-14 w-14 text-xl";
   return (
-    <div className={`relative grid ${dimensions} shrink-0 place-items-center overflow-hidden rounded-2xl ${bonus.logoClass} font-black shadow-[0_12px_28px_rgba(0,0,0,.35)]`}>
+    <div className={`relative grid ${dimensions} shrink-0 place-items-center overflow-hidden rounded-2xl border border-black/10 ${bonus.logoClass} font-black shadow-[0_12px_28px_rgba(0,0,0,.28)]`}>
       <img
         src={bonus.logoUrl}
         alt={`${bonus.name} logo`}
-        className="relative z-10 h-full w-full object-cover"
+        className="relative z-10 h-full w-full object-contain p-2 xl:p-0.5"
         onError={(event) => {
           event.currentTarget.style.display = "none";
           event.currentTarget.nextElementSibling?.classList.remove("hidden");
@@ -206,19 +206,20 @@ function RankShield({ rank }: { rank: number }) {
   );
 }
 
-export function BonusCard({ bonus, rank }: { bonus: Bonus; rank?: number }) {
+export function BonusCard({ bonus, rank, variant = "featured" }: { bonus: Bonus; rank?: number; variant?: "featured" | "list" }) {
   const navigate = useNavigate();
+  const desktopList = variant === "list";
 
   return (
     <motion.article
       whileTap={{ scale: 0.985 }}
       onClick={() => navigate(paths.exchangeDetail(bonus.id))}
-      className="relative h-full cursor-pointer rounded-[20px] border border-white/10 bg-white/[.055] p-3 shadow-card transition hover:border-neon/30 lg:p-4"
+      className={`relative h-full cursor-pointer rounded-[20px] border border-white/10 bg-white/[.055] p-3 shadow-card transition hover:-translate-y-0.5 hover:border-neon/40 hover:bg-white/[.07] lg:p-4 ${desktopList ? "lg:rounded-[12px]" : "xl:rounded-[12px]"}`}
     >
       {rank ? <RankShield rank={rank} /> : null}
-      <div className="flex h-full items-center gap-3 lg:flex-col lg:items-start">
+      <div className={`flex h-full items-center gap-3 ${desktopList ? "lg:grid lg:grid-cols-[56px_minmax(0,1fr)_132px] lg:items-center lg:gap-4" : "lg:flex-col lg:items-start"}`}>
         <LogoMark bonus={bonus} />
-        <div className="min-w-0 flex-1 lg:w-full">
+        <div className={`min-w-0 flex-1 ${desktopList ? "lg:w-auto" : "lg:w-full"}`}>
           <div className="flex items-center gap-1">
             <h3 className="truncate font-bold">{bonus.name}</h3>
             <VerifiedBadge size={17} />
@@ -236,19 +237,16 @@ export function BonusCard({ bonus, rank }: { bonus: Bonus; rank?: number }) {
             ))}
           </div>
         </div>
-        <div className="flex flex-col items-end gap-4 lg:w-full lg:flex-row lg:items-center lg:justify-between">
-          <span className="flex items-center gap-1 text-sm font-semibold">
-            <Star className="fill-yellow-300 text-yellow-300" size={15} />
-            {bonus.rating}
-          </span>
+        <div className={`flex flex-col items-end justify-end gap-4 ${desktopList ? "lg:w-[132px]" : "lg:w-full lg:flex-row lg:items-center lg:justify-end"}`}>
           <button
             onClick={(event) => {
               event.stopPropagation();
               navigate(paths.exchangeDetail(bonus.id));
             }}
-            className="neon-button h-10 whitespace-nowrap rounded-[14px] px-4 text-xs font-black text-[#02130c] active:scale-95 lg:min-w-[130px]"
+            className={`neon-button h-10 whitespace-nowrap rounded-[14px] px-4 text-xs font-black text-[#02130c] active:scale-95 lg:min-w-[130px] ${desktopList ? "lg:w-full lg:rounded-[12px]" : "xl:rounded-[12px]"}`}
           >
-            Získat<span className="hidden lg:inline"> {bonus.bonus}</span>
+            <span className="xl:hidden">Detail</span>
+            <span className="hidden xl:inline">Detail nabídky</span>
           </button>
         </div>
       </div>
@@ -269,9 +267,9 @@ export function ExchangeCard({ bonus }: { bonus: Bonus }) {
         <p className="truncate text-sm font-bold">{bonus.name}</p>
         <p className="text-sm font-black text-neon">{bonus.bonus}</p>
       </div>
-      <span className="flex items-center gap-1 text-xs font-semibold text-slate-100">
-        <Star className="fill-yellow-300 text-yellow-300" size={13} />
-        {bonus.rating}
+      <span className="flex items-center gap-1 text-[11px] font-semibold text-slate-300">
+        <BadgeCheck className="text-neon" size={13} />
+        Ověřeno
       </span>
       <ChevronRight size={16} className="text-slate-500" />
     </button>
@@ -312,9 +310,9 @@ export function ContactCard({ title = "Potřebuješ poradit?", text = "Odpovíd�
 
 export function DetailRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between border-b border-white/[.08] py-3 text-sm last:border-0">
-      <span className="text-slate-400">{label}</span>
-      <span className="font-semibold text-white">{value}</span>
+    <div className="flex items-start justify-between gap-4 border-b border-white/[.08] py-3 text-sm last:border-0">
+      <span className="shrink-0 text-slate-400">{label}</span>
+      <span className="min-w-0 max-w-[64%] text-right font-semibold leading-5 text-white">{value}</span>
     </div>
   );
 }

@@ -1,7 +1,8 @@
 import { Search, SearchX } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
+import { trackEvent } from "../analytics/events";
 import { ExchangeCard, GlassCard, SearchBar } from "../components/ui";
 import { bonuses, suggestions } from "../data/mockData";
 import { paths } from "../routes/paths";
@@ -21,8 +22,16 @@ export default function SearchPage() {
     [normalized]
   );
 
+  useEffect(() => {
+    if (!normalized) return;
+    const timeout = window.setTimeout(() => {
+      trackEvent("internal_search", { query_length: normalized.length, result_count: results.length });
+    }, 500);
+    return () => window.clearTimeout(timeout);
+  }, [normalized, results.length]);
+
   return (
-    <>
+    <div className="xl:mx-auto xl:max-w-[720px]">
       <Header title="Hledat bonus" back />
       <SearchBar placeholder="Např. mBank, Air Bank, Tipli..." value={query} onChange={setQuery} />
 
@@ -64,6 +73,6 @@ export default function SearchPage() {
           </div>
         </section>
       )}
-    </>
+    </div>
   );
 }

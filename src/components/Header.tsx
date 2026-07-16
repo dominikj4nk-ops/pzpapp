@@ -7,9 +7,10 @@ import { BrandLogo } from "./ui";
 type HeaderProps = {
   title?: string;
   back?: boolean;
+  heading?: boolean;
 };
 
-export default function Header({ title, back = false }: HeaderProps) {
+export default function Header({ title, back = false, heading = true }: HeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const notifications = useNotifications();
@@ -30,8 +31,10 @@ export default function Header({ title, back = false }: HeaderProps) {
       >
         {back ? <ArrowLeft size={20} /> : <Mail size={19} />}
       </button>
-      {title ? (
+      {title && heading ? (
         <h1 className="text-base font-semibold">{title}</h1>
+      ) : title ? (
+        <div className="text-base font-semibold">{title}</div>
       ) : (
         <BrandLogo onClick={() => navigate(paths.home)} className="text-[17px]" />
       )}

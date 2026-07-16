@@ -1,6 +1,7 @@
 import { SearchX } from "lucide-react";
 import { useMemo, useState } from "react";
 import Header from "../components/Header";
+import { trackEvent } from "../analytics/events";
 import { BonusCard, FilterTabs, GlassCard, SearchBar } from "../components/ui";
 import { bonusAmount, bonuses, exchangeFilters, formatKc } from "../data/mockData";
 
@@ -27,9 +28,16 @@ export default function ExchangesPage() {
   return (
     <>
       <Header title="Nabídky" />
-      <div className="space-y-3">
+      <div className="space-y-3 xl:grid xl:grid-cols-[1fr_auto] xl:items-center xl:gap-4 xl:space-y-0">
         <SearchBar placeholder="Hledat nabídku" value={query} onChange={setQuery} />
-        <FilterTabs tabs={exchangeFilters} active={active} onChange={setActive} />
+        <FilterTabs
+          tabs={exchangeFilters}
+          active={active}
+          onChange={(filter) => {
+            setActive(filter);
+            trackEvent("offer_filter", { filter });
+          }}
+        />
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-3 rounded-[18px] border border-neon/20 bg-neon/[.07] px-4 py-3">
@@ -39,9 +47,9 @@ export default function ExchangesPage() {
         <p className="whitespace-nowrap text-sm font-black text-neon">až {formatKc(filteredTotal)}</p>
       </div>
 
-      <section className="mt-4 grid gap-3 xl:grid-cols-2">
+      <section className="mt-4 grid gap-3 lg:grid-cols-2">
         {filtered.map((bonus) => (
-          <BonusCard key={bonus.id} bonus={bonus} />
+          <BonusCard key={bonus.id} bonus={bonus} variant="list" />
         ))}
       </section>
 

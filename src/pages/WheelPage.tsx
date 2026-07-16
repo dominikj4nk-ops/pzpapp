@@ -74,58 +74,6 @@ const steps = [
   { title: `Každou ${DRAW_DAY} v ${DRAW_TIME} losujeme`, text: "Ze všech, kdo ten týden sdíleli, vylosujeme jednoho a proplatíme mu přesně to, co mu na kole padlo." }
 ];
 
-function maskHandle(handle: string) {
-  const name = handle.replace(/^@/, "");
-  const visible = name.slice(0, 2);
-  return `@${visible}${"*".repeat(Math.min(5, Math.max(3, name.length - 2)))}`;
-}
-
-// Brandové profilovky (v našich barvách) – gradienty jsou vypsané literálně, aby je Tailwind zachytil.
-const avatarGradients = ["from-emerald-300 to-green-600", "from-teal-300 to-emerald-600", "from-lime-300 to-emerald-600"];
-
-function winnerAvatar(handle: string) {
-  const name = handle.replace(/^@/, "");
-  const initials = name.slice(0, 2).toUpperCase();
-  let hash = 0;
-  for (let i = 0; i < handle.length; i += 1) hash = (hash * 31 + handle.charCodeAt(i)) >>> 0;
-  return { initials, gradient: avatarGradients[hash % avatarGradients.length] };
-}
-
-// Zásoba výherců – rotuje automaticky po týdnech, takže se seznam nikdy nemusí měnit ručně.
-// Mix výher (malé, 500, kilo) je poskládaný tak, aby každé tři sousední byly různé.
-const winnerPool: Array<{ handle: string; prize: string }> = [
-  { handle: "@honza.prachy", prize: "Výhra 500 Kč" },
-  { handle: "@lucka.uspory", prize: "Výhra 50 Kč" },
-  { handle: "@petr.money", prize: "Výhra 1 000 Kč" },
-  { handle: "@klara.finance", prize: "Výhra 100 Kč" },
-  { handle: "@tomas.bonus", prize: "Výhra 500 Kč" },
-  { handle: "@niki.savings", prize: "Výhra 20 Kč" },
-  { handle: "@david.cash", prize: "Výhra 250 Kč" },
-  { handle: "@majka.spori", prize: "Výhra 1 000 Kč" },
-  { handle: "@filip.trade", prize: "Výhra 50 Kč" },
-  { handle: "@ela.penize", prize: "Výhra 100 Kč" },
-  { handle: "@radek.fin", prize: "Výhra 500 Kč" },
-  { handle: "@simona.money", prize: "Výhra 250 Kč" },
-  { handle: "@vojta.bonus", prize: "Výhra 20 Kč" },
-  { handle: "@anet.spori", prize: "Výhra 1 000 Kč" },
-  { handle: "@kuba_invest", prize: "Výhra 100 Kč" },
-  { handle: "@terka.fit", prize: "Výhra 500 Kč" }
-];
-
-const WINNER_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
-const WINNER_EPOCH = new Date(2020, 0, 6).getTime(); // pondělí – počátek počítání týdnů
-
-// Vrátí 3 nejnovější výherce; každý reálný týden se okno posune o jednoho dál.
-function getRecentWinners(now = Date.now()) {
-  const offset = Math.floor((now - WINNER_EPOCH) / WINNER_WEEK_MS);
-  const len = winnerPool.length;
-  const labels = ["minulý týden", "před 2 týdny", "před 3 týdny"];
-  return labels.map((when, i) => {
-    const entry = winnerPool[(((offset - i) % len) + len) % len];
-    return { ...entry, when };
-  });
-}
-
 const commonPrizes = wheelPrizes.filter((prize) => prize.tier === "small" || prize.tier === "spin");
 const rarePrizes = wheelPrizes.filter((prize) => prize.tier === "medium" || prize.tier === "big" || prize.tier === "jackpot");
 
@@ -161,7 +109,6 @@ export default function WheelPage() {
   const [showResult, setShowResult] = useState(false);
   const [storyImage, setStoryImage] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
-  const recentWinners = useMemo(() => getRecentWinners(), []);
   const timeoutRef = useRef<number | undefined>(undefined);
   const toastRef = useRef<number | undefined>(undefined);
 
@@ -353,7 +300,7 @@ export default function WheelPage() {
   return (
     <>
       <Header title="Kolo štěstí" back />
-      <div className="xl:grid xl:grid-cols-[minmax(0,10fr)_minmax(0,9fr)] xl:items-start xl:gap-6">
+      <div className="xl:mx-auto xl:grid xl:max-w-[1480px] xl:grid-cols-[minmax(0,10fr)_minmax(0,9fr)] xl:items-start xl:gap-6">
         <section className="space-y-4">
           <section className="wheel-hero relative overflow-hidden rounded-[24px] border border-white/10 p-4 shadow-[0_18px_56px_rgba(0,0,0,.34)] xl:p-5">
             <HeroDecor />
@@ -526,34 +473,6 @@ export default function WheelPage() {
             </div>
           </section>
 
-          <section>
-            <h2 className="mb-3 text-sm font-semibold text-slate-300">Poslední výherci</h2>
-            <div className="grid gap-2">
-              {recentWinners.map((winner) => {
-                const avatar = winnerAvatar(winner.handle);
-                return (
-                  <div key={winner.handle} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[.035] p-3">
-                    <span className="relative shrink-0">
-                      <span
-                        className={`grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br ${avatar.gradient} text-xs font-black text-[#03130c] shadow-[inset_0_1px_0_rgba(255,255,255,.4)]`}
-                      >
-                        {avatar.initials}
-                      </span>
-                      <span className="pointer-events-none absolute inset-[-3px] rounded-full ring-1 ring-neon/45" />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-bold">{maskHandle(winner.handle)}</p>
-                      <p className="text-xs text-slate-400">{winner.prize}</p>
-                    </div>
-                    <span className="shrink-0 text-[11px] font-bold text-slate-500">{winner.when}</span>
-                  </div>
-                );
-              })}
-            </div>
-            <p className="mt-2 text-[11px] leading-4 text-slate-500">
-              Výherce vyhlašujeme každou {DRAW_DAY} v {DRAW_TIME} na našem Instagramu.
-            </p>
-          </section>
         </section>
       </div>
 

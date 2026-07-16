@@ -1,4 +1,5 @@
-import { BadgePercent, CheckCircle2, ChevronDown, ExternalLink, Info } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { BadgePercent, Check, CheckCircle2, ChevronDown, Copy, ExternalLink, Info } from "lucide-react";
 import { useState } from "react";
 import Header from "../components/Header";
 import { GlassCard } from "../components/ui";
@@ -6,10 +7,17 @@ import { referralDeals } from "../data/mockData";
 
 export default function CashbackPage() {
   const [openId, setOpenId] = useState<string>("");
+  const [copiedCode, setCopiedCode] = useState<string>("");
   const toggle = (id: string) => setOpenId((current) => (current === id ? "" : id));
 
   const openDeal = (url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const copyCode = async (code: string) => {
+    await navigator.clipboard.writeText(code);
+    setCopiedCode(code);
+    window.setTimeout(() => setCopiedCode(""), 1800);
   };
 
   return (
@@ -23,7 +31,7 @@ export default function CashbackPage() {
           <div className="min-w-0">
             <h2 className="font-black">Kredity a slevy zdarma</h2>
             <p className="mt-0.5 text-xs leading-5 text-slate-400">
-              Ověřené akce, kde jako nový uživatel dostaneš reálné peníze nebo kredit. Rozklikni a zjisti, co přesně získáš.
+              Ověřené akce, kde jako nový uživatel získáš kredit nebo slevu. Rozklikni nabídku a předem uvidíš přesný postup.
             </p>
           </div>
         </div>
@@ -36,11 +44,11 @@ export default function CashbackPage() {
           return (
             <GlassCard key={deal.id} className={`overflow-hidden transition ${isOpen ? "border-neon/30" : "hover:border-neon/30"}`}>
               <button onClick={() => toggle(deal.id)} className="flex w-full items-center gap-3 p-3 text-left" aria-expanded={isOpen}>
-                <div className={`relative grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br ${deal.color} text-xl font-black shadow-[0_10px_20px_rgba(0,0,0,.24)]`}>
+                <div className={`relative grid h-14 w-14 shrink-0 place-items-center overflow-hidden rounded-2xl border border-black/10 bg-gradient-to-br ${deal.color} text-xl font-black shadow-[0_10px_20px_rgba(0,0,0,.24)]`}>
                   <img
                     src={deal.logoUrl}
                     alt={`${deal.name} logo`}
-                    className="relative z-10 h-full w-full scale-110 object-cover"
+                    className="relative z-10 h-full w-full object-contain p-2 xl:p-1"
                     onError={(event) => {
                       event.currentTarget.style.display = "none";
                       event.currentTarget.nextElementSibling?.classList.remove("hidden");
@@ -56,11 +64,21 @@ export default function CashbackPage() {
                     </span>
                   </div>
                   <p className="mt-0.5 text-sm text-slate-300">{deal.tagline}</p>
+                  {deal.promoCode ? <p className="mt-1 text-[11px] font-bold text-slate-500">Kód: <span className="text-white">{deal.promoCode}</span></p> : null}
                 </div>
                 <ChevronDown size={18} className={`shrink-0 text-slate-400 transition-transform ${isOpen ? "rotate-180 text-neon" : ""}`} />
               </button>
 
+              <AnimatePresence initial={false}>
               {isOpen ? (
+                <motion.div
+                  key="detail"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
+                  className="overflow-hidden"
+                >
                 <div className="border-t border-white/[.08] p-3 pt-3">
                   <p className="text-sm leading-6 text-slate-300">{deal.description}</p>
 
@@ -75,6 +93,20 @@ export default function CashbackPage() {
                     ))}
                   </div>
 
+                  {deal.promoCode ? (
+                    <button
+                      type="button"
+                      onClick={() => void copyCode(deal.promoCode!)}
+                      className="glass-button mt-3 flex h-10 w-full items-center justify-between px-3 text-xs font-bold text-slate-200 transition hover:border-neon/30"
+                    >
+                      <span>Slevový kód <strong className="ml-1 text-white">{deal.promoCode}</strong></span>
+                      <span className="flex items-center gap-1.5 text-neon">
+                        {copiedCode === deal.promoCode ? <Check size={14} /> : <Copy size={14} />}
+                        {copiedCode === deal.promoCode ? "Zkopírováno" : "Kopírovat"}
+                      </span>
+                    </button>
+                  ) : null}
+
                   {deal.note ? (
                     <p className="mt-3 flex items-start gap-2 text-[11px] leading-4 text-slate-500">
                       <Info size={13} className="mt-0.5 shrink-0" /> {deal.note}
@@ -85,13 +117,15 @@ export default function CashbackPage() {
                     onClick={() => openDeal(deal.partnerUrl)}
                     className="neon-button mt-3 flex h-11 w-full items-center justify-center gap-2 rounded-[16px] text-sm font-black text-[#02130c] transition active:scale-95"
                   >
-                    Získat {deal.reward} <ExternalLink size={15} />
+                    {deal.actionLabel ?? `Získat ${deal.reward}`} <ExternalLink size={15} />
                   </button>
                   <p className="mt-2 flex items-center justify-center gap-1 text-[11px] text-slate-500">
                     <CheckCircle2 size={12} className="text-neon" /> Ověřená akce pro nové uživatele
                   </p>
                 </div>
+                </motion.div>
               ) : null}
+              </AnimatePresence>
             </GlassCard>
           );
         })}

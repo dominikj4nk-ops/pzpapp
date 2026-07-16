@@ -1,11 +1,11 @@
-import { ArrowRight, CheckCheck, FerrisWheel, Inbox, Timer, UserPlus, X } from "lucide-react";
+import { ArrowRight, CheckCheck, FerrisWheel, Inbox, Timer, X } from "lucide-react";
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { dismissNotification, dismissNotifications, useNotifications } from "../components/notificationState";
 import { formatCountdown, JACKPOT_LABEL, useWheel } from "../components/wheelState";
 import { LogoMark } from "../components/ui";
-import { REFERRAL_REWARD, formatKc, type Bonus } from "../data/mockData";
+import { type Bonus } from "../data/mockData";
 import { paths } from "../routes/paths";
 
 function NotifCard({
@@ -72,12 +72,11 @@ function NotifCard({
 function offerHook(bonus: Bonus) {
   let seed = 0;
   for (const ch of bonus.id) seed = (seed * 31 + ch.charCodeAt(0)) >>> 0;
-  const people = 30 + (seed % 90);
   const hooks = [
-    `Dneska si ${bonus.name} vzalo dalších ${people} lidí. ${bonus.bonus} pořád čeká na tebe.`,
-    `${bonus.name} má hodnocení ${bonus.rating}★ a patří k nejoblíbenějším. Škoda nechat ${bonus.bonus} ležet.`,
-    `Zabere jen ${bonus.completionTime} a máš ${bonus.bonus}. Většina to dá na jeden zátah.`,
-    `Byl jsi kousek od ${bonus.bonus}. Dokonči ${bonus.name}, než ti to uteče.`
+    `U nabídky ${bonus.name} si znovu zkontroluj aktuální podmínky a potřebné kroky.`,
+    `${bonus.name} jsme naposledy ověřili ${bonus.lastVerified?.split("-").reverse().join(". ") ?? "před publikací"}.`,
+    `Odhadovaný čas registrace je ${bonus.completionTime}; splnění podmínek může trvat déle.`,
+    `Před pokračováním si projdi poplatky, omezení a oficiální zdroj nabídky ${bonus.name}.`
   ];
   return hooks[seed % hooks.length];
 }
@@ -135,25 +134,6 @@ export default function NotificationsPage() {
 
             <div className="space-y-2">
               {notifications.map((notification) => {
-                if (notification.kind === "referral") {
-                  return (
-                    <NotifCard
-                      key={notification.id}
-                      testId={notification.id}
-                      icon={
-                        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-amber-300/15 text-amber-300">
-                          <UserPlus size={20} />
-                        </span>
-                      }
-                      title="Pozvi kamaráda a vydělej"
-                      subtitle={`${formatKc(REFERRAL_REWARD)} za každého, kdo dokončí bonus`}
-                      cta="Pozvat"
-                      onOpen={() => navigate(paths.rewards)}
-                      onDismiss={() => dismissNotification(notification.id)}
-                    />
-                  );
-                }
-
                 const isViewed = notification.kind === "viewed";
                 return (
                   <NotifCard

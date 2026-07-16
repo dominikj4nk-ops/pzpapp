@@ -48,10 +48,9 @@ const contactMethods: ContactMethod[] = [
 const faqs = [
   ["Je to opravdu zdarma?", "Ano. Registrace u partnerů jsou zdarma a my si z tvého bonusu nic nebereme. Platí nás partneři za doporučení."],
   ["Jak získám bonus?", "Vyber nabídku, klikni na Získat bonus a dokonči registraci u partnera přesně podle kroků v detailu nabídky. Bonus pak vyplatí partner."],
-  ["Kdy mi přijdou peníze?", "Záleží na partnerovi. Air Bank vyplácí obvykle do 2 dnů, mBank do 30 dnů od měsíce platby. Přesný termín najdeš u každé nabídky."],
-  ["Je to bezpečné a legální?", "Ano. Jde o oficiální akce bank a platforem pro nové klienty. Registruješ se vždy přímo u partnera, my tvoje údaje nevidíme."],
+  ["Kdy mi přijdou peníze?", "Záleží na partnerovi a splnění všech podmínek. Orientační i nejzazší dohledatelný termín uvádíme v detailu nabídky; rozhodující jsou vždy aktuální pravidla partnera."],
+  ["Jak ověřujete bezpečnost?", "Aktivní nabídky porovnáváme s oficiálním zdrojem poskytovatele a uvádíme datum kontroly. Registrace probíhá u partnera. Nikdy nám neposílej heslo ani přístup do bankovnictví."],
   ["Musím účet po získání bonusu zrušit?", "Nemusíš. Účet můžeš dál používat, nebo ho po vyplacení bonusu zrušit. Záleží jen na tobě a podmínkách partnera."],
-  ["Kdy dostanu odměnu za kamaráda?", "Po tom, co partner potvrdí registraci tvého kamaráda. Obvykle do 30 dnů od odeslání žádosti a o výsledku dáme vědět e-mailem."],
   ["Nepřišel mi bonus, co teď?", "Napiš nám na e-mail název nabídky a datum dokončení. Ověříme to u partnera a poradíme, jak dál."]
 ];
 
@@ -97,7 +96,7 @@ export default function HelpPage() {
   return (
     <>
       <Header title="Kontakt a podpora" back />
-      <section className="space-y-4">
+      <section className="space-y-4 xl:mx-auto xl:grid xl:max-w-[1320px] xl:grid-cols-2 xl:items-start xl:gap-4 xl:space-y-0">
         <GlassCard className="p-4 xl:p-5">
           <div className="flex items-center gap-3">
             <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-neon/15 text-neon">
@@ -129,14 +128,14 @@ export default function HelpPage() {
                 href={method.href}
                 target={method.external ? "_blank" : undefined}
                 rel={method.external ? "noopener noreferrer" : undefined}
-                className="glass-button flex items-center gap-3 p-3 text-left transition active:scale-[.99]"
+                className={`glass-button flex items-center gap-3 p-3 text-left transition active:scale-[.99] ${method.label === "E-mail" ? "sm:col-span-2" : ""}`}
               >
                 <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/[.07] text-neon">
                   <Icon size={20} />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block text-[11px] font-bold uppercase tracking-wide text-slate-500">{method.label}</span>
-                  <span className="block truncate text-sm font-bold text-white">{method.value}</span>
+                  <span className="block break-all text-sm font-bold text-white">{method.value}</span>
                   <span className="mt-0.5 block text-xs leading-4 text-slate-400">{method.hint}</span>
                 </span>
               </a>
