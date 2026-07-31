@@ -1,4 +1,4 @@
-import { CalendarDays, ChevronRight, Mail, ScrollText, ShieldCheck } from "lucide-react";
+import { CalendarDays, ChevronRight, Mail, ScrollText } from "lucide-react";
 import Header from "../components/Header";
 import { FORM_TARGET_EMAIL } from "../components/formMailer";
 import { GlassCard } from "../components/ui";
@@ -65,7 +65,7 @@ export default function TermsPage() {
       <Header title="Podmínky použití" back />
       <GlassCard className="mb-4 p-4 xl:p-6">
         <div className="flex items-start gap-4 xl:items-center">
-          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[14px] bg-neon/12 text-neon">
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-[14px] bg-neon/12 text-neon xl:hidden">
             <ScrollText size={22} />
           </span>
           <div className="min-w-0 flex-1">
@@ -80,10 +80,7 @@ export default function TermsPage() {
               <CalendarDays size={16} className="text-neon" />
               <span>Platné od 7. 7. 2026</span>
             </div>
-            <div className="flex items-center gap-2 text-xs text-slate-400">
-              <ShieldCheck size={16} className="text-neon" />
-              <span>7 přehledných oddílů</span>
-            </div>
+            <span className="text-xs text-slate-400">7 oddílů</span>
           </div>
         </div>
       </GlassCard>
@@ -133,9 +130,10 @@ export default function TermsPage() {
               key={section.title}
               className="scroll-mt-6 border-b border-white/[0.07] py-5 first:pt-3 last:border-b-0 last:pb-1 xl:grid xl:grid-cols-[48px_minmax(0,1fr)] xl:gap-5 xl:py-7 xl:first:pt-0"
             >
-              <span className="mb-3 grid h-9 w-9 place-items-center rounded-[12px] bg-neon/10 text-xs font-black text-neon xl:mb-0">
+              <span className="mb-3 grid h-9 w-9 place-items-center rounded-[12px] bg-neon/10 text-xs font-black text-neon xl:hidden">
                 {String(index + 1).padStart(2, "0")}
               </span>
+              <span className="hidden pt-0.5 text-xs font-black text-neon xl:block">{String(index + 1).padStart(2, "0")}</span>
               <div className="min-w-0">
                 <h3 className="text-base font-black leading-6 text-white xl:text-lg">{section.title.replace(/^\d+\.\s*/, "")}</h3>
                 <div className="mt-3 space-y-3 xl:mt-4">

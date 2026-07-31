@@ -197,14 +197,14 @@ const offerRecords: Bonus[] = [
     id: "robinhood-trading",
     name: "Robinhood",
     type: "Investice",
-    bonus: "50 EUR v kryptu",
+    bonus: "50 €",
     age: "18+",
     tags: ["15 min", "Vklad"],
     logo: "R",
     logoClass: "bg-white text-emerald-600",
     logoUrl: `${import.meta.env.BASE_URL}assets/robinhood-logo.png`,
     logoFit: "contain",
-    partnerUrl: "https://join.robinhood.com/eu_crypto/petrak-376f276/",
+    partnerUrl: "https://join.robinhood.com/eu_crypto/dominij-244bae/",
     pitch: "Přesná odměna a minimální vklad se zobrazí v aplikaci před dokončením podmínek.",
     compactCtaLabel: "Získat krypto",
     description: "Robinhood Crypto uvádí odměnu až 50 EUR v kryptoměně po schválení účtu a splnění minimálního vkladu zobrazeného v aplikaci. Přesná výše odměny i minimální vklad jsou proměnlivé.",
@@ -222,7 +222,7 @@ const offerRecords: Bonus[] = [
     status: "Aktivní",
     provider: "Robinhood Europe, UAB",
     rewardType: "Kryptoměna",
-    bonusValueCzk: null,
+    bonusValueCzk: 1250,
     officialSourceUrl: "https://robinhood.com/eu/en/support/articles/rewards/",
     isAffiliate: true,
     verificationStatus: "verified",
@@ -242,7 +242,7 @@ const offerRecords: Bonus[] = [
     logo: "RB",
     logoClass: "bg-[#ffe500] text-black",
     logoUrl: `${import.meta.env.BASE_URL}assets/raiffeisenbank-logo.svg`,
-    logoFit: "symbol",
+    logoFit: "contain",
     partnerUrl: "https://onb.rb.cz/onb-web?mgm=CqbQu8",
     pitch: "500 Kč za každý z prvních šesti měsíců, ve kterém uděláš alespoň 10 plateb kartou.",
     compactCtaLabel: "Získat odměnu",
@@ -293,6 +293,13 @@ export const totalPotential = bonuses.reduce((sum, bonus) => sum + bonusAmount(b
 
 export const formatKc = (amount: number) => `${amount.toLocaleString("cs-CZ")} Kč`;
 
+export const bonusMatchesAgeFilter = (bonus: Bonus, filter: string) => {
+  if (filter === "Vše") return true;
+  const ageGroups = bonus.ageGroups ?? [bonus.age];
+  if (filter === "18+") return ageGroups.includes("18+") || ageGroups.includes("15+");
+  return ageGroups.includes(filter as "15+" | "18+");
+};
+
 export const formatVerifiedDate = (bonus: Bonus) => {
   if (!bonus.lastVerified) return "Čeká na kontrolu";
   const [year, month, day] = bonus.lastVerified.split("-");
@@ -337,24 +344,6 @@ export const referralDeals: ReferralDeal[] = [
     ],
     note: "Platí pro nové uživatele. Konkrétní podmínky a výsledná výše slevy se mohou lišit podle aktuální akce SHEIN.",
     partnerUrl: "https://onelink.shein.com/41/5uzgm7pyfokh"
-  },
-  {
-    id: "bolt",
-    name: "Bolt",
-    reward: "100 Kč",
-    tagline: "100 Kč sleva na 2 první jízdy",
-    logo: "B",
-    logoUrl: `${import.meta.env.BASE_URL}assets/bolt-logo.png`,
-    color: "from-emerald-400 to-green-600",
-    description:
-      "Taxi a sdílené koloběžky. Přes naši pozvánku dostaneš jako nový uživatel slevu 100 Kč, která se ti rozloží na 2 první jízdy. Ideální na cestu domů z večírku nebo rychlý přesun po městě.",
-    steps: [
-      "Stáhni si appku Bolt přes náš odkaz",
-      "Při registraci zadej náš pozvánkový kód 22UJ1U",
-      "Sleva 100 Kč se ti automaticky uplatní na 2 první jízdy"
-    ],
-    note: "Platí pro nové uživatele. Přesná výše promo akce se může lišit podle města.",
-    partnerUrl: "https://invite.bolt.eu/22UJ1U"
   },
   {
     id: "liftago",

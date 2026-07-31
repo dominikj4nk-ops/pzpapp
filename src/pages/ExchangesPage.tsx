@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import Header from "../components/Header";
 import { trackEvent } from "../analytics/events";
 import { BonusCard, FilterTabs, GlassCard, SearchBar } from "../components/ui";
-import { ageFilters, bonusAmount, bonuses, exchangeFilters, formatKc } from "../data/mockData";
+import { ageFilters, bonusAmount, bonusMatchesAgeFilter, bonuses, exchangeFilters, formatKc } from "../data/mockData";
 
 export default function ExchangesPage() {
   const [query, setQuery] = useState("");
@@ -19,7 +19,7 @@ export default function ExchangesPage() {
           bonus.type.toLowerCase().includes(normalized) ||
           bonus.bonus.toLowerCase().includes(normalized);
         const matchesFilter = active === "Vše" || bonus.type === active;
-        const matchesAge = activeAge === "Vše" || (bonus.ageGroups ?? [bonus.age]).includes(activeAge as "15+" | "18+");
+        const matchesAge = bonusMatchesAgeFilter(bonus, activeAge);
         return matchesQuery && matchesFilter && matchesAge;
       }),
     [active, activeAge, query]

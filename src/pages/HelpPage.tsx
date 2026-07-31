@@ -100,7 +100,7 @@ export default function HelpPage() {
         <section className="grid gap-4 xl:grid-cols-[minmax(320px,.78fr)_minmax(0,1.22fr)] xl:items-start xl:gap-5">
           <div className="space-y-4">
             <GlassCard className="p-4 xl:p-5">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 xl:hidden">
                 <span className="grid h-11 w-11 shrink-0 place-items-center rounded-[14px] bg-neon/15 text-neon">
                   <Mail size={21} />
                 </span>
@@ -110,6 +110,10 @@ export default function HelpPage() {
                     <span className="h-2 w-2 rounded-full bg-neon" /> Po–Pá 9:00–18:00
                   </p>
                 </div>
+              </div>
+              <div className="hidden min-w-0 xl:block">
+                <h1 className="text-lg font-black leading-tight">Jsme tu pro tebe</h1>
+                <p className="mt-1 text-xs font-bold text-slate-400">Po–Pá 9:00–18:00</p>
               </div>
               <p className="mt-4 text-sm leading-6 text-slate-300">
                 Napiš nám, se kterou nabídkou potřebuješ pomoct a co už máš splněno. Ozveme se co nejdřív.
@@ -127,9 +131,8 @@ export default function HelpPage() {
                     rel={method.external ? "noopener noreferrer" : undefined}
                     className="glass-button flex min-h-[74px] items-center gap-3 p-3.5 text-left transition hover:border-neon/30 active:scale-[.99]"
                   >
-                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-[12px] bg-white/[.07] text-neon">
-                      <Icon size={18} />
-                    </span>
+                    <span className="grid h-10 w-10 shrink-0 place-items-center rounded-[12px] bg-white/[.07] text-neon xl:hidden"><Icon size={18} /></span>
+                    <Icon size={18} className="hidden shrink-0 text-slate-400 xl:block" />
                     <span className="min-w-0 flex-1">
                       <span className="block text-[10px] font-black uppercase text-slate-500">{method.label}</span>
                       <span className="mt-0.5 block break-all text-sm font-bold leading-5 text-white">{method.value}</span>
@@ -150,7 +153,7 @@ export default function HelpPage() {
 
           <GlassCard className="p-4 xl:p-6">
             <div className="mb-5 flex items-center gap-3 border-b border-white/10 pb-4">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-[12px] bg-neon/10 text-neon">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-[12px] bg-neon/10 text-neon xl:hidden">
                 <Clock3 size={18} />
               </span>
               <div>
@@ -191,7 +194,7 @@ export default function HelpPage() {
         <section className="grid gap-4 xl:grid-cols-[minmax(0,1.25fr)_minmax(360px,.75fr)] xl:items-start xl:gap-5">
           <GlassCard className="overflow-hidden p-4 xl:p-5">
             <div className="mb-2 flex items-center gap-2 px-1 pb-3">
-              <HelpCircle size={17} className="text-neon" />
+              <HelpCircle size={17} className="text-neon xl:hidden" />
               <h2 className="text-base font-black">Časté dotazy</h2>
             </div>
             <div className="divide-y divide-white/10 border-t border-white/10">
@@ -212,7 +215,7 @@ export default function HelpPage() {
 
           <GlassCard className="p-4 xl:p-5">
             <div className="mb-3 flex items-center gap-2">
-              <Lightbulb size={17} className="text-neon" />
+              <Lightbulb size={17} className="text-neon xl:hidden" />
               <h2 className="text-base font-black">Chybí nám nabídka?</h2>
             </div>
             <p className="mb-4 text-xs leading-5 text-slate-400">Pošli odkaz. Podmínky ověříme a pokud dávají smysl, přidáme ji do katalogu.</p>
@@ -226,7 +229,7 @@ export default function HelpPage() {
                 {tipStatus === "rate-limited" ? <p className="rounded-[14px] border border-amber-300/25 bg-amber-300/10 p-3 text-sm leading-5 text-amber-100">{RATE_LIMIT_MESSAGE}</p> : null}
                 {tipStatus === "error" ? <p className="rounded-[14px] border border-red-400/25 bg-red-400/10 p-3 text-sm leading-5 text-red-200">Tip se nepodařilo odeslat. Zkus to znovu za chvíli.</p> : null}
                 <button type="submit" disabled={tipStatus === "sending"} className="glass-button flex h-12 w-full items-center justify-center gap-2 rounded-[14px] px-4 text-sm font-black text-white active:scale-95 disabled:opacity-60">
-                  <Lightbulb size={16} className="text-neon" /> {tipStatus === "sending" ? "Odesílám…" : "Poslat tip"}
+                  <Lightbulb size={16} className="text-neon xl:hidden" /> {tipStatus === "sending" ? "Odesílám…" : "Poslat tip"}
                 </button>
               </form>
             )}

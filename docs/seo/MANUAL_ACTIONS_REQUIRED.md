@@ -19,11 +19,16 @@
 
 ## Po nasazení
 
-1. Odeslat `https://prachyzaregistraci.cz/sitemap.xml` do Search Console.
-2. Ověřit domov, přehled, jeden detail a 404 přes URL Inspection.
-3. Zkontrolovat HTTP statusy, canonical a robots z produkčního HTML.
-4. Spustit Lighthouse na mobilu i desktopu a zaznamenat LCP/INP/CLS.
-5. Za 14 a 28 dnů porovnat indexaci, imprese, CTR a dotazy.
+Aktuální kontrola z 31. 7. 2026: produkční `/robots.txt` a `/sitemap.xml` vracejí HTTP 404 a doména stále servíruje starší Next.js verzi. Dokud se aktuální `dist/` nenasadí, crawlery nové SEO neuvidí.
+
+1. Nasadit celý obsah `dist/` do kořene domény a nastavit nginx tak, aby čisté URL servírovaly odpovídající `index.html`.
+2. Ověřit, že `/robots.txt`, `/sitemap.xml`, `/llms.txt` a `/b875a3eec8c04dfa9c6102d5ed024f85.txt` vracejí HTTP 200 a správný obsah.
+3. Odeslat `https://prachyzaregistraci.cz/sitemap.xml` do Google Search Console a ověřit domov, katalog, jeden detail a 404 přes URL Inspection.
+4. Přidat doménu do Seznam Webmasteru, odeslat sitemapu a po úspěšné kontrole produkce spustit `pnpm run indexnow`.
+5. Ověřit, že hosting ani CDN neblokují `OAI-SearchBot`, `ChatGPT-User`, Googlebot nebo SeznamBot; u OpenAI povolit také jejich publikované IP rozsahy.
+6. Zkontrolovat HTTP statusy, canonical, robots a JSON-LD přímo z produkčního HTML.
+7. Spustit Lighthouse na mobilu i desktopu a zaznamenat LCP/INP/CLS.
+8. Za 14 a 28 dnů porovnat indexaci, imprese, CTR a dotazy.
 
 ## Publikační rutina
 

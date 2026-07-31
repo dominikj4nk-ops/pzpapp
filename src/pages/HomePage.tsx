@@ -1,12 +1,12 @@
-import { ArrowRight, BellRing, CheckCircle2, ChevronRight, FerrisWheel, Search, ShieldCheck } from "lucide-react";
+import { BellRing, CheckCircle2, ChevronRight, FerrisWheel, Search, ShieldCheck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DesktopHome from "../components/DesktopHome";
 import Header from "../components/Header";
-import { BonusCard, FilterTabs, NeonButton, SectionHeading } from "../components/ui";
+import { BonusCard, FilterTabs, SectionHeading } from "../components/ui";
 import { JACKPOT_LABEL } from "../components/wheelState";
-import { ageFilters, bonuses, formatKc, totalPotential } from "../data/mockData";
+import { ageFilters, bonusMatchesAgeFilter, bonuses, formatKc, totalPotential } from "../data/mockData";
 import { paths } from "../routes/paths";
 
 const socialProof: Array<{ label: string; icon: LucideIcon; color: string }> = [
@@ -17,13 +17,8 @@ const socialProof: Array<{ label: string; icon: LucideIcon; color: string }> = [
 
 const ageBonusOrder: Record<string, string[]> = {
   "15+": ["mbank-ucet", "airbank-ucet", "tipli-cashback"],
-  "18+": ["robinhood-trading", "patrongo", "raiffeisenbank-ucet", "tipli-cashback"],
+  "18+": ["raiffeisenbank-ucet", "robinhood-trading", "mbank-ucet", "airbank-ucet", "tipli-cashback", "patrongo"],
   "Vše": ["mbank-ucet", "airbank-ucet", "tipli-cashback", "robinhood-trading", "patrongo", "raiffeisenbank-ucet"]
-};
-
-const bonusMatchesAge = (bonus: (typeof bonuses)[number], filter: string) => {
-  if (filter === "Vše") return true;
-  return (bonus.ageGroups ?? [bonus.age]).some((age) => age === filter);
 };
 
 export default function HomePage() {
@@ -36,7 +31,7 @@ export default function HomePage() {
       return index === -1 ? Number.MAX_SAFE_INTEGER : index;
     };
     return bonuses
-      .filter((bonus) => bonusMatchesAge(bonus, ageFilter))
+      .filter((bonus) => bonusMatchesAgeFilter(bonus, ageFilter))
       .sort((a, b) => position(a.id) - position(b.id));
   }, [ageFilter]);
 
@@ -55,9 +50,9 @@ export default function HomePage() {
             <p className="mt-4 max-w-[245px] text-sm leading-5 text-slate-300 sm:max-w-[310px] sm:text-[15px] sm:leading-6">Banky, cashback a investiční platformy na jednom místě.</p>
           </div>
           <div className="relative z-20 mt-7 grid w-full grid-cols-2 gap-3 sm:mt-8 sm:w-[60%] md:w-[58%] lg:w-[54%]">
-            <NeonButton onClick={() => navigate(paths.exchanges)} className="h-12 whitespace-nowrap px-3 text-sm">
-              Zobrazit nabídky <ArrowRight size={17} className="ml-1 inline" />
-            </NeonButton>
+            <Link to={paths.exchanges} className="neon-button flex h-12 items-center justify-center whitespace-nowrap rounded-[14px] px-3 text-sm font-black text-[#02130c] active:scale-95">
+              Zobrazit nabídky
+            </Link>
             <button onClick={() => navigate(paths.search)} className="glass-button flex h-12 items-center justify-center gap-2 px-3 text-sm font-bold text-slate-200 transition active:scale-95">
               <Search size={19} className="shrink-0" /> Hledat bonus
             </button>
@@ -82,7 +77,7 @@ export default function HomePage() {
           <SectionHeading title="Doporučené nabídky" action="Zobrazit všechny" onAction={() => navigate(paths.exchanges)} />
           <div className="mb-3"><FilterTabs tabs={ageFilters} active={ageFilter} onChange={setAgeFilter} /></div>
           <div className="grid gap-3 md:grid-cols-2">
-            {visibleBonuses.slice(0, 4).map((bonus, index) => (
+            {visibleBonuses.map((bonus, index) => (
               <BonusCard key={bonus.id} bonus={bonus} rank={index + 1} variant="featured" />
             ))}
           </div>

@@ -1,14 +1,4 @@
-import {
-  BadgeCheck,
-  Download,
-  FerrisWheel,
-  Gift,
-  PartyPopper,
-  Share2,
-  Timer,
-  Trophy,
-  X
-} from "lucide-react";
+import { BadgeCheck, Download, FerrisWheel, Gift, PartyPopper, Share2, Timer, Trophy, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Header from "../components/Header";
@@ -92,7 +82,7 @@ function HeroDecor() {
   });
 
   return (
-    <div className="pointer-events-none absolute -right-10 -top-10 h-44 w-44 sm:h-48 sm:w-48">
+    <div className="pointer-events-none absolute -right-10 -top-10 h-44 w-44 sm:h-48 sm:w-48 xl:hidden">
       <div className="absolute inset-6 rounded-full bg-neon/15 blur-2xl" />
       <svg viewBox="0 0 100 100" className="relative h-full w-full opacity-90 [animation:wheelIconSpin_26s_linear_infinite]">
         <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(24,242,106,.4)" strokeWidth="1" strokeDasharray="1 5" />
@@ -271,11 +261,10 @@ export default function WheelPage() {
                   />
                 ) : (
                   <div className="mx-auto grid aspect-[9/16] w-full max-w-[230px] animate-pulse place-items-center rounded-[22px] border border-white/10 bg-white/[.05]">
-                    {resultPrize.tier === "jackpot" ? (
-                      <Trophy size={38} className="text-neon" />
-                    ) : (
-                      <PartyPopper size={38} className="text-neon" />
-                    )}
+                    <span className="xl:hidden">
+                      {resultPrize.tier === "jackpot" ? <Trophy size={38} className="text-neon" /> : <PartyPopper size={38} className="text-neon" />}
+                    </span>
+                    <span className="hidden xl:block"><PrizeArt prizeId={resultPrize.id} size={42} /></span>
                   </div>
                 )}
               </div>
@@ -287,7 +276,7 @@ export default function WheelPage() {
                 {sharedThisWeek ? (
                   <div className="mt-4 rounded-2xl border border-neon/30 bg-neon/10 p-3 text-left">
                     <p className="flex items-center gap-1.5 text-[13px] font-black text-neon">
-                      <BadgeCheck size={16} className="shrink-0" /> Jsi v nedělním slosování
+                      <BadgeCheck size={16} className="shrink-0 xl:hidden" /> Jsi v nedělním slosování
                     </p>
                     <p className="mt-1.5 text-xs leading-5 text-white/75">
                       Story sis tenhle týden dal/a s označením. Když na tebe v {DRAW_DAY} {formatDrawDate()} v {DRAW_TIME} vyjde los, proplatíme ti, co ti padlo.
@@ -315,18 +304,11 @@ export default function WheelPage() {
                   <button
                     onClick={shareStoryImage}
                     disabled={!storyImage}
-                    className="glass-button flex h-12 items-center justify-center gap-2 rounded-[16px] text-sm font-black text-white transition active:scale-95 disabled:opacity-60"
+                    className="result-share-button glass-button flex h-12 items-center justify-center gap-2 rounded-[16px] text-sm font-black text-white transition active:scale-95 disabled:opacity-60"
                   >
                     <Share2 size={17} /> Sdílet
                   </button>
                 </div>
-
-                <button
-                  onClick={() => setShowResult(false)}
-                  className="mt-3 text-sm font-bold text-white/70 underline-offset-2 hover:underline"
-                >
-                  Zavřít
-                </button>
               </div>
             </div>
           </div>
@@ -337,14 +319,15 @@ export default function WheelPage() {
   return (
     <>
       <Header title="Kolo štěstí" back />
-      <div className="xl:mx-auto xl:grid xl:max-w-[1480px] xl:grid-cols-[minmax(0,10fr)_minmax(0,9fr)] xl:items-start xl:gap-6">
-        <section className="space-y-4">
-          <section className="wheel-hero relative overflow-hidden rounded-[24px] border border-white/10 p-4 shadow-[0_18px_56px_rgba(0,0,0,.34)] xl:p-5">
+      <div className="wheel-page xl:mx-auto xl:grid xl:max-w-[1480px] xl:grid-cols-[minmax(520px,1.08fr)_minmax(360px,.92fr)] xl:items-start xl:gap-7">
+        <section className="wheel-main-column space-y-4">
+          <section className="wheel-hero wheel-page-hero relative overflow-hidden rounded-[24px] border border-white/10 p-4 shadow-[0_18px_56px_rgba(0,0,0,.34)] xl:p-5 xl:shadow-none">
             <HeroDecor />
             <div className="relative max-w-[300px]">
-              <p className="inline-flex items-center gap-1.5 rounded-full border border-neon/25 bg-neon/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-neon">
+              <p className="inline-flex items-center gap-1.5 rounded-full border border-neon/25 bg-neon/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-neon xl:hidden">
                 <FerrisWheel size={12} /> Zatoč si zdarma
               </p>
+              <p className="hidden text-[10px] font-black uppercase text-slate-500 xl:block">Jedna otočka každých 24 hodin</p>
               <h2 className="mt-3 text-[30px] font-black leading-[1.05] text-white">
                 Hraj o <span className="text-neon">{JACKPOT_LABEL}</span>
               </h2>
@@ -435,14 +418,12 @@ export default function WheelPage() {
                 disabled={spinning}
                 className={`wheel-spin-button ${spinning ? "wheel-spin-button-active" : ""}`}
               >
-                <span className="wheel-spin-button-icon" aria-hidden>
-                  <FerrisWheel size={22} />
-                </span>
-                <span className="min-w-0 text-left">
-                  <span className="block text-[16px] font-black leading-tight">
+                <span className="wheel-spin-button-icon" aria-hidden><FerrisWheel size={22} /></span>
+                <span className="wheel-spin-button-copy min-w-0 text-left">
+                  <span className="wheel-spin-button-title block text-[16px] font-black leading-tight">
                     {spinning ? "Kolo se točí" : "Zatočit zdarma"}
                   </span>
-                  <span className="mt-0.5 block text-[11px] font-bold leading-tight opacity-65">
+                  <span className="wheel-spin-button-subtitle mt-0.5 block text-[11px] font-bold leading-tight opacity-65">
                     {spinning
                       ? "Výsledek se právě vybírá"
                       : bonusSpins > 0
@@ -455,9 +436,7 @@ export default function WheelPage() {
             ) : (
               <GlassCard className="wheel-countdown flex items-center justify-between gap-3 p-4">
                 <div className="flex items-center gap-3">
-                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/[.07] text-neon">
-                    <Timer size={20} />
-                  </span>
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/[.07] text-neon xl:hidden"><Timer size={20} /></span>
                   <div>
                     <p className="text-sm font-bold">Další otočka za</p>
                     <p className="text-xs text-slate-400">Vrať se zítra a zatoč znovu.</p>
@@ -469,12 +448,10 @@ export default function WheelPage() {
           </div>
         </section>
 
-        <section className="mt-4 space-y-4 xl:mt-0">
-          <GlassCard className="p-4 xl:p-5">
+        <section className="wheel-side-column mt-4 space-y-4 xl:mt-0">
+          <GlassCard className="wheel-share-card p-4 xl:p-5">
             <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-neon/15 text-neon">
-                <Gift size={20} />
-              </span>
+              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-neon/15 text-neon xl:hidden"><Gift size={20} /></span>
               <div className="min-w-0 flex-1">
                 <h2 className="font-black leading-tight">Sdílej story a výhru ti proplatíme</h2>
                 <p className="mt-0.5 text-xs text-slate-400">Nejbližší losování: neděle {formatDrawDate()} v {DRAW_TIME}</p>
@@ -485,7 +462,7 @@ export default function WheelPage() {
               {steps.map((step, index) => (
                 <li key={step.title} className="relative flex gap-3 pb-4 last:pb-0">
                   {index < steps.length - 1 ? (
-                    <span className="absolute bottom-0 left-4 top-9 w-px bg-gradient-to-b from-neon/40 to-white/10" aria-hidden />
+                    <span className="absolute bottom-0 left-4 top-9 w-px bg-gradient-to-b from-neon/40 to-white/10 xl:bg-white/10" aria-hidden />
                   ) : null}
                   <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full border border-neon/40 bg-neon/10 text-sm font-black text-neon">
                     {index + 1}
@@ -500,7 +477,7 @@ export default function WheelPage() {
 
             {sharedThisWeek ? (
               <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-neon/30 bg-neon/10 px-2.5 py-1 text-[11px] font-black text-neon">
-                <BadgeCheck size={14} /> Tenhle týden jsi ve slosování
+                <BadgeCheck size={14} className="xl:hidden" /> Tenhle týden jsi ve slosování
               </p>
             ) : null}
           </GlassCard>
@@ -509,7 +486,7 @@ export default function WheelPage() {
             <h2 className="mb-3 text-sm font-semibold text-slate-300">Padá často</h2>
             <div className="grid grid-cols-2 gap-2">
               {commonPrizes.map((prize) => (
-                <div key={prize.id} className="flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/[.04] p-3">
+                <div key={prize.id} className="wheel-prize-card flex items-center gap-2.5 rounded-2xl border border-white/10 bg-white/[.04] p-3">
                   <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/[.07]">
                     <PrizeArt prizeId={prize.id} size={28} />
                   </span>
@@ -523,7 +500,7 @@ export default function WheelPage() {
               {rarePrizes.map((prize) => (
                 <div
                   key={prize.id}
-                  className={`flex items-center gap-3 rounded-2xl border p-3 ${
+                  className={`wheel-prize-card flex items-center gap-3 rounded-2xl border p-3 ${
                     prize.tier === "jackpot" ? "border-neon/30 bg-neon/[.07]" : "border-white/10 bg-white/[.04]"
                   }`}
                 >
@@ -556,7 +533,7 @@ export default function WheelPage() {
         ? createPortal(
             <div className="pointer-events-none fixed inset-x-0 bottom-24 z-[90] flex justify-center px-4 xl:bottom-8">
               <div className="wheel-toast flex items-center gap-2 rounded-full border border-neon/40 bg-[#04140c] px-4 py-2.5 text-sm font-black text-neon shadow-[0_12px_34px_rgba(0,0,0,.55)]">
-                <FerrisWheel size={17} /> {toast}
+                <FerrisWheel size={17} className="xl:hidden" /> {toast}
               </div>
             </div>,
             document.body

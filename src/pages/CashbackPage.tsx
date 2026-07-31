@@ -60,9 +60,8 @@ function CashbackDealCard({ deal, isOpen, copiedCode, onToggle, onCopy, onOpen }
               <div className="mt-3 space-y-2">
                 {deal.steps.map((step, index) => (
                   <div key={step} className="flex min-h-10 items-start gap-2.5 rounded-[12px] bg-white/[.04] px-3 py-2 text-xs leading-5 text-slate-200">
-                    <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-neon/12 text-[10px] font-black text-neon">
-                      {index + 1}
-                    </span>
+                    <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-neon/12 text-[10px] font-black text-neon xl:hidden">{index + 1}</span>
+                    <span className="hidden w-5 shrink-0 pt-0.5 text-[10px] font-black text-neon xl:block">0{index + 1}</span>
                     <span className="min-w-0">{step}</span>
                   </div>
                 ))}
@@ -95,7 +94,7 @@ function CashbackDealCard({ deal, isOpen, copiedCode, onToggle, onCopy, onOpen }
                 {deal.actionLabel ?? `Získat ${deal.reward}`} <ExternalLink size={15} />
               </button>
               <p className="mt-2 flex items-center justify-center gap-1 text-center text-[11px] leading-4 text-slate-500">
-                <CheckCircle2 size={12} className="shrink-0 text-neon" /> Ověřená akce pro nové uživatele
+                <CheckCircle2 size={12} className="shrink-0 text-neon xl:hidden" /> Ověřená akce pro nové uživatele
               </p>
             </div>
           </motion.div>
@@ -133,7 +132,7 @@ export default function CashbackPage() {
       <Header title="Cashback" />
       <GlassCard className="mb-4 p-4">
         <div className="flex items-center gap-3">
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-[14px] bg-pink-400/15 text-pink-400">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-[14px] bg-pink-400/15 text-pink-400 xl:hidden">
             <BadgePercent size={20} />
           </span>
           <div className="min-w-0">

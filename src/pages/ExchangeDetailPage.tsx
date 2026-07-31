@@ -76,7 +76,7 @@ export default function ExchangeDetailPage() {
       <Header title="Detail nabídky" back heading={false} />
       <div className="xl:mx-auto xl:grid xl:max-w-[1400px] xl:grid-cols-[5fr_7fr] xl:items-start xl:gap-4">
       <div ref={heroRef} className="xl:sticky xl:top-[96px]">
-        <GlassCard className="mb-4 p-4 xl:rounded-[12px] xl:p-6">
+        <GlassCard className="mb-4 p-4 xl:p-6">
           <div className="flex items-start gap-4">
             <LogoMark bonus={bonus} size="lg" />
             <div className="min-w-0 flex-1">
@@ -86,42 +86,42 @@ export default function ExchangeDetailPage() {
               </div>
               <p className="text-sm text-slate-400">{bonus.type}</p>
             </div>
-            <span className="hidden items-center gap-1 text-xs font-bold text-slate-300 sm:flex">
-              <ShieldCheck className="text-neon" size={15} />
-              Ověřeno
+            <span className="hidden items-center gap-1 text-xs font-bold text-slate-300 sm:flex xl:hidden">
+              <ShieldCheck className="text-neon" size={15} /> Ověřeno
             </span>
+            <span className="hidden text-xs font-bold text-slate-400 xl:block">Ověřeno</span>
           </div>
           <p className="mt-5 text-3xl font-black text-neon xl:text-4xl">{bonus.bonus}</p>
           <p className="mt-1 text-xs font-black uppercase text-slate-500">{offerValueLabel(bonus)}</p>
           {bonus.pitch ? <p className="mt-3 text-sm font-semibold leading-6 text-slate-200">{bonus.pitch}</p> : null}
 
           <div className="mt-4 grid grid-cols-3 gap-2">
-            <div className="flex min-h-[84px] flex-col items-center justify-center rounded-[14px] border border-white/10 bg-white/[.04] p-2 text-center">
-              <Clock3 size={16} className="mx-auto text-neon" />
-              <p className="mt-1.5 text-[11px] font-bold leading-4 text-white">{bonus.completionTime}</p>
-              <p className="mt-0.5 text-[10px] leading-3 text-slate-500">zabere</p>
+            <div className="flex min-h-[84px] flex-col items-center justify-center rounded-[14px] border border-white/10 bg-white/[.04] p-2 text-center xl:min-h-[74px] xl:border-x-0 xl:bg-transparent">
+              <Clock3 size={16} className="mx-auto text-neon xl:hidden" />
+              <p className="mt-1.5 text-[11px] font-bold leading-4 text-white xl:mt-0">{bonus.completionTime}</p>
+              <p className="mt-0.5 text-[10px] leading-3 text-slate-500 xl:mt-1"><span className="xl:hidden">zabere</span><span className="hidden xl:inline">čas registrace</span></p>
             </div>
-            <div className="flex min-h-[84px] flex-col items-center justify-center rounded-[14px] border border-white/10 bg-white/[.04] p-2 text-center">
-              <Wallet size={16} className="mx-auto text-neon" />
-              <p className="mt-1.5 flex min-h-7 items-center justify-center text-[10px] font-bold leading-[14px] text-white">{payoutSummary}</p>
-              <p className="mt-0.5 text-[10px] leading-3 text-slate-500">{travelOffer ? "charakter" : "výplata"}</p>
+            <div className="flex min-h-[84px] flex-col items-center justify-center rounded-[14px] border border-white/10 bg-white/[.04] p-2 text-center xl:min-h-[74px] xl:border-x-0 xl:bg-transparent">
+              <Wallet size={16} className="mx-auto text-neon xl:hidden" />
+              <p className="mt-1.5 flex min-h-7 items-center justify-center text-[10px] font-bold leading-[14px] text-white xl:mt-0">{payoutSummary}</p>
+              <p className="mt-0.5 text-[10px] leading-3 text-slate-500 xl:mt-1">{travelOffer ? "charakter" : "výplata"}</p>
             </div>
-            <div className="flex min-h-[84px] flex-col items-center justify-center rounded-[14px] border border-white/10 bg-white/[.04] p-2 text-center">
-              <BadgeCheck size={16} className="mx-auto text-neon" />
-              <p className="mt-1.5 text-[11px] font-bold leading-4 text-white">{bonus.age}</p>
-              <p className="mt-0.5 text-[10px] leading-3 text-slate-500">věk</p>
+            <div className="flex min-h-[84px] flex-col items-center justify-center rounded-[14px] border border-white/10 bg-white/[.04] p-2 text-center xl:min-h-[74px] xl:border-x-0 xl:bg-transparent">
+              <BadgeCheck size={16} className="mx-auto text-neon xl:hidden" />
+              <p className="mt-1.5 text-[11px] font-bold leading-4 text-white xl:mt-0">{bonus.age}</p>
+              <p className="mt-0.5 text-[10px] leading-3 text-slate-500 xl:mt-1"><span className="xl:hidden">věk</span><span className="hidden xl:inline">minimální věk</span></p>
             </div>
           </div>
 
           {bonus.status === "Aktivní" ? (
-            <NeonButton onClick={openPartner} className="mt-5 w-full xl:h-14 xl:rounded-[12px] xl:text-base">
+            <NeonButton onClick={openPartner} className="mt-5 w-full xl:h-14 xl:text-base">
               {offerCtaLabel(bonus)} <ExternalLink size={15} className="inline" />
             </NeonButton>
           ) : (
             <p className="mt-5 rounded-[18px] border border-amber-300/20 bg-amber-300/10 p-3 text-center text-sm font-bold text-amber-100">Nabídka není v aktivním přehledu</p>
           )}
           <p className="mt-2 flex items-center justify-center gap-1.5 text-center text-[11px] font-semibold leading-4 text-slate-500">
-            <ShieldCheck size={13} className="shrink-0 text-neon" /> Otevře se nová karta. Návod ti zůstane otevřený.
+            <ShieldCheck size={13} className="shrink-0 text-neon xl:hidden" /> Otevře se nová karta. Návod ti zůstane otevřený.
           </p>
           <p className="mt-3 text-center text-xs leading-5 text-slate-400">
             {bonus.isAffiliate
@@ -166,8 +166,9 @@ export default function ExchangeDetailPage() {
         <p className="text-sm leading-6 text-slate-300">{bonus.description}</p>
         <div className="mt-3 space-y-2">
           {bonus.requirements.map((requirement) => (
-            <div key={requirement} className="flex items-start gap-2 rounded-xl bg-white/[.04] px-3 py-2 text-xs leading-5 text-slate-300">
-              <CheckCircle2 size={15} className="mt-0.5 shrink-0 text-neon" />
+            <div key={requirement} className="flex items-start gap-2 rounded-xl bg-white/[.04] px-3 py-2 text-xs leading-5 text-slate-300 xl:border-t xl:border-white/[.07] xl:bg-transparent xl:px-1 first:xl:border-t-0">
+              <CheckCircle2 size={15} className="mt-0.5 shrink-0 text-neon xl:hidden" />
+              <span className="mt-2 hidden h-1 w-1 shrink-0 rounded-full bg-neon xl:block" />
               <span>{requirement}</span>
             </div>
           ))}
@@ -180,9 +181,8 @@ export default function ExchangeDetailPage() {
         <div className="space-y-3">
           {steps.map((step, index) => (
             <div key={step} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[.04] p-3 text-sm">
-              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/10 text-xs font-black text-neon">
-                {index + 1}
-              </span>
+              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/10 text-xs font-black text-neon xl:hidden">{index + 1}</span>
+              <span className="hidden w-7 shrink-0 text-xs font-black text-neon xl:block">0{index + 1}</span>
               <span className="text-slate-200">{step}</span>
             </div>
           ))}
@@ -197,7 +197,7 @@ export default function ExchangeDetailPage() {
             aria-expanded={guideOpen}
             className="flex w-full items-center gap-3 p-4 text-left xl:p-5"
           >
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-[14px] bg-neon/12 text-neon">
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-[14px] bg-neon/12 text-neon xl:hidden">
               <ClipboardCheck size={21} />
             </span>
             <span className="min-w-0 flex-1">
@@ -216,14 +216,15 @@ export default function ExchangeDetailPage() {
                 <div className="mt-3 grid gap-2 sm:grid-cols-2">
                   {guide.preparation.map((item) => (
                     <p key={item} className="flex items-start gap-2 text-xs leading-5 text-slate-300">
-                      <CheckCircle2 size={14} className="mt-0.5 shrink-0 text-neon" /> {item}
+                      <CheckCircle2 size={14} className="mt-0.5 shrink-0 text-neon xl:hidden" />
+                      <span className="mt-2 hidden h-1 w-1 shrink-0 rounded-full bg-neon xl:block" /> {item}
                     </p>
                   ))}
                 </div>
               </div>
 
-              <div className="mt-4 flex items-start gap-3 rounded-[16px] border border-amber-300/20 bg-amber-300/[.07] p-4">
-                <Lightbulb size={18} className="mt-0.5 shrink-0 text-amber-300" />
+              <div className="mt-4 flex items-start gap-3 rounded-[16px] border border-amber-300/20 bg-amber-300/[.07] p-4 xl:bg-amber-300/[.05]">
+                <Lightbulb size={18} className="mt-0.5 shrink-0 text-amber-300 xl:hidden" />
                 <div>
                   <p className="text-xs font-black text-amber-200">Nejčastější chyba</p>
                   <p className="mt-1 text-xs leading-5 text-slate-300">{guide.commonMistake}</p>
@@ -233,12 +234,13 @@ export default function ExchangeDetailPage() {
               <div className="mt-5 space-y-3">
                 {guide.steps.map((step, index) => (
                   <article key={step.title} className="grid grid-cols-[34px_minmax(0,1fr)] gap-3 rounded-[16px] border border-white/10 bg-white/[.035] p-4">
-                    <span className="grid h-8 w-8 place-items-center rounded-[10px] bg-neon text-xs font-black text-[#02130c]">{index + 1}</span>
+                    <span className="grid h-8 w-8 place-items-center rounded-[10px] bg-neon text-xs font-black text-[#02130c] xl:hidden">{index + 1}</span>
+                    <span className="hidden pt-0.5 text-xs font-black text-neon xl:block">0{index + 1}</span>
                     <div className="min-w-0">
                       <h4 className="text-sm font-black text-white">{step.title}</h4>
                       <p className="mt-1.5 text-xs leading-5 text-slate-300">{step.description}</p>
                       <p className="mt-3 flex items-start gap-2 border-t border-white/[.08] pt-3 text-[11px] font-semibold leading-5 text-slate-400">
-                        <CheckCircle2 size={14} className="mt-0.5 shrink-0 text-neon" /> Kontrola: {step.check}
+                        <CheckCircle2 size={14} className="mt-0.5 shrink-0 text-neon xl:hidden" /> Kontrola: {step.check}
                       </p>
                     </div>
                   </article>
@@ -248,7 +250,7 @@ export default function ExchangeDetailPage() {
               {bonus.status === "Aktivní" ? (
                 <div className="mt-5 border-t border-white/10 pt-5 text-center">
                   <p className="mb-3 text-xs font-semibold text-slate-400">Máš jasno? Otevři partnera a postupuj bod po bodu.</p>
-                  <NeonButton onClick={openPartner} className="w-full xl:h-14 xl:rounded-[12px] xl:text-base">
+                  <NeonButton onClick={openPartner} className="w-full xl:h-14 xl:text-base">
                     {offerCtaLabel(bonus)} <ExternalLink size={15} className="inline" />
                   </NeonButton>
                 </div>

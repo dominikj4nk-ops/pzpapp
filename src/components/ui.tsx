@@ -3,7 +3,7 @@ import { BadgeCheck, Check, ChevronRight, HelpCircle, Mail, Search } from "lucid
 import type { HTMLMotionProps } from "framer-motion";
 import type { ReactNode } from "react";
 import { useId } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { type Bonus } from "../data/mockData";
 import { FORM_TARGET_EMAIL } from "./formMailer";
 import { paths } from "../routes/paths";
@@ -36,9 +36,12 @@ export function SectionHeading({ title, action, onAction }: { title: string; act
 
 export function VerifiedBadge({ size = 18 }: { size?: number }) {
   return (
-    <span className="verified-badge" style={{ width: size, height: size }}>
-      <Check size={Math.max(10, size - 7)} strokeWidth={4} />
-    </span>
+    <>
+      <span className="verified-badge xl:hidden" style={{ width: size, height: size }}>
+        <Check size={Math.max(10, size - 7)} strokeWidth={4} />
+      </span>
+      <span className="desktop-verified-dot hidden xl:inline-block" aria-label="Ověřeno" title="Ověřeno" />
+    </>
   );
 }
 
@@ -185,7 +188,7 @@ function RankShield({ rank }: { rank: number }) {
           };
 
   return (
-    <span className="absolute -left-1.5 -top-1.5 z-20 h-9 w-8 font-black" style={{ filter: colors.shadow }}>
+    <span className="absolute -left-1.5 -top-1.5 z-20 h-9 w-8 font-black xl:hidden" style={{ filter: colors.shadow }}>
       <svg aria-hidden="true" className="absolute inset-0 h-full w-full" viewBox="0 0 32 36" fill="none">
         <defs>
           <linearGradient id={gradientId} x1="3" y1="0" x2="30" y2="35" gradientUnits="userSpaceOnUse">
@@ -203,10 +206,7 @@ function RankShield({ rank }: { rank: number }) {
         <path d="M8 0H24C28.42 0 32 3.58 32 8V25.92L16 36L0 25.92V8C0 3.58 3.58 0 8 0Z" fill={`url(#${highlightId})`} />
         <ellipse cx="16" cy="25.4" rx="11" ry="3.2" fill="rgba(0,0,0,.1)" />
       </svg>
-      <span
-        className="absolute left-1/2 top-2 grid h-5 w-5 -translate-x-1/2 place-items-center rounded-full bg-white/72 text-[11px] shadow-[inset_0_1px_0_rgba(255,255,255,.7),0_3px_8px_rgba(0,0,0,.16)]"
-        style={{ color: colors.text }}
-      >
+      <span className="absolute left-1/2 top-2 grid h-5 w-5 -translate-x-1/2 place-items-center rounded-full bg-white/72 text-[11px] shadow-[inset_0_1px_0_rgba(255,255,255,.7),0_3px_8px_rgba(0,0,0,.16)]" style={{ color: colors.text }}>
         {rank}
       </span>
     </span>
@@ -221,15 +221,17 @@ export function BonusCard({ bonus, rank, variant = "featured" }: { bonus: Bonus;
     <motion.article
       whileTap={{ scale: 0.985 }}
       onClick={() => navigate(paths.exchangeDetail(bonus.id))}
-      className={`relative h-full cursor-pointer rounded-[20px] border border-white/10 bg-white/[.055] p-3 shadow-card transition hover:-translate-y-0.5 hover:border-neon/40 hover:bg-white/[.07] lg:p-4 ${desktopList ? "lg:rounded-[12px]" : "xl:rounded-[12px]"}`}
+      className="bonus-card relative h-full cursor-pointer rounded-[20px] border border-white/10 bg-white/[.055] p-3 shadow-card transition hover:-translate-y-0.5 hover:border-neon/40 hover:bg-white/[.07] lg:p-4"
     >
       {rank ? <RankShield rank={rank} /> : null}
-      <div className={`flex h-full items-center gap-3 ${desktopList ? "lg:grid lg:grid-cols-[56px_minmax(0,1fr)_132px] lg:items-center lg:gap-4" : "lg:flex-col lg:items-start"}`}>
+      <div className={`bonus-card-layout flex h-full items-center gap-3 ${desktopList ? "lg:grid lg:grid-cols-[56px_minmax(0,1fr)_132px] lg:items-center lg:gap-4" : "lg:flex-col lg:items-start"}`}>
         <LogoMark bonus={bonus} />
-        <div className={`min-w-0 flex-1 ${desktopList ? "lg:w-auto" : "lg:w-full"}`}>
+        <div className={`bonus-card-content min-w-0 flex-1 ${desktopList ? "lg:w-auto" : "lg:w-full"}`}>
           <div className="flex items-center gap-1">
             <h3 className="truncate font-bold">{bonus.name}</h3>
-            <VerifiedBadge size={17} />
+            <span className="hidden xl:inline-flex">
+              <VerifiedBadge size={17} />
+            </span>
           </div>
           <p className="text-xs text-slate-400">{bonus.type}</p>
           <p className="mt-1 text-lg font-black text-neon">{bonus.bonus}</p>
@@ -244,17 +246,15 @@ export function BonusCard({ bonus, rank, variant = "featured" }: { bonus: Bonus;
             ))}
           </div>
         </div>
-        <div className={`flex flex-col items-end justify-end gap-4 ${desktopList ? "lg:w-[132px]" : "lg:w-full lg:flex-row lg:items-center lg:justify-end"}`}>
-          <button
-            onClick={(event) => {
-              event.stopPropagation();
-              navigate(paths.exchangeDetail(bonus.id));
-            }}
-            className={`neon-button h-10 whitespace-nowrap rounded-[14px] px-4 text-xs font-black text-[#02130c] active:scale-95 lg:min-w-[130px] ${desktopList ? "lg:w-full lg:rounded-[12px]" : "xl:rounded-[12px]"}`}
+        <div className={`bonus-card-action flex flex-col items-end justify-end gap-4 ${desktopList ? "lg:w-[132px]" : "lg:w-full lg:flex-row lg:items-center lg:justify-end"}`}>
+          <Link
+            to={paths.exchangeDetail(bonus.id)}
+            onClick={(event) => event.stopPropagation()}
+            className={`neon-button inline-flex h-10 items-center justify-center whitespace-nowrap rounded-[14px] px-4 text-xs font-black text-[#02130c] active:scale-95 lg:min-w-[130px] ${desktopList ? "lg:w-full" : ""}`}
           >
             <span className="xl:hidden">Detail</span>
             <span className="hidden xl:inline">Detail nabídky</span>
-          </button>
+          </Link>
         </div>
       </div>
     </motion.article>
@@ -262,11 +262,9 @@ export function BonusCard({ bonus, rank, variant = "featured" }: { bonus: Bonus;
 }
 
 export function ExchangeCard({ bonus }: { bonus: Bonus }) {
-  const navigate = useNavigate();
-
   return (
-    <button
-      onClick={() => navigate(paths.exchangeDetail(bonus.id))}
+    <Link
+      to={paths.exchangeDetail(bonus.id)}
       className="glass-button flex w-full items-center gap-3 p-3 text-left transition active:scale-[.99]"
     >
       <LogoMark bonus={bonus} size="sm" />
@@ -275,11 +273,12 @@ export function ExchangeCard({ bonus }: { bonus: Bonus }) {
         <p className="text-sm font-black text-neon">{bonus.bonus}</p>
       </div>
       <span className="flex items-center gap-1 text-[11px] font-semibold text-slate-300">
-        <BadgeCheck className="text-neon" size={13} />
+        <BadgeCheck className="text-neon xl:hidden" size={13} />
+        <span className="hidden xl:inline-flex"><VerifiedBadge size={14} /></span>
         Ověřeno
       </span>
       <ChevronRight size={16} className="text-slate-500" />
-    </button>
+    </Link>
   );
 }
 
@@ -289,7 +288,7 @@ export function ContactCard({ title = "Potřebuješ poradit?", text = "Odpovíd�
   return (
     <GlassCard className="p-4">
       <div className="flex items-center gap-3">
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-white/[.07] text-neon">
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl bg-white/[.07] text-neon xl:hidden">
           <Mail size={19} />
         </span>
         <div className="min-w-0 flex-1">

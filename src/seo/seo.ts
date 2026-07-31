@@ -1,13 +1,18 @@
 import { allBonuses, bonuses, type Bonus } from "../data/mockData";
 
 export const SITE_URL = "https://prachyzaregistraci.cz";
+export const SITE_NAME = "Prachy za registraci";
 export const DEFAULT_SOCIAL_IMAGE = `${SITE_URL}/assets/hero-trust-v3.png`;
+const SITE_CONTENT_LAST_MODIFIED = "2026-07-31";
+const ORGANIZATION_ID = `${SITE_URL}/#organization`;
+const WEBSITE_ID = `${SITE_URL}/#website`;
 
 export type SeoDescriptor = {
   title: string;
   description: string;
   canonicalPath: string;
   index: boolean;
+  lastModified?: string;
   type?: "website" | "article";
   image?: string;
 };
@@ -17,37 +22,43 @@ const staticSeo: Record<string, SeoDescriptor> = {
     title: "Bonusy za registraci u bank a platforem | Prachy za registraci",
     description: "Přehled aktuálních bonusů za registraci s podmínkami, detailními postupy a odkazy na oficiální zdroje. Bankovní bonusy, cashback a kryptoměny.",
     canonicalPath: "/",
-    index: true
+    index: true,
+    lastModified: SITE_CONTENT_LAST_MODIFIED
   },
   "/nabidky": {
     title: "Aktuální bonusy za registraci | Prachy za registraci",
     description: "Porovnej aktuální bonusy za registraci podle odměny, věku a potřebného času. U každé nabídky uvádíme podmínky a datum poslední kontroly.",
     canonicalPath: "/nabidky",
-    index: true
+    index: true,
+    lastModified: SITE_CONTENT_LAST_MODIFIED
   },
   "/cashback": {
     title: "Cashback a slevy pro nové uživatele | Prachy za registraci",
     description: "Přehled cashbacku, kreditů a slev pro nové uživatele. Před využitím vždy zkontroluj podmínky a platnost přímo u poskytovatele.",
     canonicalPath: "/cashback",
-    index: false
+    index: false,
+    lastModified: SITE_CONTENT_LAST_MODIFIED
   },
   "/jak-overujeme": {
     title: "Jak ověřujeme bonusové nabídky | Prachy za registraci",
     description: "Zjisti, jak kontrolujeme zdroje, podmínky, poplatky a aktuálnost bonusových nabídek a jak web vydělává na affiliate odkazech.",
     canonicalPath: "/jak-overujeme",
-    index: true
+    index: true,
+    lastModified: SITE_CONTENT_LAST_MODIFIED
   },
   "/podpora": {
     title: "Kontakt a podpora | Prachy za registraci",
     description: "Kontakt pro dotazy k nabídkám, podmínkám a nevyplaceným bonusům. Nikdy po tobě nechceme heslo ani přístup do bankovnictví.",
     canonicalPath: "/podpora",
-    index: true
+    index: true,
+    lastModified: SITE_CONTENT_LAST_MODIFIED
   },
   "/podminky": {
     title: "Podmínky použití a soukromí | Prachy za registraci",
     description: "Podmínky používání webu Prachy za registraci, affiliate spolupráce, odpovědnost, ochrana soukromí a kontaktní údaje.",
     canonicalPath: "/podminky",
-    index: true
+    index: true,
+    lastModified: SITE_CONTENT_LAST_MODIFIED
   }
 };
 
@@ -70,7 +81,9 @@ function offerSeo(bonus: Bonus): SeoDescriptor {
       ? `${bonus.name}: jak ušetřit při cestování bez slibu pevné peněžní odměny. Detailní postup, limity, poplatky a oficiální zdroj.`
       : `${bonus.name}: ${bonus.bonus}. Podmínky, detailní postup krok za krokem, poplatky, omezení a oficiální zdroj.`,
     canonicalPath: `/nabidky/${bonus.id}`,
-    index: active
+    index: active,
+    lastModified: bonus.lastVerified ?? SITE_CONTENT_LAST_MODIFIED,
+    type: "article"
   };
 }
 
@@ -98,43 +111,97 @@ export function getSeoForPath(pathname: string): SeoDescriptor {
   };
 }
 
+function breadcrumbList(items: Array<{ name: string; path: string }>) {
+  return {
+    "@type": "BreadcrumbList",
+    "@id": `${SITE_URL}${items[items.length - 1]?.path ?? "/"}#breadcrumb`,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: new URL(item.path, SITE_URL).toString()
+    }))
+  };
+}
+
 export function getJsonLdForPath(pathname: string) {
   const path = normalizePath(pathname);
+  const seo = getSeoForPath(path);
+  const canonical = new URL(seo.canonicalPath, SITE_URL).toString();
   const graph: Record<string, unknown>[] = [
     {
       "@type": "Organization",
-      "@id": `${SITE_URL}/#organization`,
-      name: "prachyzaregistraci.cz",
+      "@id": ORGANIZATION_ID,
+      name: SITE_NAME,
+      alternateName: "prachyzaregistraci.cz",
       url: `${SITE_URL}/`,
-      email: "prachyzaregistraci.cz@seznam.cz"
+      logo: {
+        "@type": "ImageObject",
+        url: `${SITE_URL}/assets/pzr-web-icon.png`
+      },
+      email: "prachyzaregistraci.cz@seznam.cz",
+      sameAs: [
+        "https://www.tiktok.com/@prachyzaregistraci",
+        "https://www.instagram.com/prachyzaregistracicz/"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": WEBSITE_ID,
+      url: `${SITE_URL}/`,
+      name: SITE_NAME,
+      alternateName: "prachyzaregistraci.cz",
+      description: staticSeo["/"].description,
+      inLanguage: "cs-CZ",
+      publisher: { "@id": ORGANIZATION_ID }
     }
   ];
 
-  if (path === "/") {
+  const detailMatch = path.match(/^\/nabidky\/([^/]+)$/);
+  const bonus = detailMatch ? allBonuses.find((item) => item.id === detailMatch[1]) : undefined;
+  const page = {
+    "@type": path === "/nabidky" ? "CollectionPage" : "WebPage",
+    "@id": `${canonical}#webpage`,
+    url: canonical,
+    name: seo.title,
+    description: seo.description,
+    inLanguage: "cs-CZ",
+    isPartOf: { "@id": WEBSITE_ID },
+    about: { "@id": ORGANIZATION_ID },
+    ...(seo.lastModified ? { dateModified: seo.lastModified } : {})
+  };
+
+  if (path === "/nabidky" || path === "/") {
+    const itemListId = `${SITE_URL}/nabidky#itemlist`;
     graph.push({
-      "@type": "WebSite",
-      "@id": `${SITE_URL}/#website`,
-      url: `${SITE_URL}/`,
-      name: "prachyzaregistraci.cz",
-      inLanguage: "cs-CZ",
-      publisher: { "@id": `${SITE_URL}/#organization` }
+      ...page,
+      ...(path === "/nabidky" ? { mainEntity: { "@id": itemListId } } : {})
+    });
+    graph.push({
+      "@type": "ItemList",
+      "@id": itemListId,
+      name: "Aktuální bonusy za registraci",
+      numberOfItems: bonuses.length,
+      itemListOrder: "https://schema.org/ItemListOrderAscending",
+      itemListElement: bonuses.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: `${item.name}: ${item.bonus}`,
+        url: `${SITE_URL}/nabidky/${item.id}`
+      }))
+    });
+  } else {
+    graph.push({
+      ...page,
+      ...(bonus ? { name: `${bonus.name}: ${bonus.bonus}`, description: bonus.description } : {})
     });
   }
 
-  const detailMatch = path.match(/^\/nabidky\/([^/]+)$/);
-  const bonus = detailMatch ? bonuses.find((item) => item.id === detailMatch[1]) : undefined;
-  if (bonus) {
-    graph.push({
-      "@type": "WebPage",
-      "@id": `${SITE_URL}/nabidky/${bonus.id}#webpage`,
-      url: `${SITE_URL}/nabidky/${bonus.id}`,
-      name: `${bonus.name}: ${bonus.bonus}`,
-      description: bonus.description,
-      dateModified: bonus.lastVerified,
-      inLanguage: "cs-CZ",
-      isPartOf: { "@id": `${SITE_URL}/#website` },
-      publisher: { "@id": `${SITE_URL}/#organization` }
-    });
+  if (path !== "/") {
+    const breadcrumbs = [{ name: "Prachy za registraci", path: "/" }];
+    if (bonus) breadcrumbs.push({ name: "Nabídky", path: "/nabidky" });
+    breadcrumbs.push({ name: bonus?.name ?? seo.title.split(" | ")[0], path: seo.canonicalPath });
+    graph.push(breadcrumbList(breadcrumbs));
   }
 
   return { "@context": "https://schema.org", "@graph": graph };

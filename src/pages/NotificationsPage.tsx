@@ -98,9 +98,9 @@ export default function NotificationsPage() {
             canSpin ? "border-neon/35" : ""
           }`}
         >
-          <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-neon/15 blur-2xl" />
+          <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-neon/15 blur-2xl xl:hidden" />
           <div className="relative flex items-center gap-3">
-            <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-emerald-300 to-green-500 text-white shadow-glow ${canSpin ? "wheel-glow" : ""}`}>
+            <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-emerald-300 to-green-500 text-white shadow-glow xl:hidden ${canSpin ? "wheel-glow" : ""}`}>
               <FerrisWheel size={24} />
             </span>
             <div className="min-w-0 flex-1">

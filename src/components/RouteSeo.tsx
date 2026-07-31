@@ -13,6 +13,17 @@ function setMeta(selector: string, attribute: "name" | "property", key: string, 
   element.content = content;
 }
 
+function setAlternate(hreflang: string, href: string) {
+  let element = document.head.querySelector<HTMLLinkElement>(`link[rel="alternate"][hreflang="${hreflang}"]`);
+  if (!element) {
+    element = document.createElement("link");
+    element.rel = "alternate";
+    element.hreflang = hreflang;
+    document.head.appendChild(element);
+  }
+  element.href = href;
+}
+
 export default function RouteSeo() {
   const location = useLocation();
 
@@ -22,13 +33,23 @@ export default function RouteSeo() {
     document.title = seo.title;
     setMeta('meta[name="description"]', "name", "description", seo.description);
     setMeta('meta[name="robots"]', "name", "robots", seo.index ? "index, follow, max-image-preview:large" : "noindex, nofollow");
+    setMeta('meta[property="og:type"]', "property", "og:type", seo.type ?? "website");
     setMeta('meta[property="og:title"]', "property", "og:title", seo.title);
     setMeta('meta[property="og:description"]', "property", "og:description", seo.description);
     setMeta('meta[property="og:url"]', "property", "og:url", canonical);
     setMeta('meta[property="og:image"]', "property", "og:image", seo.image ?? DEFAULT_SOCIAL_IMAGE);
+    setMeta('meta[property="og:image:alt"]', "property", "og:image:alt", "Prachy za registraci - přehled ověřených bonusů");
     setMeta('meta[name="twitter:title"]', "name", "twitter:title", seo.title);
     setMeta('meta[name="twitter:description"]', "name", "twitter:description", seo.description);
     setMeta('meta[name="twitter:image"]', "name", "twitter:image", seo.image ?? DEFAULT_SOCIAL_IMAGE);
+    setMeta('meta[name="twitter:image:alt"]', "name", "twitter:image:alt", "Prachy za registraci - přehled ověřených bonusů");
+
+    const articleModified = document.head.querySelector<HTMLMetaElement>('meta[property="article:modified_time"]');
+    if (seo.type === "article" && seo.lastModified) {
+      setMeta('meta[property="article:modified_time"]', "property", "article:modified_time", seo.lastModified);
+    } else {
+      articleModified?.remove();
+    }
 
     let canonicalElement = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
     if (!canonicalElement) {
@@ -37,6 +58,8 @@ export default function RouteSeo() {
       document.head.appendChild(canonicalElement);
     }
     canonicalElement.href = canonical;
+    setAlternate("cs-CZ", canonical);
+    setAlternate("x-default", canonical);
 
     let jsonLd = document.head.querySelector<HTMLScriptElement>("#route-jsonld");
     if (!jsonLd) {

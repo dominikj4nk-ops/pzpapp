@@ -1,4 +1,4 @@
-import { Search, SearchX } from "lucide-react";
+import { ChevronRight, Search, SearchX } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
@@ -66,8 +66,9 @@ export default function SearchPage() {
                 }}
                 className="glass-button flex w-full items-center gap-3 p-3 text-left text-sm transition active:scale-[.99]"
               >
-                <Search size={16} className="text-neon" />
-                {suggestion}
+                <Search size={16} className="text-neon xl:hidden" />
+                <span className="min-w-0 flex-1">{suggestion}</span>
+                <ChevronRight size={16} className="hidden text-slate-500 xl:block" />
               </button>
             ))}
           </div>
