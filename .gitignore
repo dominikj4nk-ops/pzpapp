@@ -3,6 +3,13 @@ dist/
 .env
 .env.*
 *.local
+.npmrc
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*
+secrets*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
