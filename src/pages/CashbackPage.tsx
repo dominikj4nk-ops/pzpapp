@@ -89,7 +89,7 @@ function CashbackDealCard({ deal, isOpen, copiedCode, onToggle, onCopy, onOpen }
 
               <button
                 onClick={() => onOpen(deal.partnerUrl)}
-                className="neon-button mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-[14px] px-4 py-2 text-sm font-black text-[#02130c] transition active:scale-95"
+                className="neon-button mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-[14px] px-4 py-2 text-sm font-black text-on-accent transition active:scale-95"
               >
                 {deal.actionLabel ?? `Získat ${deal.reward}`} <ExternalLink size={15} />
               </button>

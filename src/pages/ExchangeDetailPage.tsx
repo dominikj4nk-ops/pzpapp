@@ -234,7 +234,7 @@ export default function ExchangeDetailPage() {
               <div className="mt-5 space-y-3">
                 {guide.steps.map((step, index) => (
                   <article key={step.title} className="grid grid-cols-[34px_minmax(0,1fr)] gap-3 rounded-[16px] border border-white/10 bg-white/[.035] p-4">
-                    <span className="grid h-8 w-8 place-items-center rounded-[10px] bg-neon text-xs font-black text-[#02130c] xl:hidden">{index + 1}</span>
+                    <span className="grid h-8 w-8 place-items-center rounded-[10px] bg-neon text-xs font-black text-on-accent xl:hidden">{index + 1}</span>
                     <span className="hidden pt-0.5 text-xs font-black text-neon xl:block">0{index + 1}</span>
                     <div className="min-w-0">
                       <h4 className="text-sm font-black text-white">{step.title}</h4>

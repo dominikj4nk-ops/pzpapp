@@ -1,11 +1,11 @@
-import { BellRing, CheckCircle2, ChevronRight, FerrisWheel, Search, ShieldCheck } from "lucide-react";
+import { BellRing, CheckCircle2, Search, ShieldCheck } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import DesktopHome from "../components/DesktopHome";
 import Header from "../components/Header";
+import HeroOffersVisual from "../components/HeroOffersVisual";
 import { BonusCard, FilterTabs, SectionHeading } from "../components/ui";
-import { JACKPOT_LABEL } from "../components/wheelState";
 import { ageFilters, bonusMatchesAgeFilter, bonuses, formatKc, totalPotential } from "../data/mockData";
 import { paths } from "../routes/paths";
 
@@ -40,17 +40,16 @@ export default function HomePage() {
       <Header />
 
       <div className="xl:hidden">
-        <section className="hero-section relative mb-8 min-h-[305px] p-4 sm:mb-7 sm:min-h-[340px] sm:rounded-[16px] sm:p-7 lg:min-h-[360px] lg:p-8">
-          <div className="hero-copy relative z-10 max-w-[82%] sm:max-w-[54%]">
-            <h2 className="text-[44px] font-black leading-[0.98] tracking-normal sm:text-[50px] md:text-[56px] lg:text-[62px]">
-              <span className="block">Získej</span>
-              <span className="block whitespace-nowrap pt-1.5 leading-[1.04] text-neon -mb-1.5">{formatKc(totalPotential)}</span>
-              <span className="block whitespace-nowrap">na bonusech</span>
-            </h2>
-            <p className="mt-4 max-w-[245px] text-sm leading-5 text-slate-300 sm:max-w-[310px] sm:text-[15px] sm:leading-6">Banky, cashback a investiční platformy na jednom místě.</p>
-          </div>
-          <div className="relative z-20 mt-7 grid w-full grid-cols-2 gap-3 sm:mt-8 sm:w-[60%] md:w-[58%] lg:w-[54%]">
-            <Link to={paths.exchanges} className="neon-button flex h-12 items-center justify-center whitespace-nowrap rounded-[14px] px-3 text-sm font-black text-[#02130c] active:scale-95">
+        <section className="hero-section relative mb-8 pt-2 sm:mb-7 sm:rounded-[16px] sm:p-7 lg:p-8">
+          <h2 className="hero-title text-[44px] font-black leading-[0.98] tracking-normal sm:text-[50px] md:text-[56px] lg:text-[62px]">
+            <span className="block">Získej</span>
+            <span className="block whitespace-nowrap pt-1.5 leading-[1.04] text-neon -mb-1.5">{formatKc(totalPotential)}</span>
+            <span className="block whitespace-nowrap">na bonusech</span>
+          </h2>
+          <p className="hero-subtitle mt-4 text-sm leading-5 text-slate-300 sm:max-w-[310px] sm:text-[15px] sm:leading-6">Banky, cashback a investiční platformy na jednom místě.</p>
+          <HeroOffersVisual className="hero-art mt-4 sm:mt-0" />
+          <div className="hero-actions mt-7 grid w-full grid-cols-2 gap-3 sm:mt-8">
+            <Link to={paths.exchanges} className="neon-button flex h-12 items-center justify-center whitespace-nowrap rounded-[14px] px-3 text-sm font-black text-on-accent active:scale-95">
               Zobrazit nabídky
             </Link>
             <button onClick={() => navigate(paths.search)} className="glass-button flex h-12 items-center justify-center gap-2 px-3 text-sm font-bold text-slate-200 transition active:scale-95">
@@ -59,7 +58,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        <div className="mb-6 grid grid-cols-3 gap-2 sm:mb-8 sm:rounded-[16px] sm:border sm:border-white/10 sm:bg-white/[.025] sm:px-5 sm:py-5">
+        <div className="mb-6 grid grid-cols-3 gap-2 sm:mb-8 sm:rounded-[16px] sm:border sm:border-slate-200 sm:bg-white sm:px-5 sm:py-5">
           {socialProof.map((item) => {
             const Icon = item.icon;
             return (
@@ -82,15 +81,6 @@ export default function HomePage() {
             ))}
           </div>
         </section>
-
-        <button onClick={() => navigate(paths.wheel)} className="glass flex w-full items-center gap-3 p-4 text-left transition hover:border-neon/30 active:scale-[.99]">
-          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-emerald-300 to-green-500 text-white shadow-glow"><FerrisWheel size={21} /></span>
-          <span className="min-w-0 flex-1">
-            <span className="block truncate font-bold">Týdenní kolo o {JACKPOT_LABEL} zdarma</span>
-            <span className="mt-0.5 block text-xs leading-5 text-slate-400">Zatoč a sdílej story. Když tě vylosujeme, proplatíme ti, co ti padlo.</span>
-          </span>
-          <ChevronRight size={18} className="shrink-0 text-neon" />
-        </button>
       </div>
 
       <DesktopHome />

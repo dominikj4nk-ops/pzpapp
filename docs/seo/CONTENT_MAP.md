@@ -13,7 +13,7 @@
 
 ## Publikované, ale noindex
 
-`/cashback`, `/pozvat`, `/kolo`, `/hledat`, `/notifikace`, `/zisk` a `/nastaveni`. Důvodem je nedokončená faktická/právní kontrola nebo čistě aplikační charakter.
+`/cashback`, `/pozvat`, `/hledat`, `/notifikace`, `/zisk` a `/nastaveni`. Důvodem je nedokončená faktická/právní kontrola nebo čistě aplikační charakter.
 
 ## Doporučený backlog
 

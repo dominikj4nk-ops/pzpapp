@@ -183,7 +183,7 @@ export default function HelpPage() {
                     Zprávu se nepodařilo odeslat. Napiš nám přímo na <a href={`mailto:${CONTACT_EMAIL}`} className="font-bold text-red-100 underline">{CONTACT_EMAIL}</a>.
                   </p>
                 ) : null}
-                <button type="submit" disabled={contactStatus === "sending"} className="neon-button flex h-12 w-full items-center justify-center gap-2 rounded-[14px] px-4 text-sm font-black text-[#02130c] active:scale-95 disabled:opacity-60">
+                <button type="submit" disabled={contactStatus === "sending"} className="neon-button flex h-12 w-full items-center justify-center gap-2 rounded-[14px] px-4 text-sm font-black text-on-accent active:scale-95 disabled:opacity-60">
                   <Send size={17} /> {contactStatus === "sending" ? "Odesílám…" : "Odeslat zprávu"}
                 </button>
               </form>

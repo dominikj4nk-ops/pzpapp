@@ -3,7 +3,6 @@ import {
   BadgeCheck,
   ChevronDown,
   Clock3,
-  FerrisWheel,
   ListChecks,
   Search
 } from "lucide-react";
@@ -19,7 +18,6 @@ import {
   totalPotential
 } from "../data/mockData";
 import { paths } from "../routes/paths";
-import { JACKPOT_LABEL } from "./wheelState";
 import { LogoMark, VerifiedBadge } from "./ui";
 
 const ageBonusOrder: Record<string, string[]> = {
@@ -95,7 +93,7 @@ export default function DesktopHome() {
               <div className="mt-5 flex items-center gap-3">
                 <button
                   onClick={() => document.getElementById("nabidky")?.scrollIntoView({ behavior: "smooth" })}
-                  className="neon-button flex h-11 items-center justify-center gap-2 rounded-[12px] px-5 text-xs font-black text-[#02130c]"
+                  className="neon-button flex h-11 items-center justify-center gap-2 rounded-[12px] px-5 text-xs font-black text-on-accent"
                 >
                   Projít nabídky <ArrowRight size={15} />
                 </button>
@@ -134,7 +132,7 @@ export default function DesktopHome() {
                   <button
                     key={filter}
                     onClick={() => setAgeFilter(filter)}
-                    className={`h-8 rounded-[10px] px-4 text-[11px] font-black transition ${ageFilter === filter ? "bg-neon text-[#02130c]" : "text-slate-400 hover:bg-white/[.06] hover:text-white"}`}
+                    className={`h-8 rounded-[10px] px-4 text-[11px] font-black transition ${ageFilter === filter ? "bg-neon text-on-accent" : "text-slate-400 hover:bg-white/[.06] hover:text-white"}`}
                   >
                     {filter}
                   </button>
@@ -184,9 +182,12 @@ export default function DesktopHome() {
                   <Link
                     to={paths.exchangeDetail(bonus.id)}
                     onClick={(event) => event.stopPropagation()}
-                    className="neon-button flex h-10 min-w-[156px] items-center justify-center gap-2 rounded-[12px] px-4 text-[11px] font-black text-[#02130c]"
+                    className="neon-button detail-button flex h-10 min-w-[156px] items-center justify-center gap-2.5 rounded-[12px] pl-4 pr-1.5 text-[11px] font-black text-on-accent"
                   >
-                    Detail nabídky <ArrowRight size={14} />
+                    Detail nabídky
+                    <span className="detail-button-icon" aria-hidden="true">
+                      <ArrowRight size={14} strokeWidth={2.6} />
+                    </span>
                   </Link>
                 </div>
               </article>
@@ -205,9 +206,9 @@ export default function DesktopHome() {
             {steps.map((step, index) => {
               const StepIcon = [Search, ListChecks, BadgeCheck][index];
               return (
-                <article key={step.number} className="group min-h-[184px] rounded-[20px] border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-emerald-300">
+                <article key={step.number} className="group min-h-[184px] rounded-[20px] border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-neon/40">
                   <div className="flex items-center justify-between">
-                    <span className="grid h-10 w-10 place-items-center rounded-[14px] bg-emerald-50 text-neon">
+                    <span className="grid h-10 w-10 place-items-center rounded-[14px] bg-neon-soft text-neon">
                       <StepIcon size={19} strokeWidth={2.4} />
                     </span>
                     <span className="text-[11px] font-black text-neon">{step.number}</span>
@@ -220,7 +221,7 @@ export default function DesktopHome() {
           </div>
         </section>
 
-        <section className="grid grid-cols-[minmax(0,1.35fr)_minmax(340px,.65fr)] items-start gap-6 pt-14">
+        <section className="max-w-[960px] pt-14" aria-label="Časté otázky">
           <div>
             <div>
               <p className="text-[11px] font-black uppercase text-neon">Časté otázky</p>
@@ -231,11 +232,11 @@ export default function DesktopHome() {
               {faqItems.map((item, index) => {
                 const isOpen = openFaq === index;
                 return (
-                  <article key={item.question} className={`overflow-hidden rounded-[18px] border bg-white shadow-sm transition-colors ${isOpen ? "border-emerald-300" : "border-slate-200 hover:border-slate-300"}`}>
+                  <article key={item.question} className={`overflow-hidden rounded-[18px] border bg-white shadow-sm transition-colors ${isOpen ? "border-neon/40" : "border-slate-200 hover:border-slate-300"}`}>
                     <button onClick={() => setOpenFaq(isOpen ? -1 : index)} className="flex min-h-[58px] w-full items-center gap-4 px-5 py-3.5 text-left" aria-expanded={isOpen}>
                       <span className="text-[10px] font-black text-neon">{String(index + 1).padStart(2, "0")}</span>
                       <span className="flex-1 text-sm font-black">{item.question}</span>
-                      <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-full transition-colors ${isOpen ? "bg-emerald-50 text-neon" : "bg-slate-50 text-slate-500"}`}>
+                      <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-full transition-colors ${isOpen ? "bg-neon-soft text-neon" : "bg-slate-50 text-slate-500"}`}>
                         <ChevronDown size={16} className={`transition-transform ${isOpen ? "rotate-180" : ""}`} />
                       </span>
                     </button>
@@ -246,15 +247,6 @@ export default function DesktopHome() {
             </div>
           </div>
 
-          <div>
-            <div>
-              <p className="text-[11px] font-black uppercase text-neon">Denní aktivita</p>
-              <h2 className="mt-1.5 text-[25px] font-black tracking-normal">Kolo štěstí</h2>
-            </div>
-            <div className="mt-5">
-              <QuickAction title={`Kolo o ${JACKPOT_LABEL}`} text="Každý den nový pokus o výhru." onClick={() => navigate(paths.wheel)} />
-            </div>
-          </div>
         </section>
       </div>
     </div>
@@ -277,28 +269,5 @@ function ComparisonRow({ label, value }: { label: string; value: string }) {
       <span className="text-slate-500">{label}</span>
       <strong className="text-right text-slate-200">{value}</strong>
     </div>
-  );
-}
-
-function QuickAction({ title, text, onClick }: { title: string; text: string; onClick: () => void }) {
-  return (
-    <button onClick={onClick} className="group flex min-h-[184px] w-full flex-col rounded-[20px] border border-slate-200 bg-white p-5 text-left shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-slate-50">
-      <span className="flex w-full items-center justify-between gap-4">
-        <span className="grid h-11 w-11 place-items-center rounded-[14px] bg-emerald-50 text-neon">
-          <FerrisWheel size={21} strokeWidth={2.3} />
-        </span>
-        <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-[10px] font-black text-neon">1× denně</span>
-      </span>
-      <span className="mt-5 min-w-0">
-        <strong className="block text-base font-black text-white">{title}</strong>
-        <span className="mt-1.5 block text-xs leading-5 text-slate-500">{text}</span>
-      </span>
-      <span className="mt-auto flex w-full items-center justify-between border-t border-slate-100 pt-4 text-xs font-black text-neon">
-        Zatočit si
-        <span className="grid h-8 w-8 place-items-center rounded-full bg-emerald-50 transition-transform group-hover:translate-x-0.5">
-          <ArrowRight size={15} />
-        </span>
-      </span>
-    </button>
   );
 }

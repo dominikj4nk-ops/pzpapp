@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { BadgeCheck, Check, ChevronRight, HelpCircle, Mail, Search } from "lucide-react";
+import { ArrowRight, BadgeCheck, Check, ChevronRight, HelpCircle, Mail, Search } from "lucide-react";
 import type { HTMLMotionProps } from "framer-motion";
 import type { ReactNode } from "react";
 import { useId } from "react";
@@ -49,7 +49,7 @@ export function BrandLogo({ className = "", onClick, tone = "white" }: { classNa
   const content = (
     <>
       <span className="whitespace-nowrap">
-        <span className={tone === "ink" ? "text-[#0b1628]" : "text-white"}>prachyzaregistraci</span><span className={tone === "ink" ? "text-[#10a96f]" : "text-neon"}>.cz</span>
+        <span className={tone === "ink" ? "text-[#0b1628]" : "text-white"}>prachyzaregistraci</span><span className={tone === "ink" ? "text-neon" : "text-neon"}>.cz</span>
       </span>
     </>
   );
@@ -82,7 +82,7 @@ export function NeonButton({
       {...buttonProps}
       className={`h-12 rounded-[18px] px-4 text-sm font-bold transition ${
         variant === "primary"
-          ? "neon-button text-[#02130c]"
+          ? "neon-button text-on-accent"
           : "glass-button text-white"
       } ${className}`}
     >
@@ -165,50 +165,12 @@ export function LogoMark({ bonus, size = "md" }: { bonus: Bonus; size?: "sm" | "
   );
 }
 
-function RankShield({ rank }: { rank: number }) {
-  const gradientId = useId().replace(/:/g, "");
-  const highlightId = `${gradientId}-shine`;
-  const colors =
-    rank === 1
-      ? {
-          stops: ["#fef08a", "#fbbf24", "#fb923c"],
-          text: "#211400",
-          shadow: "drop-shadow(0 8px 10px rgba(0,0,0,.24))"
-        }
-      : rank === 2
-        ? {
-            stops: ["#f8fafc", "#cffafe", "#cbd5e1"],
-            text: "#07111c",
-            shadow: "drop-shadow(0 8px 10px rgba(0,0,0,.22))"
-          }
-        : {
-            stops: ["#fed7aa", "#f59e0b", "#f43f5e"],
-            text: "#1d0a02",
-            shadow: "drop-shadow(0 8px 10px rgba(0,0,0,.24))"
-          };
-
+/** Pořadí doporučené nabídky (mobil a tablet). 1. místo plně v barvě akcentu, 2.–3. světle, další neutrálně. */
+function RankBadge({ rank }: { rank: number }) {
+  const tier = rank === 1 ? "first" : rank <= 3 ? "top" : "rest";
   return (
-    <span className="absolute -left-1.5 -top-1.5 z-20 h-9 w-8 font-black xl:hidden" style={{ filter: colors.shadow }}>
-      <svg aria-hidden="true" className="absolute inset-0 h-full w-full" viewBox="0 0 32 36" fill="none">
-        <defs>
-          <linearGradient id={gradientId} x1="3" y1="0" x2="30" y2="35" gradientUnits="userSpaceOnUse">
-            <stop stopColor={colors.stops[0]} />
-            <stop offset="0.58" stopColor={colors.stops[1]} />
-            <stop offset="1" stopColor={colors.stops[2]} />
-          </linearGradient>
-          <linearGradient id={highlightId} x1="0" y1="0" x2="32" y2="36" gradientUnits="userSpaceOnUse">
-            <stop stopColor="rgba(255,255,255,.62)" />
-            <stop offset="0.42" stopColor="rgba(255,255,255,0)" />
-            <stop offset="1" stopColor="rgba(0,0,0,.18)" />
-          </linearGradient>
-        </defs>
-        <path d="M8 0H24C28.42 0 32 3.58 32 8V25.92L16 36L0 25.92V8C0 3.58 3.58 0 8 0Z" fill={`url(#${gradientId})`} />
-        <path d="M8 0H24C28.42 0 32 3.58 32 8V25.92L16 36L0 25.92V8C0 3.58 3.58 0 8 0Z" fill={`url(#${highlightId})`} />
-        <ellipse cx="16" cy="25.4" rx="11" ry="3.2" fill="rgba(0,0,0,.1)" />
-      </svg>
-      <span className="absolute left-1/2 top-2 grid h-5 w-5 -translate-x-1/2 place-items-center rounded-full bg-white/72 text-[11px] shadow-[inset_0_1px_0_rgba(255,255,255,.7),0_3px_8px_rgba(0,0,0,.16)]" style={{ color: colors.text }}>
-        {rank}
-      </span>
+    <span className="rank-badge xl:hidden" data-tier={tier} aria-label={`${rank}. místo`}>
+      {rank}
     </span>
   );
 }
@@ -221,9 +183,9 @@ export function BonusCard({ bonus, rank, variant = "featured" }: { bonus: Bonus;
     <motion.article
       whileTap={{ scale: 0.985 }}
       onClick={() => navigate(paths.exchangeDetail(bonus.id))}
-      className="bonus-card relative h-full cursor-pointer rounded-[20px] border border-white/10 bg-white/[.055] p-3 shadow-card transition hover:-translate-y-0.5 hover:border-neon/40 hover:bg-white/[.07] lg:p-4"
+      className="bonus-card relative h-full cursor-pointer rounded-[20px] border border-slate-200 bg-white p-3 shadow-card transition hover:-translate-y-0.5 hover:border-neon/40 lg:p-4"
     >
-      {rank ? <RankShield rank={rank} /> : null}
+      {rank ? <RankBadge rank={rank} /> : null}
       <div className={`bonus-card-layout flex h-full items-center gap-3 ${desktopList ? "lg:grid lg:grid-cols-[56px_minmax(0,1fr)_132px] lg:items-center lg:gap-4" : "lg:flex-col lg:items-start"}`}>
         <LogoMark bonus={bonus} />
         <div className={`bonus-card-content min-w-0 flex-1 ${desktopList ? "lg:w-auto" : "lg:w-full"}`}>
@@ -250,10 +212,13 @@ export function BonusCard({ bonus, rank, variant = "featured" }: { bonus: Bonus;
           <Link
             to={paths.exchangeDetail(bonus.id)}
             onClick={(event) => event.stopPropagation()}
-            className={`neon-button inline-flex h-10 items-center justify-center whitespace-nowrap rounded-[14px] px-4 text-xs font-black text-[#02130c] active:scale-95 lg:min-w-[130px] ${desktopList ? "lg:w-full" : ""}`}
+            className={`neon-button detail-button inline-flex h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-[14px] pl-3.5 pr-1.5 text-xs font-black text-on-accent lg:min-w-[130px] ${desktopList ? "lg:w-full" : ""}`}
           >
             <span className="xl:hidden">Detail</span>
             <span className="hidden xl:inline">Detail nabídky</span>
+            <span className="detail-button-icon" aria-hidden="true">
+              <ArrowRight size={14} strokeWidth={2.6} />
+            </span>
           </Link>
         </div>
       </div>
@@ -333,7 +298,7 @@ export function ProgressRing({ value = 4, total = 12, size = 112 }: { value?: nu
   return (
     <div className="relative grid place-items-center" style={{ width: size, height: size }}>
       <svg className="-rotate-90" width={size} height={size} viewBox="0 0 112 112">
-        <circle cx="56" cy="56" r={radius} stroke="rgba(255,255,255,.09)" strokeWidth="12" fill="none" />
+        <circle cx="56" cy="56" r={radius} stroke="rgba(15,23,42,.08)" strokeWidth="12" fill="none" />
         <motion.circle
           cx="56"
           cy="56"
@@ -349,9 +314,8 @@ export function ProgressRing({ value = 4, total = 12, size = 112 }: { value?: nu
         />
         <defs>
           <linearGradient id={gradientId} x1="0" x2="1" y1="0" y2="1">
-            <stop stopColor="#18f26a" />
-            <stop offset="0.58" stopColor="#8cff4f" />
-            <stop offset="1" stopColor="#2d8cff" />
+            <stop style={{ stopColor: "rgb(var(--accent) / .55)" }} />
+            <stop offset="1" style={{ stopColor: "rgb(var(--accent-strong))" }} />
           </linearGradient>
         </defs>
       </svg>
@@ -369,7 +333,7 @@ export function Toggle({ checked, onChange }: { checked: boolean; onChange: () =
   return (
     <button
       onClick={onChange}
-      className={`flex h-7 w-12 items-center rounded-full p-1 transition ${checked ? "bg-neon shadow-[0_6px_12px_rgba(0,0,0,.2)]" : "bg-white/15"}`}
+      className={`flex h-7 w-12 items-center rounded-full p-1 transition ${checked ? "bg-neon shadow-[0_6px_12px_rgb(var(--accent)/.2)]" : "bg-slate-300"}`}
       aria-pressed={checked}
     >
       <span className={`h-5 w-5 rounded-full bg-white shadow transition ${checked ? "translate-x-5" : "translate-x-0"}`} />

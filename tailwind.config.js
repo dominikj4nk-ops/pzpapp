@@ -7,14 +7,19 @@ export default {
         sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"]
       },
       colors: {
-        ink: "#030b12",
-        panel: "rgba(8, 22, 34, 0.78)",
-        neon: "#18f26a",
-        cyanGlow: "#21d4fd"
+        ink: "#0f172a",
+        panel: "#ffffff",
+        // Hlavní akcent webu – skutečná barva je v CSS proměnné --accent (src/styles.css, :root).
+        // Název "neon" zůstal kvůli stávajícím třídám text-neon, bg-neon…
+        neon: "rgb(var(--accent) / <alpha-value>)",
+        "neon-strong": "rgb(var(--accent-strong) / <alpha-value>)",
+        "neon-soft": "rgb(var(--accent-soft) / <alpha-value>)",
+        "on-accent": "#ffffff",
+        cyanGlow: "#60a5fa"
       },
       boxShadow: {
-        glow: "0 8px 18px rgba(0, 0, 0, 0.24)",
-        card: "0 18px 50px rgba(0, 0, 0, 0.35)"
+        glow: "0 6px 14px rgb(var(--accent) / 0.18)",
+        card: "0 1px 2px rgba(15, 23, 42, 0.04)"
       }
     }
   },

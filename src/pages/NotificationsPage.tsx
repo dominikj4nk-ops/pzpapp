@@ -1,9 +1,8 @@
-import { ArrowRight, CheckCheck, FerrisWheel, Inbox, Timer, X } from "lucide-react";
+import { ArrowRight, CheckCheck, Inbox, X } from "lucide-react";
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { dismissNotification, dismissNotifications, useNotifications } from "../components/notificationState";
-import { formatCountdown, JACKPOT_LABEL, useWheel } from "../components/wheelState";
 import { LogoMark } from "../components/ui";
 import { type Bonus } from "../data/mockData";
 import { paths } from "../routes/paths";
@@ -48,7 +47,7 @@ function NotifCard({
       </div>
       <span
         className={`shrink-0 rounded-xl px-3 py-2 text-xs font-black ${
-          primary ? "bg-neon text-[#02130c]" : "border border-white/12 text-slate-200"
+          primary ? "bg-neon text-on-accent" : "border border-white/12 text-slate-200"
         }`}
       >
         {cta}
@@ -84,7 +83,6 @@ function offerHook(bonus: Bonus) {
 export default function NotificationsPage() {
   const navigate = useNavigate();
   const notifications = useNotifications();
-  const { canSpin, remaining } = useWheel();
 
   const dismissAll = () => dismissNotifications(notifications.map((notification) => notification.id));
 
@@ -92,33 +90,6 @@ export default function NotificationsPage() {
     <>
       <Header title="Notifikace" back />
       <section className="space-y-4">
-        <button
-          onClick={() => navigate(paths.wheel)}
-          className={`glass relative w-full overflow-hidden p-4 text-left transition active:scale-[.99] ${
-            canSpin ? "border-neon/35" : ""
-          }`}
-        >
-          <div className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full bg-neon/15 blur-2xl xl:hidden" />
-          <div className="relative flex items-center gap-3">
-            <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-emerald-300 to-green-500 text-white shadow-glow xl:hidden ${canSpin ? "wheel-glow" : ""}`}>
-              <FerrisWheel size={24} />
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="font-black leading-tight">Kolo štěstí</p>
-              {canSpin ? (
-                <p className="mt-0.5 text-xs leading-5 text-neon">Máš otočku zdarma! Zatoč a hraj o {JACKPOT_LABEL}.</p>
-              ) : (
-                <p className="mt-0.5 flex items-center gap-1 text-xs leading-5 text-slate-400">
-                  <Timer size={12} /> Další otočka za <span className="font-mono font-bold tabular-nums text-slate-200">{formatCountdown(remaining)}</span>
-                </p>
-              )}
-            </div>
-            <span className="shrink-0 rounded-xl bg-neon px-3 py-2 text-xs font-black text-[#02130c]">
-              {canSpin ? "Zatočit" : "Otevřít"}
-            </span>
-          </div>
-        </button>
-
         {notifications.length ? (
           <>
             <div className="flex items-center justify-between gap-3">
@@ -158,7 +129,7 @@ export default function NotificationsPage() {
             </span>
             <h3 className="mt-3 text-base font-bold">Žádné nové zprávy</h3>
             <p className="mx-auto mt-1 max-w-[280px] text-sm leading-6 text-slate-400">
-              Nové nabídky a rozpracované bonusy ti ukážeme tady. Zatím si zatoč kolem štěstí nahoře.
+              Nové nabídky a rozpracované bonusy ti ukážeme tady.
             </p>
             <button
               onClick={() => navigate(paths.exchanges)}

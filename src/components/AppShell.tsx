@@ -1,7 +1,6 @@
 import {
   ArrowRight,
   BadgePercent,
-  Gift,
   HelpCircle,
   House,
   Instagram,
@@ -27,8 +26,7 @@ type AppShellProps = {
 const navItems = [
   { label: "Přehled", path: paths.home, icon: House },
   { label: "Všechny nabídky", path: paths.exchanges, icon: LayoutGrid },
-  { label: "Cashback", path: paths.cashback, icon: BadgePercent },
-  { label: "Kolo štěstí", path: paths.wheel, icon: Gift }
+  { label: "Cashback", path: paths.cashback, icon: BadgePercent }
 ];
 
 const supportItems = [
@@ -42,7 +40,6 @@ const pageTitle = (pathname: string) => {
   if (pathname === paths.exchanges) return "Katalog nabídek";
   if (pathname.startsWith(`${paths.exchanges}/`)) return "Detail nabídky";
   if (pathname === paths.cashback) return "Cashback";
-  if (pathname === paths.wheel) return "Kolo štěstí";
   if (pathname === paths.search) return "Hledání";
   if (pathname === paths.notifications) return "Oznámení";
   if (pathname === paths.profit) return "Moje odměny";
@@ -58,7 +55,7 @@ export default function AppShell({ children }: AppShellProps) {
   const navigate = useNavigate();
 
   return (
-    <main id="app-scroll-root" className="app-scroll-root desktop-shell bg-[#030b12] text-white">
+    <main id="app-scroll-root" className="app-scroll-root desktop-shell bg-[#f5f8fc] text-slate-900">
       <aside className="desktop-sidebar fixed inset-y-0 left-0 z-50 hidden w-[264px] flex-col border-r border-white/10 bg-[#0c1217] xl:flex">
         <div className="flex h-16 shrink-0 items-center border-b border-white/10 px-5">
           <BrandLogo className="text-[18px]" onClick={() => navigate(paths.home)} tone="ink" />
@@ -150,7 +147,7 @@ export default function AppShell({ children }: AppShellProps) {
             {location.pathname !== paths.exchanges ? (
               <button
                 onClick={() => navigate(paths.exchanges)}
-                className="neon-button h-10 whitespace-nowrap rounded-[12px] px-5 text-xs font-black text-[#02130c] active:scale-[.98]"
+                className="neon-button h-10 whitespace-nowrap rounded-[12px] px-5 text-xs font-black text-on-accent active:scale-[.98]"
               >
                 Všechny nabídky
               </button>
@@ -158,7 +155,7 @@ export default function AppShell({ children }: AppShellProps) {
           </div>
         </header>
 
-        <div className="desktop-page-frame mx-auto flex min-h-screen w-full flex-col bg-[linear-gradient(180deg,rgba(3,12,19,.86),rgba(4,18,24,.95))] shadow-[0_0_80px_rgba(0,0,0,.55)] sm:my-6 sm:min-h-[884px] sm:max-w-[calc(100%-48px)] sm:rounded-[24px] sm:border sm:border-white/10 md:max-w-[720px] lg:max-w-[960px] xl:my-0 xl:min-h-0 xl:max-w-none xl:rounded-none xl:border-0 xl:bg-transparent xl:shadow-none">
+        <div className="desktop-page-frame mx-auto flex min-h-screen w-full flex-col sm:my-6 sm:min-h-[884px] sm:max-w-[calc(100%-48px)] sm:rounded-[24px] sm:border sm:border-white/10 md:max-w-[720px] lg:max-w-[960px] xl:my-0 xl:min-h-0 xl:max-w-none xl:rounded-none xl:border-0">
           <section className="flex min-h-screen min-w-0 flex-col xl:min-h-[calc(100vh-64px)]">
             <div className="relative flex-1">
               <div key={location.pathname} className="page-fade relative z-10 min-h-full px-4 pb-28 pt-5 sm:px-5 sm:pt-6 md:px-6 lg:px-7 xl:px-7 xl:pb-12 xl:pt-7 2xl:px-9">

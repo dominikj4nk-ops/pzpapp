@@ -42,7 +42,7 @@ export default class ErrorBoundary extends Component<Props, State> {
         <div className="mt-4 flex flex-col gap-2">
           <button
             onClick={this.handleReset}
-            className="neon-button h-11 rounded-[16px] px-4 text-sm font-black text-[#02130c] active:scale-95"
+            className="neon-button h-11 rounded-[16px] px-4 text-sm font-black text-on-accent active:scale-95"
           >
             Zkusit znovu
           </button>

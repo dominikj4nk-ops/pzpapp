@@ -47,7 +47,7 @@ export default function Header({ title, back = false, heading = true }: HeaderPr
       >
         <Bell size={19} />
         {hasNotification ? (
-          <span className="absolute -right-1 -top-1 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-neon px-1 text-[10px] font-black text-[#03130c] shadow-[0_4px_10px_rgba(0,0,0,.35)]">
+          <span className="absolute -right-1 -top-1 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-neon px-1 text-[10px] font-black text-on-accent shadow-[0_4px_10px_rgba(0,0,0,.35)]">
             {notificationCount}
           </span>
         ) : null}

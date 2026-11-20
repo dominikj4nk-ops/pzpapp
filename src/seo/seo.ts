@@ -65,7 +65,6 @@ const staticSeo: Record<string, SeoDescriptor> = {
 const noindexSeo: Record<string, Omit<SeoDescriptor, "canonicalPath" | "index">> = {
   "/hledat": { title: "Hledat nabídku | Prachy za registraci", description: "Interní vyhledávání nabídek." },
   "/notifikace": { title: "Notifikace | Prachy za registraci", description: "Tvoje upozornění a rozpracované nabídky." },
-  "/kolo": { title: "Kolo štěstí | Prachy za registraci", description: "Interaktivní soutěž pro návštěvníky webu." },
   "/zisk": { title: "Přehled bonusů | Prachy za registraci", description: "Soukromý přehled rozpracovaných bonusů." },
   "/nastaveni": { title: "Nastavení | Prachy za registraci", description: "Nastavení webové aplikace." }
 };

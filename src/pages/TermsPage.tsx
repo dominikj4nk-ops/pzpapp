@@ -20,9 +20,9 @@ const sections: { title: string; body: string[] }[] = [
     ]
   },
   {
-    title: "3. Odměny za doporučení, soutěže a kolo štěstí",
+    title: "3. Odměny za doporučení a soutěže",
     body: [
-      "Odměny za pozvání přátel, výhry v kole štěstí a další akce provozované webem jsou dobrovolným plněním provozovatele. Není na ně právní nárok.",
+      "Odměny za pozvání přátel, výhry v soutěžích a další akce provozované webem jsou dobrovolným plněním provozovatele. Není na ně právní nárok.",
       "Provozovatel si vyhrazuje právo žádost o odměnu zamítnout (zejména při podezření na zneužití, duplicitní účty, nesplnění podmínek nebo nemožnost ověření), akci kdykoli změnit, pozastavit nebo ukončit.",
       "Slosování a výplaty výher probíhají v termínech uvedených na webu; provozovatel si vyhrazuje právo termíny upravit."
     ]
